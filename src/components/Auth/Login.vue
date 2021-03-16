@@ -1,4 +1,5 @@
 <script>
+import { useRoute, useRouter } from 'vue-router';
 import { mapGetters, mapActions } from 'vuex';
 import { getCookie, setCookie } from '../../router/library';
 
@@ -10,16 +11,20 @@ export default {
   methods: {
     ...mapActions(['setSpace'])
   },
-  created() {
-    if (this.$route.query.space && this.$route.query.authKey) {
-      console.log(this.$route.query);
-      this.setSpace(this.$route.query.space);
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+    if (route.query.space && route.query.authKey) {
+      // const { result, loading, error } = useQuery(session, {
+      //   id: route.query.authKey,
+      //   space: route.query.space
+      // });
+      // console.log(result, loading, error);
 
-      // this.$cookies.set(`janus_${this.$route.query.space}`, this.$route.query.authKey);
-      setCookie(`janus_${this.$route.query.space}`, this.$route.query.authKey);
-      this.$router.push({
-        name: 'CreateAppView',
-        params: { space: this.$route.query.space }
+      setCookie(`janus_${route.query.space}`, route.query.authKey);
+      router.push({
+        name: 'AppView',
+        params: { space: route.query.space }
       });
     }
   }

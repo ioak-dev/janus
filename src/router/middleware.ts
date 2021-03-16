@@ -1,6 +1,10 @@
 import axios from 'axios';
 import store from '@/store/index';
+import gql from 'graphql-tag';
+import { useQuery } from '@vue/apollo-composable';
 import { getCookie, redirectToLogin } from './library';
+import { defaultClient } from '../apollo';
+import { sessionQuery } from '../graphql/session.query';
 
 export function middlewarePipeline(context: any, middleware: any, index: any) {
   const nextMiddleware = middleware[index];
@@ -25,19 +29,27 @@ export function authenticate({ to, from, next, nextVue }: any) {
   } else {
     const fromCookies = getCookie(`janus_${to.params.space}`);
     if (fromCookies) {
-      axios
-        .get(`${process.env.VUE_APP_ROOT_API}/auth/${to.params.space}/session/${fromCookies}`)
+      defaultClient
+        .query({
+          query: sessionQuery,
+          variables: {
+            id: fromCookies,
+            space: to.params.space
+          }
+        })
         .then((sessionResponse) => {
-          store.dispatch('addAuth', {
-            auth: { ...sessionResponse.data.data, isAuth: true }
-          });
-          next();
+          if (sessionResponse?.data?.session) {
+            store.dispatch('addAuth', {
+              auth: { ...sessionResponse.data.session, isAuth: true }
+            });
+            next();
+          } else {
+            redirectToLogin(to.params.space);
+          }
         })
         .catch((error) => {
           console.log(error.response.status);
-          if (error.response.status === 401 || error.response.status === 404) {
-            redirectToLogin(to.params.space);
-          }
+          redirectToLogin(to.params.space);
         });
     } else {
       redirectToLogin(to.params.space);

@@ -4,8 +4,9 @@
       <logo />
       <nav-elements />
     </div>
-    <div>
+    <div class="topbar__right">
       <dark-mode-switch />
+      <user-account />
     </div>
   </div>
 </template>
@@ -13,6 +14,7 @@
 import { mapGetters, mapActions } from 'vuex';
 import Logo from '../Logo/Logo.vue';
 import DarkModeSwitch from './DarkModeSwitch.vue';
+import UserAccount from './UserAccount.vue';
 import NavElements from './NavElements.vue';
 
 export default {
@@ -20,7 +22,8 @@ export default {
   components: {
     NavElements,
     Logo,
-    DarkModeSwitch
+    DarkModeSwitch,
+    UserAccount
   },
   computed: {
     ...mapGetters(['getProfile'])
@@ -43,7 +46,8 @@ export default {
   width: 100%;
 }
 
-.topbar__left {
+.topbar__left,
+.topbar__right {
   display: flex;
   align-items: center;
   gap: 10px;

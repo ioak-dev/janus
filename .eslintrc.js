@@ -20,7 +20,8 @@ module.exports = {
     'prettier/prettier': 'error',
     'no-underscore-dangle': 'off',
     'prefer-template': 'off',
-    'no-shadow': ['error', { allow: ['state'] }]
+    'no-shadow': ['error', { allow: ['state'] }],
+    'import/prefer-default-export': 'off'
   },
   overrides: [
     {

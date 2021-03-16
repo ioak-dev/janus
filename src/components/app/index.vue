@@ -9,13 +9,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
   name: 'App',
+  computed: {
+    ...mapGetters(['getProfile'])
+  },
   methods: {
     goToCreate(event: any) {
-      console.log(event);
-      this.$router.push('/app/create');
+      this.$router.push(`/${this.getProfile.space}/app/create`);
     }
   }
 });

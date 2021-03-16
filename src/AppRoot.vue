@@ -1,19 +1,32 @@
 <template>
-  <div class="theme_light">
-    <oak-app-layout topbarVariant="sticky" topbarColor="global" topElevation="4">
-      <div slot="topbar" class="topbar">
-        <div id="nav">
-          <router-link to="/">Home</router-link>
-          <router-link to="/about">About</router-link>
-          <router-link to="/business-process">Business Process</router-link>
-        </div>
+  <div :class="getProfile.theme">
+    <init />
+    <oak-app-layout topbarVariant="sticky" topbarColor="global" topElevation="2">
+      <div slot="topbar" class="topbar-container">
+        <topbar />
       </div>
-      <div slot="content" class="content">
+      <div slot="content" class="content-container">
         <router-view />
       </div>
     </oak-app-layout>
   </div>
 </template>
+<script>
+import { mapGetters } from 'vuex';
+import Topbar from './components/navigation/Topbar.vue';
+import Init from './components/init/index.vue';
+
+export default {
+  name: 'AppRoot',
+  components: {
+    Topbar,
+    Init
+  },
+  computed: {
+    ...mapGetters(['getProfile'])
+  }
+};
+</script>
 
 <style lang="scss">
 @import './oak-styles/index.scss';
@@ -33,18 +46,14 @@ body {
   color: #2c3e50;
 }
 
-.topbar {
+.topbar-container {
   height: 40px;
   display: flex;
   align-items: center;
   padding: 0 10px;
 }
 
-.drawer-left {
-  height: 100vh;
-}
-
-.content {
+.content-container {
   height: 100%;
   padding: 20px;
 }

@@ -1,17 +1,17 @@
 <template>
   <div class="process-view">
-    <BusinessProcess />
+    <App />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import BusinessProcess from '@/components/business-process/index.vue';
+import App from '@/components/app/index.vue';
 
 export default defineComponent({
-  name: 'ProcessView',
+  name: 'AppView',
   components: {
-    BusinessProcess
+    App
   }
 });
 </script>

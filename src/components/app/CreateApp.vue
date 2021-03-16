@@ -1,5 +1,5 @@
 <template>
-  <div class="create-business-process">
+  <div class="create-app">
     <oak-typography :variant="state.name">{{ state.name }}</oak-typography>
     <oak-form formGroupName="hello-form" @form-submit="handleSubmit">
       <oak-input

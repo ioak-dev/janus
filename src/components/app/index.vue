@@ -1,5 +1,5 @@
 <template>
-  <div class="business-process">
+  <div class="app">
     <oak-form-actions-container align="left">
       <oak-button theme="primary" variant="regular" @button-click="goToCreate">Create</oak-button>
     </oak-form-actions-container>
@@ -11,11 +11,11 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'BusinessProcess',
+  name: 'App',
   methods: {
     goToCreate(event: any) {
       console.log(event);
-      this.$router.push('/business-process/create');
+      this.$router.push('/app/create');
     }
   }
 });
@@ -23,7 +23,7 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.business-process {
+.app {
   display: flex;
   flex-direction: column;
   justify-items: flex-start;

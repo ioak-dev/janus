@@ -1,12 +1,12 @@
 <template>
   <div :class="getProfile.theme">
     <init />
-    <oak-app-layout topbarVariant="sticky" topbarColor="global" topElevation="2">
+    <oak-app-layout topbarVariant="sticky" topbarColor="surface" topbarElevation="0">
       <div slot="topbar" class="topbar-container">
         <topbar />
       </div>
-      <div slot="content" class="content-container">
-        <router-view />
+      <div slot="main" class="content-container">
+        <router-view :key="$route.fullPath" />
       </div>
     </oak-app-layout>
   </div>
@@ -31,11 +31,16 @@ export default {
 <style lang="scss">
 @import './oak-styles/index.scss';
 @import '../node_modules/@oakui/core-stage/style/index.css';
+@import './styles/index.scss';
 
 body {
   margin: 0;
   background-color: var(--color-global-lightmode);
   color: var(--color-global-i);
+}
+
+* {
+  text-align: left;
 }
 
 #app {
@@ -55,7 +60,7 @@ body {
 
 .content-container {
   height: 100%;
-  padding: 20px;
+  // padding: 20px;
 }
 
 #nav {

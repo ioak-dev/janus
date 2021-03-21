@@ -62,6 +62,11 @@ export function readSpace({ to, from, next, nextVue }: any) {
   next();
 }
 
+export function readTable({ to, from, next, nextVue }: any) {
+  store.dispatch('setTable', to.params.id);
+  next();
+}
+
 export function readProject({ to, from, next, nextVue }: any) {
   store.dispatch('chooseProject', to.params.projectId);
   store.dispatch('chooseTeam', null);

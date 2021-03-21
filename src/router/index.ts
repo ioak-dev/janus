@@ -1,14 +1,18 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Home from '../views/Home.vue';
 import Login from '../components/Auth/Login.vue';
-import AppView from '../views/AppView.vue';
-import CreateAppView from '../views/CreateAppView.vue';
+import ListTableView from '../views/ListTableView.vue';
+import CreateTableView from '../views/CreateTableView.vue';
+import ListTableDataView from '../views/ListTableDataView.vue';
+import CreateTableDataView from '../views/CreateTableDataView.vue';
+import ViewTableDataView from '../views/ViewTableDataView.vue';
+import EditTableDataView from '../views/EditTableDataView.vue';
 
 import {
   middlewarePipeline,
   authenticate,
   readSpace,
-  readProject,
+  readTable,
   readTeam,
   readTask,
   projectAdministrator,
@@ -22,34 +26,62 @@ const routes: Array<RouteRecordRaw> = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
     path: '/login',
     name: 'Login',
     component: Login
   },
   {
-    path: '/:space/app',
-    name: 'AppView',
-    component: AppView,
+    path: '/:space/table-management',
+    name: 'ListTableView',
+    component: ListTableView,
     meta: {
-      context: 'app',
+      context: 'table',
       middleware: [readSpace, authenticate]
     }
   },
   {
-    path: '/:space/app/create',
-    name: 'CreateAppView',
-    component: CreateAppView,
+    path: '/:space/table-management/create',
+    name: 'CreateTableView',
+    component: CreateTableView,
     meta: {
-      context: 'app',
+      context: 'table',
       middleware: [readSpace, authenticate]
+    }
+  },
+  {
+    path: '/:space/table/:id',
+    name: 'ListTableDataView',
+    component: ListTableDataView,
+    meta: {
+      context: 'table',
+      middleware: [readSpace, readTable, authenticate]
+    }
+  },
+  {
+    path: '/:space/table/:id/data/create',
+    name: 'CreateTableDataView',
+    component: CreateTableDataView,
+    meta: {
+      context: 'table',
+      middleware: [readSpace, readTable, authenticate]
+    }
+  },
+  {
+    path: '/:space/table/:id/data/view/:rowId',
+    name: 'ViewTableDataView',
+    component: ViewTableDataView,
+    meta: {
+      context: 'table',
+      middleware: [readSpace, readTable, authenticate]
+    }
+  },
+  {
+    path: '/:space/table/:id/data/edit/:rowId',
+    name: 'EditTableDataView',
+    component: EditTableDataView,
+    meta: {
+      context: 'table',
+      middleware: [readSpace, readTable, authenticate]
     }
   }
 ];

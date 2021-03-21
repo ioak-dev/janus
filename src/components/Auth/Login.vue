@@ -23,7 +23,7 @@ export default {
 
       setCookie(`janus_${route.query.space}`, route.query.authKey);
       router.push({
-        name: 'AppView',
+        name: 'ListTableView',
         params: { space: route.query.space }
       });
     }

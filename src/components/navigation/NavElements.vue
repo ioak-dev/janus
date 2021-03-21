@@ -1,8 +1,7 @@
 <template>
   <div class="nav-elements">
     <router-link to="/">Home</router-link>
-    <router-link to="/about">About</router-link>
-    <router-link :to="`/${getProfile.space}/app`">Apps</router-link>
+    <router-link :to="`/${getProfile.space}/table-management`">Apps</router-link>
   </div>
 </template>
 <script>

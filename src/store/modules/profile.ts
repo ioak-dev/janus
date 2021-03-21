@@ -1,6 +1,7 @@
 const state = {
   theme: 'theme_dark',
   space: '',
+  table: '',
   auth: {},
   sidebar: true
 };
@@ -18,15 +19,13 @@ const actions = {
   setSpace({ commit }: any, space: any) {
     commit('UPDATE_PROFILE', { ...state, space });
   },
+  setTable({ commit }: any, table: any) {
+    commit('UPDATE_PROFILE', { ...state, table });
+  },
   addAuth({ commit, dispatch }: any, { auth }: any) {
     commit('UPDATE_PROFILE', { ...state, auth });
-    dispatch('fetchProjects');
-    dispatch('fetchStages');
-    dispatch('fetchProjectTeams');
-    dispatch('fetchTeamMembers');
-    dispatch('fetchUsers');
-    dispatch('fetchRoles');
-    dispatch('fetchTeams');
+    // dispatch('fetchUsers');
+    // dispatch('fetchRoles');
   },
   removeAuth({ commit }: any, cookies: any) {
     cookies.remove(`janus_${state.space}`);

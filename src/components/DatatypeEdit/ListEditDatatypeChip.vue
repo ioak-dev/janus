@@ -2,9 +2,12 @@
   <oak-select
     :name="cellHeader.id"
     :value="value"
+    :values="value"
     :options="cellHeader?.meta?.options?.map((item) => item.value)"
-    @input-input="$emit('change', $event)"
+    @select-input="$emit('change', $event)"
     :formGroupName="formGroupName"
+    autocompleteVariant="none"
+    multiple
     gutterBottom
   />
   <div v-if="options" class="list-edit-datatype-chip">

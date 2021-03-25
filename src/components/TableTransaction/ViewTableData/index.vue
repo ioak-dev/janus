@@ -1,55 +1,41 @@
 <template>
   <div class="view-table-data">
-    <oak-toolbar fillColor="container" borderVariant="both">
-      <div slot="left">
-        <oak-form-actions-container>
-          <oak-button
-            theme="default"
-            variant="appear"
-            shape="rectangle"
-            size="xsmall"
-            @button-click="goBack"
-            >Back</oak-button
-          >
-          <oak-button
-            theme="primary"
-            variant="appear"
-            shape="rectangle"
-            size="xsmall"
-            @button-click="goToEdit"
-            >Edit</oak-button
-          >
-          <oak-button
-            theme="danger"
-            variant="appear"
-            shape="rectangle"
-            size="xsmall"
-            @button-click="goToEdit"
-            >Delete</oak-button
-          >
-        </oak-form-actions-container>
+    <toolbar
+      :tableId="$route.params.id"
+      :record="schemaTableDataByIdQueryResult"
+      :openEdit="openEdit"
+      :closeEdit="closeEdit"
+      :isEdit="isEdit"
+    />
+    <app-section subtle>
+      <div slot>
+        <action-bar
+          :record="schemaTableDataByIdQueryResult"
+          :isEdit="isEdit"
+          :openEdit="openEdit"
+          :closeEdit="closeEdit"
+        /></div
+    ></app-section>
+    <app-section v-if="!loading">
+      <div slot>
+        <view-detail
+          v-if="!isEdit"
+          :columnHeaders="allSchemaTableColumnQueryResult"
+          :rowData="schemaTableDataByIdQueryResult"
+        />
+        <edit-detail
+          v-else
+          :columnHeaders="allSchemaTableColumnQueryResult"
+          :rowData="schemaTableDataByIdQueryResult"
+          :closeEdit="closeEdit"
+        />
       </div>
-      <div slot="right">right side</div>
-    </oak-toolbar>
-    <div class="view-table-data__container">
-      <div :class="headerSpacingStyle">
-        <div>
-          <oak-typography variant="h5">JANU-21</oak-typography>
-        </div>
+    </app-section>
+    <app-section>
+      <div slot>
+        <div>Comments</div>
       </div>
-      <div v-if="!loading" class="view-table-data__container__main">
-        <div
-          class="view-table-data__container__main__item"
-          v-for="(column, index) in allSchemaTableColumnQueryResult"
-          :key="`${column.id}-${index}`"
-        >
-          <div class="view-table-data__container__main__item__label">{{ column.name }}</div>
-          <div class="view-table-data__container__main__item__value">
-            <datatype-view :cellData="schemaTableDataByIdQueryResult" :cellHeader="column" />
-          </div>
-        </div>
-      </div>
-    </div>
+    </app-section>
   </div>
 </template>
 
@@ -61,28 +47,55 @@ import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { mapGetters } from 'vuex';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
-import DatatypeView from '../../DatatypeView/index.vue';
+import { compose as sectionCompose } from '@oakui/core-stage/style-composer/OakSectionComposer';
+import AppSection from '@/components/ui/AppSection.vue';
+import Toolbar from './Toolbar.vue';
+import ActionBar from './ActionBar.vue';
+import ViewDetail from './ViewDetail.vue';
+import EditDetail from './EditDetail.vue';
 
 export default defineComponent({
   name: 'ViewTableData',
   computed: {
     ...mapGetters(['getProfile']),
-
-    headerSpacingStyle() {
-      return spacingCompose({ marginVertical: 6, marginHorizontal: 1 });
+    mainSectionStyle() {
+      return sectionCompose({
+        outlineColor: 'none',
+        elevation: 1,
+        fillColor: 'container',
+        marginHorizontal: 0,
+        marginVertical: 0,
+        paddingHorizontal: 3,
+        paddingVertical: 3
+      });
+    },
+    mainSpacingStyle() {
+      return spacingCompose({
+        marginHorizontal: 4
+      });
     }
   },
+  data() {
+    return {
+      isEdit: false
+    };
+  },
   components: {
-    DatatypeView
+    Toolbar,
+    ActionBar,
+    ViewDetail,
+    EditDetail,
+    AppSection
   },
   methods: {
     goBack() {
       this.$router.back();
     },
-    goToEdit(event: any) {
-      this.$router.push(
-        `/${this.getProfile.space}/table/${this.$route.params.id}/data/edit/${this.$route.params.rowId}`
-      );
+    openEdit() {
+      this.isEdit = true;
+    },
+    closeEdit() {
+      this.isEdit = false;
     }
   },
   setup() {
@@ -117,31 +130,5 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .view-table-data {
-}
-.view-table-data__container {
-  margin: 20px;
-}
-.view-table-data__container__main {
-  display: grid;
-  // flex-direction: column;
-  grid-template-columns: auto auto auto;
-  justify-content: flex-start;
-  // justify-items: flex-start;
-  column-gap: 20px;
-  row-gap: 20px;
-  font-size: 14px;
-}
-.view-table-data__container__main__item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  // background-color: var(--color-container);
-  padding: 10px;
-  border-radius: 4px;
-}
-.view-table-data__container__main__item__label {
-  font-weight: 600;
-}
-.view-table-data__container__main__item__value {
 }
 </style>

@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { allSchemaTableColumnQuery } from '@/graphql/allSchemaTableColumn.query';
-import { addSchemaTableDataQuery } from '@/graphql/addSchemaTableData.mutation';
+import { addSchemaTableDataMutation } from '@/graphql/addSchemaTableData.mutation';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -70,7 +70,7 @@ export default defineComponent({
       });
     }
 
-    const { mutate } = useMutation(addSchemaTableDataQuery, () => ({
+    const { mutate } = useMutation(addSchemaTableDataMutation, () => ({
       update: (cache, mutationResult) => {
         const data: any = cache.readQuery({
           query: allSchemaTableDataQuery,

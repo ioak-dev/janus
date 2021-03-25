@@ -1,8 +1,8 @@
 <template>
-  <div v-if="cellData?.relation" class="relation-edit-datatype">
+  <div v-if="rowData?.relation" class="relation-edit-datatype">
     <oak-link @link-click="goToRecord">
       <oak-typography variant="body2" underline="hover" color="primary">
-        {{ cellData?.relation[cellHeader?.id][0]?.row[cellHeader?.meta?.columnId] }}
+        {{ rowData?.relation[cellHeader?.id][0]?.row[cellHeader?.meta?.columnId] }}
       </oak-typography>
     </oak-link>
   </div>
@@ -18,7 +18,7 @@ export default defineComponent({
     ...mapGetters(['getProfile'])
   },
   props: {
-    cellData: Object,
+    rowData: Object,
     cellHeader: Object
   },
   methods: {
@@ -26,14 +26,14 @@ export default defineComponent({
       console.log({
         space: this.getProfile.space,
         id: this.cellHeader?.meta?.tableId,
-        rowId: this.cellData?.relation[this.cellHeader?.id][0]._id.toString() || ''
+        rowId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
       });
       this.$router.push({
         name: 'ViewTableDataView',
         params: {
           space: this.getProfile.space,
           id: this.cellHeader?.meta?.tableId,
-          rowId: this.cellData?.relation[this.cellHeader?.id][0]._id.toString() || ''
+          rowId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
         }
       });
     }

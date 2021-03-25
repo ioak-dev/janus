@@ -1,5 +1,5 @@
 <template>
-  <div class="text-view-datatype">{{ cellData?.row[cellHeader?.id] }}</div>
+  <div class="text-view-datatype">{{ rowData?.row[cellHeader?.id] }}</div>
 </template>
 
 <script lang="ts">
@@ -9,7 +9,7 @@ import { mapGetters } from 'vuex';
 export default defineComponent({
   name: 'TextViewDatatype',
   props: {
-    cellData: Object,
+    rowData: Object,
     cellHeader: Object
   }
 });

@@ -1,18 +1,18 @@
 <template>
-  <div v-if="cellHeader?.meta?.indicator && cellData">
+  <div v-if="cellHeader?.meta?.indicator && rowData">
     <list-view-datatype-badge
       v-if="cellHeader.meta.indicator === 'badge'"
-      :cellData="cellData"
+      :rowData="rowData"
       :cellHeader="cellHeader"
     />
     <list-view-datatype-chip
       v-if="cellHeader.meta.indicator === 'chip'"
-      :cellData="cellData"
+      :rowData="rowData"
       :cellHeader="cellHeader"
     />
     <list-view-datatype-chip-outline
       v-if="cellHeader.meta.indicator === 'chip-outline'"
-      :cellData="cellData"
+      :rowData="rowData"
       :cellHeader="cellHeader"
     />
   </div>
@@ -29,7 +29,7 @@ export default defineComponent({
   components: { ListViewDatatypeChip, ListViewDatatypeBadge, ListViewDatatypeChipOutline },
   name: 'ListViewDatatype',
   props: {
-    cellData: Object,
+    rowData: Object,
     cellHeader: Object
   }
 });

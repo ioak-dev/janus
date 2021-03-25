@@ -3,6 +3,7 @@
     <oak-input
       type="text"
       :name="cellHeader.id"
+      :label="cellHeader.name"
       :value="value"
       @input-input="$emit('change', $event)"
       :formGroupName="formGroupName"

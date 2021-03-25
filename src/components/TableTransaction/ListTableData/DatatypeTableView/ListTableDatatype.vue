@@ -1,6 +1,6 @@
 <template>
   <div class="list-table-datatype">
-    <list-view-datatype :cellData="cellData" :cellHeader="cellHeader" />
+    <list-view-datatype :rowData="rowData" :cellHeader="cellHeader" />
   </div>
 </template>
 
@@ -13,7 +13,7 @@ export default defineComponent({
   components: { ListViewDatatype },
   name: 'ListTableDatatype',
   props: {
-    cellData: Object,
+    rowData: Object,
     cellHeader: Object
   }
 });

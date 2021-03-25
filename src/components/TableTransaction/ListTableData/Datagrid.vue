@@ -35,7 +35,7 @@
                 v-for="column in columns"
                 :key="column.id"
               >
-                <datatype-table-view :cellData="item" :cellHeader="column" />
+                <datatype-table-view :rowData="item" :cellHeader="column" />
               </td>
             </tr>
             <tr v-if="data?.length === 0">

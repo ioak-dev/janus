@@ -74,15 +74,6 @@ const routes: Array<RouteRecordRaw> = [
       context: 'table',
       middleware: [readSpace, readTable, authenticate]
     }
-  },
-  {
-    path: '/:space/table/:id/data/edit/:rowId',
-    name: 'EditTableDataView',
-    component: EditTableDataView,
-    meta: {
-      context: 'table',
-      middleware: [readSpace, readTable, authenticate]
-    }
   }
 ];
 

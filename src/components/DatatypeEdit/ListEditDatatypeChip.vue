@@ -1,8 +1,9 @@
 <template>
   <oak-select
     :name="cellHeader.id"
+    :label="cellHeader.name"
     :value="value"
-    :values="value"
+    :values="[value]"
     :options="cellHeader?.meta?.options?.map((item) => item.value)"
     @select-input="$emit('change', $event)"
     :formGroupName="formGroupName"

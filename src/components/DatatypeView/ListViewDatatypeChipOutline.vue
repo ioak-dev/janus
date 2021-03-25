@@ -24,7 +24,7 @@ import { mapGetters } from 'vuex';
 export default defineComponent({
   name: 'ListViewDatatypeChipOutline',
   props: {
-    cellData: Object,
+    rowData: Object,
     cellHeader: Object
   },
   computed: {
@@ -34,11 +34,11 @@ export default defineComponent({
       }
       if (this.cellHeader.meta.multiple) {
         return this.cellHeader.meta.options.filter((item: any) =>
-          this.cellData?.row[this.cellHeader?.id].includes(item.value)
+          this.rowData?.row[this.cellHeader?.id].includes(item.value)
         );
       }
       return this.cellHeader.meta.options.filter(
-        (item: any) => item.value === this.cellData?.row[this.cellHeader?.id]
+        (item: any) => item.value === this.rowData?.row[this.cellHeader?.id]
       );
     }
   }

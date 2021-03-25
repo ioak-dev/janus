@@ -1,6 +1,6 @@
 <template>
   <div class="relation-table-datatype">
-    <relation-view-datatype :cellData="cellData" :cellHeader="cellHeader" />
+    <relation-view-datatype :rowData="rowData" :cellHeader="cellHeader" />
   </div>
 </template>
 
@@ -13,7 +13,7 @@ export default defineComponent({
   components: { RelationViewDatatype },
   name: 'RelationTableDatatype',
   props: {
-    cellData: Object,
+    rowData: Object,
     cellHeader: Object
   }
 });

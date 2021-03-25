@@ -7,8 +7,8 @@
       @change="$emit('change', $event)"
     />
   </div>
-  <div v-if="cellData?.row && cellHeader.datatype === 'number'" class="data-cell">
-    {{ cellData.row[cellHeader.id] }}
+  <div v-if="rowData?.row && cellHeader.datatype === 'number'" class="data-cell">
+    {{ rowData.row[cellHeader.id] }}
   </div>
   <div v-if="cellHeader.datatype === 'list'" class="data-cell">
     <list-edit-datatype
@@ -18,8 +18,8 @@
       @change="$emit('change', $event)"
     />
   </div>
-  <div v-if="cellData?.row && cellHeader.datatype === 'relation'" class="data-cell">
-    <relation-edit-datatype :cellData="cellData" :cellHeader="cellHeader" />
+  <div v-if="rowData?.row && cellHeader.datatype === 'relation'" class="data-cell">
+    <relation-edit-datatype :rowData="rowData" :cellHeader="cellHeader" />
   </div>
   <div
     v-if="!['text', 'number', 'list', 'relation'].includes(cellHeader.datatype)"

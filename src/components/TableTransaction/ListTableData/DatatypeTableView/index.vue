@@ -1,15 +1,15 @@
 <template>
-  <div v-if="cellData?.row && cellHeader.datatype === 'text'" class="data-cell">
-    <text-table-datatype :cellData="cellData" :cellHeader="cellHeader" />
+  <div v-if="rowData?.row && cellHeader.datatype === 'text'" class="data-cell">
+    <text-table-datatype :rowData="rowData" :cellHeader="cellHeader" />
   </div>
-  <div v-if="cellData?.row && cellHeader.datatype === 'number'" class="data-cell">
-    {{ cellData.row[cellHeader.id] }}
+  <div v-if="rowData?.row && cellHeader.datatype === 'number'" class="data-cell">
+    {{ rowData.row[cellHeader.id] }}
   </div>
-  <div v-if="cellData?.row && cellHeader.datatype === 'list'" class="data-cell">
-    <list-table-datatype :cellData="cellData" :cellHeader="cellHeader" />
+  <div v-if="rowData?.row && cellHeader.datatype === 'list'" class="data-cell">
+    <list-table-datatype :rowData="rowData" :cellHeader="cellHeader" />
   </div>
-  <div v-if="cellData?.row && cellHeader.datatype === 'relation'" class="data-cell">
-    <relation-table-datatype :cellData="cellData" :cellHeader="cellHeader" />
+  <div v-if="rowData?.row && cellHeader.datatype === 'relation'" class="data-cell">
+    <relation-table-datatype :rowData="rowData" :cellHeader="cellHeader" />
   </div>
   <div
     v-if="!['text', 'number', 'list', 'relation'].includes(cellHeader.datatype)"
@@ -30,7 +30,7 @@ export default defineComponent({
   name: 'DatatypeTableView',
   components: { TextTableDatatype, RelationTableDatatype, ListTableDatatype },
   props: {
-    cellData: Object,
+    rowData: Object,
     cellHeader: Object
   }
 });

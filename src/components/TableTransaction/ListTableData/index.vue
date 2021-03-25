@@ -26,7 +26,7 @@
             variant="appear"
             shape="rectangle"
             size="xsmall"
-            @button-click="goToCreate"
+            @button-click="goToEdit"
             >Edit</oak-button
           >
           <oak-button
@@ -111,6 +111,16 @@ export default defineComponent({
   methods: {
     goToCreate(event: any) {
       this.$router.push(`/${this.getProfile.space}/table/${this.$route.params.id}/data/create`);
+    },
+    goToEdit(record: any) {
+      this.$router.push(
+        `/${this.getProfile.space}/table/${this.$route.params.id}/data/view/${this.chosenRecords[0]}`
+      );
+    },
+    goToView(record: any) {
+      this.$router.push(
+        `/${this.getProfile.space}/table/${this.$route.params.id}/data/view/${this.chosenRecords[0]}`
+      );
     },
     toggleDenseView() {
       this.dense = !this.dense;

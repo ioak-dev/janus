@@ -1,6 +1,6 @@
 <template>
   <div v-if="rowData?.row && cellHeader.datatype === 'text'" class="data-cell">
-    <text-table-datatype :rowData="rowData" :cellHeader="cellHeader" />
+    <text-table-datatype :rowData="rowData" :cellHeader="cellHeader" :wrap="wrap" />
   </div>
   <div v-if="rowData?.row && cellHeader.datatype === 'number'" class="data-cell">
     {{ rowData.row[cellHeader.id] }}
@@ -31,7 +31,8 @@ export default defineComponent({
   components: { TextTableDatatype, RelationTableDatatype, ListTableDatatype },
   props: {
     rowData: Object,
-    cellHeader: Object
+    cellHeader: Object,
+    wrap: Boolean
   }
 });
 </script>

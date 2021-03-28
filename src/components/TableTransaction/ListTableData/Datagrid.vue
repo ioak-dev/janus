@@ -16,11 +16,19 @@
             <tr
               v-for="item in data"
               :key="item.id"
-              :class="chosenRecords.includes(item.id) ? 'active' : ''"
+              :class="selectedRecords.includes(item.id) ? 'active' : ''"
             >
               <td className="checkbox">
+                <oak-radio
+                  v-if="!multiselect"
+                  :value="selectedRecords.includes(item.id)"
+                  :name="item.id"
+                  color="secondary"
+                  @input-change="recordSelectedEvent"
+                ></oak-radio>
                 <oak-checkbox
-                  :value="chosenRecords.includes(item.id)"
+                  v-else
+                  :value="selectedRecords.includes(item.id)"
                   :name="item.id"
                   @input-change="toggleRecordSelectionEvent"
                   color="secondary"
@@ -28,14 +36,8 @@
               </td>
               <td><oak-link @link-click="goToView(item)" color="primary">Link-125</oak-link></td>
               <!-- <td @click="goToEdit(item)" v-for="column in columns" :key="column.id"> -->
-              <td
-                @click="
-                  $emit('record-toggled', item.id, !chosenRecords.includes(item.id) ? 'active' : '')
-                "
-                v-for="column in columns"
-                :key="column.id"
-              >
-                <datatype-table-view :rowData="item" :cellHeader="column" />
+              <td @click="handleRecordClick(item)" v-for="column in columns" :key="column.id">
+                <datatype-table-view :rowData="item" :cellHeader="column" :wrap="wrap" />
               </td>
             </tr>
             <tr v-if="data?.length === 0">
@@ -61,8 +63,10 @@ export default defineComponent({
   name: 'DataGrid',
   props: {
     id: String,
-    chosenRecords: Array,
-    dense: Boolean
+    selectedRecords: Array,
+    dense: Boolean,
+    multiselect: Boolean,
+    wrap: Boolean
   },
   components: { DatatypeTableView },
   computed: {
@@ -72,17 +76,28 @@ export default defineComponent({
     }
   },
   methods: {
-    goToCreate(event: any) {
-      this.$router.push(`/${this.getProfile.space}/app/create`);
-    },
-    goToEdit(record: any) {
-      this.$router.push(`/${this.getProfile.space}/table/${record.tableId}/data/edit/${record.id}`);
-    },
     goToView(record: any) {
-      this.$router.push(`/${this.getProfile.space}/table/${record.tableId}/data/view/${record.id}`);
+      this.$router.push(
+        `/${this.getProfile.space}/schema/${this.getProfile.schema}/table/${record.tableId}/record/${record.id}`
+      );
     },
     toggleRecordSelectionEvent(event: any) {
       this.$emit('record-toggled', event.detail.name, event.detail.value);
+    },
+    recordSelectedEvent(event: any) {
+      console.log(event.detail);
+      this.$emit('record-selected', event.detail.name);
+    },
+    handleRecordClick(record: any) {
+      if (this.multiselect) {
+        this.$emit(
+          'record-toggled',
+          record.id,
+          !this.selectedRecords?.includes(record.id) ? 'active' : ''
+        );
+      } else {
+        this.$emit('record-selected', record.id);
+      }
     }
   },
   setup(props) {

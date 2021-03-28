@@ -1,12 +1,18 @@
 <template>
   <oak-toolbar fillColor="container" borderVariant="both">
     <div slot="left">
-      <oak-form-actions-container>
-        <oak-link @link-click="goBack" block blockSize="xsmall" blockShape="sharp" color="default">
-          <font-awesome-icon :icon="['fas', 'arrow-left']" />
-        </oak-link>
+      <div class="app-toolbar-action">
+        <oak-button
+          theme="info"
+          :variant="dense ? 'regular' : 'block'"
+          size="xsmall"
+          shape="sharp"
+          @button-click="goBack"
+        >
+          <font-awesome-icon :icon="['fas', 'arrow-left']"
+        /></oak-button>
         <div>JANU-21 ({{ record?.id }})</div>
-      </oak-form-actions-container>
+      </div>
     </div>
     <div slot="right">right side</div>
   </oak-toolbar>
@@ -19,11 +25,7 @@ import { mapGetters } from 'vuex';
 export default defineComponent({
   name: 'Toolbar',
   props: {
-    tableId: String,
-    record: Object,
-    openEdit: Function,
-    closeEdit: Function,
-    isEdit: Boolean
+    record: Object
   },
   computed: {
     ...mapGetters(['getProfile'])

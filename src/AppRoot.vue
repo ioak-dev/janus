@@ -1,25 +1,36 @@
 <template>
   <div :class="getProfile.theme">
     <init />
-    <oak-app-layout topbarVariant="sticky" topbarColor="surface" topbarElevation="0">
+    <oak-app-layout
+      topbarVariant="sticky"
+      topbarColor="surface"
+      topbarElevation="0"
+      sidebarElevation="0"
+      sidebarColor="container"
+    >
       <div slot="topbar" class="topbar-container">
         <topbar />
       </div>
       <div slot="main" class="content-container">
         <router-view :key="$route.fullPath" />
       </div>
+      <div slot="sidebar" class="sidebar-container">
+        <sidebar />
+      </div>
     </oak-app-layout>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import Topbar from './components/navigation/Topbar.vue';
-import Init from './components/init/index.vue';
+import Sidebar from '@/components/navigation/Sidebar/index.vue';
+import Topbar from '@/components/navigation/Topbar.vue';
+import Init from '@/components/Init/index.vue';
 
 export default {
   name: 'AppRoot',
   components: {
     Topbar,
+    Sidebar,
     Init
   },
   computed: {

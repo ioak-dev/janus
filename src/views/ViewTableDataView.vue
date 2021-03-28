@@ -1,6 +1,6 @@
 <template>
   <div class="view-table-data-view">
-    <ViewTableData />
+    <ViewTableData :tableId="$route.params.tableId" :recordId="$route.params.recordId" />
   </div>
 </template>
 

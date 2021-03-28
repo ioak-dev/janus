@@ -1,6 +1,9 @@
+import { userAuthorizedSubject } from '@/events/UserAuthorizedEvent';
+
 const state = {
   theme: 'theme_dark',
   space: '',
+  schema: '',
   table: '',
   auth: {},
   sidebar: true
@@ -19,15 +22,20 @@ const actions = {
   setSpace({ commit }: any, space: any) {
     commit('UPDATE_PROFILE', { ...state, space });
   },
+  setSchema({ commit }: any, schema: any) {
+    commit('UPDATE_PROFILE', { ...state, schema });
+  },
   setTable({ commit }: any, table: any) {
     commit('UPDATE_PROFILE', { ...state, table });
   },
   addAuth({ commit, dispatch }: any, { auth }: any) {
     commit('UPDATE_PROFILE', { ...state, auth });
+    userAuthorizedSubject.next({ isAuth: true });
     // dispatch('fetchUsers');
     // dispatch('fetchRoles');
   },
   removeAuth({ commit }: any, cookies: any) {
+    userAuthorizedSubject.next({ isAuth: false });
     cookies.remove(`janus_${state.space}`);
     commit('UPDATE_PROFILE', { ...state, auth: {} });
   },
@@ -39,6 +47,8 @@ const actions = {
 const mutations = {
   UPDATE_PROFILE: (state: any, profile: any) => {
     state.theme = profile.theme;
+    state.schema = profile.schema;
+    state.table = profile.table;
     state.space = profile.space;
     state.auth = profile.auth;
     state.sidebar = profile.sidebar;

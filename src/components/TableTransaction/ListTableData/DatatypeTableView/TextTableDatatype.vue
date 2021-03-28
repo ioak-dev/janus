@@ -1,5 +1,5 @@
 <template>
-  <div class="text-table-datatype">
+  <div class="text-table-datatype" :class="wrap ? 'wrap-text' : ''">
     <text-view-datatype :rowData="rowData" :cellHeader="cellHeader" />
   </div>
 </template>
@@ -14,7 +14,8 @@ export default defineComponent({
   name: 'ListTableDatatype',
   props: {
     rowData: Object,
-    cellHeader: Object
+    cellHeader: Object,
+    wrap: Boolean
   }
 });
 </script>
@@ -25,10 +26,12 @@ export default defineComponent({
   white-space: normal;
   min-width: 100px;
   max-width: 200px;
-  div {
-    display: -webkit-box !important;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
+  &.wrap-text {
+    div {
+      display: -webkit-box !important;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
   }
 }
 </style>

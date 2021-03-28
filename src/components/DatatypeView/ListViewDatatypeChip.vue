@@ -7,13 +7,6 @@
     >
       <div class="list-view-datatype-chip__item__value">{{ option.value }}</div>
     </div>
-    <div
-      v-for="option in options"
-      :key="option.value"
-      :class="`list-view-datatype-chip__item indicator-chip-fill-color-${option.color}`"
-    >
-      <div class="list-view-datatype-chip__item__value">{{ option.value }}</div>
-    </div>
   </div>
 </template>
 
@@ -56,7 +49,7 @@ export default defineComponent({
 .list-view-datatype-chip__item {
   display: flex;
   gap: 4px;
-  padding: 4px 8px;
+  padding: 6px 8px;
   border-radius: 4px;
   font-size: 12px;
 }

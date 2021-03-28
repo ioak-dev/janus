@@ -26,14 +26,14 @@ export default defineComponent({
       console.log({
         space: this.getProfile.space,
         id: this.cellHeader?.meta?.tableId,
-        rowId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
+        recordId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
       });
       this.$router.push({
         name: 'ViewTableDataView',
         params: {
           space: this.getProfile.space,
-          id: this.cellHeader?.meta?.tableId,
-          rowId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
+          tableId: this.cellHeader?.meta?.tableId,
+          recordId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
         }
       });
     }

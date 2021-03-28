@@ -1,6 +1,12 @@
 .indicator-chip-fill-color-1 {
-  background-color: green;
+  background-color: var(--app-color-bg-1);
 }
 .indicator-chip-fill-color-2 {
-  background-color: red;
+  background-color: var(--app-color-bg-2);
+}
+.indicator-chip-fill-color-3 {
+  background-color: var(--app-color-bg-3);
+}
+.indicator-chip-fill-color-4 {
+  background-color: var(--app-color-bg-4);
 }

@@ -1,8 +1,7 @@
 <template>
   <div class="topbar">
     <div class="topbar__left">
-      <logo />
-      <nav-elements />
+      <schema-info />
     </div>
     <div class="topbar__right">
       <dark-mode-switch />
@@ -12,18 +11,16 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import Logo from '../Logo/Logo.vue';
 import DarkModeSwitch from './DarkModeSwitch.vue';
 import UserAccount from './UserAccount.vue';
-import NavElements from './NavElements.vue';
+import SchemaInfo from './Topbar/SchemaInfo.vue';
 
 export default {
   name: 'Topbar',
   components: {
-    NavElements,
-    Logo,
     DarkModeSwitch,
-    UserAccount
+    UserAccount,
+    SchemaInfo
   },
   computed: {
     ...mapGetters(['getProfile'])

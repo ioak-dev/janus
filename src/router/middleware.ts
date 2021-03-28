@@ -48,7 +48,6 @@ export function authenticate({ to, from, next, nextVue }: any) {
           }
         })
         .catch((error) => {
-          console.log(error.response.status);
           redirectToLogin(to.params.space);
         });
     } else {
@@ -62,8 +61,13 @@ export function readSpace({ to, from, next, nextVue }: any) {
   next();
 }
 
+export function readSchema({ to, from, next, nextVue }: any) {
+  store.dispatch('setSchema', to.params.schemaId);
+  next();
+}
+
 export function readTable({ to, from, next, nextVue }: any) {
-  store.dispatch('setTable', to.params.id);
+  store.dispatch('setTable', to.params.tableId);
   next();
 }
 

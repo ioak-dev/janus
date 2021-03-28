@@ -1,83 +1,39 @@
 <template>
   <div class="list-table-data">
-    <oak-toolbar fillColor="container" borderVariant="both">
-      <div slot="left">
-        <oak-form-actions-container>
-          <oak-button
-            theme="primary"
-            variant="appear"
-            shape="rectangle"
-            size="xsmall"
-            @button-click="goToCreate"
-            >Add data</oak-button
-          >
-          <oak-button
-            v-if="chosenRecords.length > 1"
-            theme="primary"
-            variant="appear"
-            shape="rectangle"
-            size="xsmall"
-            @button-click="goToCreate"
-            >Bulk edit</oak-button
-          >
-          <oak-button
-            v-if="chosenRecords.length === 1"
-            theme="primary"
-            variant="appear"
-            shape="rectangle"
-            size="xsmall"
-            @button-click="goToEdit"
-            >Edit</oak-button
-          >
-          <oak-button
-            v-if="chosenRecords.length > 0"
-            theme="danger"
-            variant="appear"
-            shape="rectangle"
-            size="xsmall"
-            @button-click="goToCreate"
-            >Delete</oak-button
-          >
-          <oak-button
-            v-if="chosenRecords.length > 0"
-            theme="default"
-            variant="block"
-            shape="rectangle"
-            size="xsmall"
-            @button-click="clearChosenRecords"
-            >Clear selection ({{ chosenRecords.length }})</oak-button
-          >
-        </oak-form-actions-container>
+    <toolbar
+      :table="table"
+      @toggle-dense-view="toggleDenseView"
+      :dense="dense"
+      :multiselect="multiselect"
+      @toggle-multiselect="toggleMultiselect"
+      :preview="preview"
+      @toggle-preview="togglePreview"
+      :wrap="wrap"
+      @toggle-wrap="toggleWrap"
+    />
+    <div class="list-table-data__container">
+      <div class="list-table-data__container__main">
+        <action-bar
+          :selectedRecords="selectedRecords"
+          @clear-selection="clearSelectedRecords"
+          @view="goToView"
+        />
+        <div class="list-table-data__container__main__datagrid">
+          <data-grid
+            :id="$route.params.tableId"
+            :selectedRecords="selectedRecords"
+            :dense="dense"
+            :multiselect="multiselect"
+            :wrap="wrap"
+            @record-toggled="handleRecordToggled"
+            @record-selected="handleRecordSelected"
+          />
+        </div>
       </div>
-      <div slot="right">
-        <oak-form-actions-container>
-          <oak-button
-            theme="default"
-            variant="appear"
-            shape="rectangle"
-            size="xsmall"
-            @button-click="goToCreate"
-            >Apply filter</oak-button
-          ></oak-form-actions-container
-        >
-      </div>
-    </oak-toolbar>
-    <div :class="headerSpacingStyle">
-      <div class="list-table-data__header">
-        <oak-typography v-if="!loading" :variant="dense ? 'h5' : 'h4'">{{
-          table.name
-        }}</oak-typography>
-        <oak-checkbox :value="dense" name="dense" @input-change="toggleDenseView"
-          >Compact view</oak-checkbox
-        >
+      <div :class="`list-table-data__container__side ${preview ? 'active' : ''}`">
+        <sidepane :table="table" :selectedRecords="selectedRecords" />
       </div>
     </div>
-    <data-grid
-      :id="$route.params.id"
-      :chosenRecords="chosenRecords"
-      :dense="dense"
-      @record-toggled="handleRecordToggled"
-    />
   </div>
 </template>
 
@@ -88,14 +44,17 @@ import { schemaTableByIdQuery } from '@/graphql/schemaTableById.query';
 import { useRoute } from 'vue-router';
 import { useQuery, useResult } from '@vue/apollo-composable';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
+import Toolbar from './Toolbar.vue';
 import DataGrid from './Datagrid.vue';
+import ActionBar from './ActionBar.vue';
+import Sidepane from './Sidepane.vue';
 
 export default defineComponent({
   name: 'ListTableData',
-  components: { DataGrid },
+  components: { DataGrid, Toolbar, ActionBar, Sidepane },
   computed: {
     ...mapGetters(['getProfile']),
-    headerSpacingStyle() {
+    datagridSpacingStyle() {
       if (this.dense) {
         return spacingCompose({ marginVertical: 3, marginHorizontal: 1 });
       }
@@ -104,36 +63,67 @@ export default defineComponent({
   },
   data() {
     return {
-      chosenRecords: [] as string[],
-      dense: false
+      selectedRecords: [] as string[],
+      dense: false,
+      multiselect: false,
+      preview: true,
+      wrap: true,
+      isSidePaneOpen: false
     };
   },
   methods: {
-    goToCreate(event: any) {
-      this.$router.push(`/${this.getProfile.space}/table/${this.$route.params.id}/data/create`);
-    },
-    goToEdit(record: any) {
+    goToCreate() {
       this.$router.push(
-        `/${this.getProfile.space}/table/${this.$route.params.id}/data/view/${this.chosenRecords[0]}`
+        `/${this.getProfile.space}/table/${this.$route.params.tableId}/data/create`
       );
     },
-    goToView(record: any) {
+    goToEdit() {
+      if (this.selectedRecords.length === 1) {
+        this.$router.push(
+          `/${this.getProfile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords[0]}`
+        );
+      } else if (this.selectedRecords.length > 1) {
+        this.$router.push(
+          `/${this.getProfile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords}`
+        );
+      }
+    },
+    goToView() {
       this.$router.push(
-        `/${this.getProfile.space}/table/${this.$route.params.id}/data/view/${this.chosenRecords[0]}`
+        `/${this.getProfile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords[0]}`
       );
     },
     toggleDenseView() {
       this.dense = !this.dense;
     },
-    handleRecordToggled(recordId: string, add: boolean) {
-      if (add) {
-        this.chosenRecords.push(recordId);
+    toggleMultiselect() {
+      if (this.multiselect) {
+        if (this.selectedRecords.length > 1) {
+          this.selectedRecords = [this.selectedRecords[this.selectedRecords.length - 1]];
+        }
+        this.multiselect = !this.multiselect;
       } else {
-        this.chosenRecords = this.chosenRecords.filter((item) => item !== recordId);
+        this.multiselect = !this.multiselect;
       }
     },
-    clearChosenRecords() {
-      this.chosenRecords = [];
+    togglePreview() {
+      this.preview = !this.preview;
+    },
+    toggleWrap() {
+      this.wrap = !this.wrap;
+    },
+    handleRecordToggled(recordId: string, add: boolean) {
+      if (add) {
+        this.selectedRecords = [...this.selectedRecords, recordId];
+      } else {
+        this.selectedRecords = this.selectedRecords.filter((item) => item !== recordId);
+      }
+    },
+    handleRecordSelected(recordId: string) {
+      this.selectedRecords = [recordId];
+    },
+    clearSelectedRecords() {
+      this.selectedRecords = [];
     }
   },
   setup(props) {
@@ -141,24 +131,51 @@ export default defineComponent({
     const schemaTableByIdQueryOutput = useQuery(
       schemaTableByIdQuery,
       ref({
-        id: route.params.id
+        id: route.params.tableId
       })
     );
     return {
       table: useResult(schemaTableByIdQueryOutput.result),
       loading: schemaTableByIdQueryOutput.loading
     };
+  },
+  watch: {
+    selectedRecords(newVal, oldVal) {
+      console.log(oldVal, newVal);
+      if (newVal.length > 0) {
+        this.isSidePaneOpen = true;
+      } else {
+        this.isSidePaneOpen = false;
+      }
+    }
   }
 });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.list-table-data {
-  .list-table-data__header {
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: space-between;
+.list-table-data__container {
+  overflow-x: hidden;
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+.list-table-data__container__main {
+  overflow-x: auto;
+}
+.list-table-data__container__main__datagrid {
+  margin-top: 20px;
+}
+
+.list-table-data__container__side {
+  width: 0px;
+  transition: width 250ms ease-in-out;
+  text-overflow: hidden;
+
+  &.active {
+    @media (min-width: 1000px) {
+      border-left: 1px solid var(--global-border-color);
+      width: 400px;
+    }
   }
 }
 </style>

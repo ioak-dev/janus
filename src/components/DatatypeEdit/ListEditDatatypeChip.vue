@@ -3,7 +3,6 @@
     :name="cellHeader.id"
     :label="cellHeader.name"
     :value="value"
-    :values="[value]"
     :options="cellHeader?.meta?.options?.map((item) => item.value)"
     @select-input="$emit('change', $event)"
     :formGroupName="formGroupName"
@@ -12,13 +11,6 @@
     gutterBottom
   />
   <div v-if="options" class="list-edit-datatype-chip">
-    <div
-      v-for="option in options"
-      :key="option.value"
-      :class="`list-edit-datatype-chip__item indicator-chip-fill-color-${option.color}`"
-    >
-      <div class="list-edit-datatype-chip__item__value">{{ option.value }}</div>
-    </div>
     <div
       v-for="option in options"
       :key="option.value"

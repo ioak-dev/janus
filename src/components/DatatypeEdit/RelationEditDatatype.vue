@@ -1,41 +1,95 @@
 <template>
-  <div v-if="rowData?.relation" class="relation-edit-datatype">
-    <oak-link @link-click="goToRecord">
-      <oak-typography variant="body2" underline="hover" color="primary">
-        {{ rowData?.relation[cellHeader?.id][0]?.row[cellHeader?.meta?.columnId] }}
-      </oak-typography>
-    </oak-link>
+  <div class="relation-edit-datatype">
+    <div>
+      <oak-typography variant="body2"> {{ cellHeader.name }}</oak-typography>
+    </div>
+    <div>
+      {{ value }}
+      <oak-link @link-click="openChoosePrompt" color="primary">Choose</oak-link>
+    </div>
   </div>
+  <oak-sheet
+    fillColor="global"
+    position="bottom"
+    sizeVertical="two-third"
+    sizeHorizontal="full"
+    :isOpen="showChoosePrompt"
+    @sheet-close="closeChoosePrompt"
+  >
+    <div class="sheet-container">
+      <app-section subtle>
+        <div slot>
+          <div class="app-action-bar">
+            <div>
+              <oak-button
+                theme="primary"
+                :variant="selectedRecords.length > 0 ? 'appear' : 'appear'"
+                shape="sharp"
+                @button-click="handleChange"
+                ><font-awesome-icon :icon="['fas', 'plus']" />Choose selected</oak-button
+              >
+            </div>
+          </div>
+        </div>
+      </app-section>
+      <datagrid
+        :id="cellHeader?.meta?.tableId"
+        :selectedRecords="selectedRecords"
+        @record-toggled="handleRecordToggled"
+        @record-selected="handleRecordSelected"
+      />
+    </div>
+  </oak-sheet>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { mapGetters } from 'vuex';
+import Datagrid from '@/components/TableTransaction/ListTableData/Datagrid.vue';
 
 export default defineComponent({
   name: 'RelationEditDatatype',
   computed: {
     ...mapGetters(['getProfile'])
   },
+  components: { Datagrid },
   props: {
-    rowData: Object,
-    cellHeader: Object
+    value: Object,
+    cellHeader: Object,
+    rowData: Object
+  },
+  data() {
+    return {
+      showChoosePrompt: false,
+      selectedRecords: [] as string[]
+    };
   },
   methods: {
-    goToRecord() {
-      console.log({
-        space: this.getProfile.space,
-        id: this.cellHeader?.meta?.tableId,
-        rowId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
-      });
-      this.$router.push({
-        name: 'ViewTableDataView',
-        params: {
-          space: this.getProfile.space,
-          id: this.cellHeader?.meta?.tableId,
-          rowId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
+    openChoosePrompt() {
+      this.showChoosePrompt = true;
+    },
+    closeChoosePrompt() {
+      this.showChoosePrompt = false;
+    },
+    handleRecordToggled(recordId: string, add: boolean) {
+      if (add) {
+        this.selectedRecords = [...this.selectedRecords, recordId];
+      } else {
+        this.selectedRecords = this.selectedRecords.filter((item) => item !== recordId);
+      }
+    },
+    handleRecordSelected(recordId: string) {
+      this.selectedRecords = [recordId];
+    },
+    handleChange() {
+      console.log(this.selectedRecords[0]);
+      this.$emit('change', {
+        detail: {
+          name: this.cellHeader?.id,
+          value: this.selectedRecords[0]
         }
       });
+      this.closeChoosePrompt();
     }
   }
 });
@@ -44,5 +98,9 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .relation-edit-datatype {
+}
+.sheet-container {
+  display: grid;
+  grid-auto-flow: row;
 }
 </style>

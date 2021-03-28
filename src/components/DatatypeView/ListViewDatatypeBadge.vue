@@ -9,15 +9,6 @@
       </div>
       <div class="list-view-datatype-badge__item__value">{{ option.value }}</div>
     </div>
-    <div v-for="option in options" :key="option.value" class="list-view-datatype-badge__item">
-      <div class="list-view-datatype-badge__item__indicator">
-        <font-awesome-icon
-          :class="`indicator-color-${option.color}`"
-          :icon="['fas', option.badge]"
-        />
-      </div>
-      <div class="list-view-datatype-badge__item__value">{{ option.value }}</div>
-    </div>
   </div>
 </template>
 

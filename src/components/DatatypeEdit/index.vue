@@ -7,9 +7,9 @@
       @change="$emit('change', $event)"
     />
   </div>
-  <div v-if="rowData?.row && cellHeader.datatype === 'number'" class="data-cell">
-    {{ rowData.row[cellHeader.id] }}
-  </div>
+  <!-- <div v-if="cellHeader.datatype === 'number'" class="data-cell">
+    {{ value }}
+  </div> -->
   <div v-if="cellHeader.datatype === 'list'" class="data-cell">
     <list-edit-datatype
       :value="value"
@@ -18,13 +18,15 @@
       @change="$emit('change', $event)"
     />
   </div>
-  <div v-if="rowData?.row && cellHeader.datatype === 'relation'" class="data-cell">
-    <relation-edit-datatype :rowData="rowData" :cellHeader="cellHeader" />
+  <div v-if="cellHeader.datatype === 'relation'" class="data-cell">
+    <relation-edit-datatype
+      :value="value"
+      :cellHeader="cellHeader"
+      :rowData="rowData"
+      @change="$emit('change', $event)"
+    />
   </div>
-  <div
-    v-if="!['text', 'number', 'list', 'relation'].includes(cellHeader.datatype)"
-    class="data-cell"
-  >
+  <div v-if="!['text', 'list', 'relation'].includes(cellHeader.datatype)" class="data-cell">
     datatype ({{ cellHeader.datatype }}) not supported
   </div>
 </template>
@@ -42,7 +44,8 @@ export default defineComponent({
   props: {
     formGroupName: String,
     value: Object,
-    cellHeader: Object
+    cellHeader: Object,
+    rowData: Object
   }
 });
 </script>

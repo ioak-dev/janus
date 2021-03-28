@@ -47,7 +47,7 @@ export default defineComponent({
       this.state = { ...this.state, [event.detail.name]: event.detail.value };
     },
     goToTable(event: any) {
-      this.$router.push(`/${this.getProfile.space}/table/${this.$route.params.id}`);
+      this.$router.push(`/${this.getProfile.space}/table/${this.$route.params.tableId}`);
     },
     handleSubmit(event: any) {
       console.log('***');
@@ -59,7 +59,7 @@ export default defineComponent({
     const allSchemaTableColumnQueryOutput = useQuery(
       allSchemaTableColumnQuery,
       ref({
-        tableId: route.params.id
+        tableId: route.params.tableId
       })
     );
     const columns = useResult(allSchemaTableColumnQueryOutput.result);
@@ -75,13 +75,13 @@ export default defineComponent({
         const data: any = cache.readQuery({
           query: allSchemaTableDataQuery,
           variables: {
-            tableId: route.params.id
+            tableId: route.params.tableId
           }
         });
         cache.writeQuery({
           query: allSchemaTableDataQuery,
           variables: {
-            tableId: route.params.id
+            tableId: route.params.tableId
           },
           data: {
             allSchemaTableData: [...data.allSchemaTableData, mutationResult.data.addSchemaTableData]
@@ -90,7 +90,7 @@ export default defineComponent({
       },
       variables: {
         payload: {
-          tableId: route.params.id,
+          tableId: route.params.tableId,
           row: state.value
         }
       }

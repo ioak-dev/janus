@@ -1,58 +1,17 @@
 <template>
-  <div class="view-table-data">
-    <toolbar
-      :tableId="$route.params.id"
-      :record="schemaTableDataByIdQueryResult"
-      :openEdit="openEdit"
-      :closeEdit="closeEdit"
-      :isEdit="isEdit"
-    />
-    <app-section subtle>
-      <div slot>
-        <action-bar
-          :record="schemaTableDataByIdQueryResult"
-          :isEdit="isEdit"
-          :openEdit="openEdit"
-          :closeEdit="closeEdit"
-        /></div
-    ></app-section>
-    <app-section v-if="!loading">
-      <div slot>
-        <view-detail
-          v-if="!isEdit"
-          :columnHeaders="allSchemaTableColumnQueryResult"
-          :rowData="schemaTableDataByIdQueryResult"
-        />
-        <edit-detail
-          v-else
-          :columnHeaders="allSchemaTableColumnQueryResult"
-          :rowData="schemaTableDataByIdQueryResult"
-          :closeEdit="closeEdit"
-        />
-      </div>
-    </app-section>
-    <app-section>
-      <div slot>
-        <div>Comments</div>
-      </div>
-    </app-section>
-  </div>
+  <toolbar :tableId="tableId" :record="schemaTableDataByIdQueryResult" />
+  <view-table-data-main :tableId="tableId" :recordId="recordId" />
 </template>
 
 <script lang="ts">
-import { allSchemaTableColumnQuery } from '@/graphql/allSchemaTableColumn.query';
 import { schemaTableDataByIdQuery } from '@/graphql/schemaTableDataById.query';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import { defineComponent, ref } from 'vue';
-import { useRoute } from 'vue-router';
 import { mapGetters } from 'vuex';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import { compose as sectionCompose } from '@oakui/core-stage/style-composer/OakSectionComposer';
-import AppSection from '@/components/ui/AppSection.vue';
 import Toolbar from './Toolbar.vue';
-import ActionBar from './ActionBar.vue';
-import ViewDetail from './ViewDetail.vue';
-import EditDetail from './EditDetail.vue';
+import ViewTableDataMain from './ViewTableDataMain.vue';
 
 export default defineComponent({
   name: 'ViewTableData',
@@ -81,12 +40,10 @@ export default defineComponent({
     };
   },
   components: {
-    Toolbar,
-    ActionBar,
-    ViewDetail,
-    EditDetail,
-    AppSection
+    ViewTableDataMain,
+    Toolbar
   },
+  props: { tableId: String, recordId: String },
   methods: {
     goBack() {
       this.$router.back();
@@ -98,30 +55,19 @@ export default defineComponent({
       this.isEdit = false;
     }
   },
-  setup() {
-    const route = useRoute();
-    const allSchemaTableColumnQueryOutput = useQuery(
-      allSchemaTableColumnQuery,
-      ref({
-        tableId: route.params.id
-      })
-    );
-    const allSchemaTableColumnQueryResult = useResult(allSchemaTableColumnQueryOutput.result);
-
+  setup(props) {
     const schemaTableDataByIdQueryOutput = useQuery(
       schemaTableDataByIdQuery,
       ref({
-        tableId: route.params.id,
-        id: route.params.rowId
+        tableId: props.tableId,
+        id: props.recordId
       })
     );
     const schemaTableDataByIdQueryResult = useResult(schemaTableDataByIdQueryOutput.result);
 
     return {
-      allSchemaTableColumnQueryResult,
       schemaTableDataByIdQueryResult,
-      schemaTableDataByIdQueryOutput,
-      loading: allSchemaTableColumnQueryOutput.loading || schemaTableDataByIdQueryOutput.loading
+      loading: schemaTableDataByIdQueryOutput.loading
     };
   }
 });

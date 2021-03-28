@@ -3,8 +3,14 @@
   fill: var(--color-1);
 }
 .indicator-color-1 {
-  color: green;
+  color: var(--app-color-bg-1);
 }
 .indicator-color-2 {
-  color: red;
+  color: var(--app-color-bg-2);
+}
+.indicator-color-3 {
+  color: var(--app-color-bg-3);
+}
+.indicator-color-4 {
+  color: var(--app-color-bg-4);
 }

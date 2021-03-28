@@ -1,31 +1,40 @@
 <template>
-  <oak-typography variant="h6">Details</oak-typography>
-  <div class="view-record-detail">
-    <div
-      class="view-record-detail__item"
-      v-for="(column, index) in columnHeaders"
-      :key="`${column.id}-${index}`"
-    >
-      <div class="view-record-detail__item__label">{{ column.name }}</div>
-      <div class="view-record-detail__item__value">
-        <datatype-view :rowData="rowData" :cellHeader="column" />
+  <action-bar-view :openEdit="openEdit" />
+  <app-section>
+    <div slot>
+      <div class="view-record-detail">
+        <div
+          class="view-record-detail__item"
+          v-for="(column, index) in columnHeaders"
+          :key="`${column.id}-${index}`"
+        >
+          <div class="view-record-detail__item__label">{{ column.name }}</div>
+          <div class="view-record-detail__item__value">
+            <datatype-view :rowData="rowData" :cellHeader="column" />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </app-section>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import AppSection from '@/components/ui/AppSection.vue';
 import DatatypeView from '../../DatatypeView/index.vue';
+import ActionBarView from './ActionBarView.vue';
 
 export default defineComponent({
   name: 'ViewDetail',
   components: {
-    DatatypeView
+    DatatypeView,
+    AppSection,
+    ActionBarView
   },
   props: {
     columnHeaders: Array,
-    rowData: Object
+    rowData: Object,
+    openEdit: Function
   }
 });
 </script>

@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Home from '../views/Home.vue';
 import Login from '../components/Auth/Login.vue';
+import ListSchemaView from '../views/ListSchemaView.vue';
 import ListTableView from '../views/ListTableView.vue';
 import CreateTableView from '../views/CreateTableView.vue';
 import ListTableDataView from '../views/ListTableDataView.vue';
 import CreateTableDataView from '../views/CreateTableDataView.vue';
 import ViewTableDataView from '../views/ViewTableDataView.vue';
-import EditTableDataView from '../views/EditTableDataView.vue';
+import ManageTableView from '../views/ManageTableView.vue';
 
 import {
   middlewarePipeline,
@@ -16,7 +17,8 @@ import {
   readTeam,
   readTask,
   projectAdministrator,
-  teamAdministrator
+  teamAdministrator,
+  readSchema
 } from './middleware';
 
 const routes: Array<RouteRecordRaw> = [
@@ -29,6 +31,15 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/:space/schema',
+    name: 'ListSchemaView',
+    component: ListSchemaView,
+    meta: {
+      context: 'schema',
+      middleware: [readSpace, authenticate]
+    }
   },
   {
     path: '/:space/table-management',
@@ -49,30 +60,39 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/:space/table/:id',
+    path: '/:space/schema/:schemaId/table/:tableId',
     name: 'ListTableDataView',
     component: ListTableDataView,
     meta: {
       context: 'table',
-      middleware: [readSpace, readTable, authenticate]
+      middleware: [readSpace, readSchema, readTable, authenticate]
     }
   },
   {
-    path: '/:space/table/:id/data/create',
+    path: '/:space/schema/:schemaId/table/:tableId/manage',
+    name: 'ManageTableView',
+    component: ManageTableView,
+    meta: {
+      context: 'table',
+      middleware: [readSpace, readSchema, readTable, authenticate]
+    }
+  },
+  {
+    path: '/:space/schema/:schemaId/table/:tableId/create',
     name: 'CreateTableDataView',
     component: CreateTableDataView,
     meta: {
       context: 'table',
-      middleware: [readSpace, readTable, authenticate]
+      middleware: [readSpace, readSchema, readTable, authenticate]
     }
   },
   {
-    path: '/:space/table/:id/data/view/:rowId',
+    path: '/:space/schema/:schemaId/table/:tableId/record/:recordId',
     name: 'ViewTableDataView',
     component: ViewTableDataView,
     meta: {
       context: 'table',
-      middleware: [readSpace, readTable, authenticate]
+      middleware: [readSpace, readSchema, readTable, authenticate]
     }
   }
 ];

@@ -7,13 +7,6 @@
     >
       <div class="list-view-datatype-chip-outline__item__value">{{ option.value }}</div>
     </div>
-    <div
-      v-for="option in options"
-      :key="option.value"
-      :class="`list-view-datatype-chip-outline__item indicator-chip-outline-color-${option.color}`"
-    >
-      <div class="list-view-datatype-chip-outline__item__value">{{ option.value }}</div>
-    </div>
   </div>
 </template>
 

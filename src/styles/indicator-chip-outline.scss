@@ -1,6 +1,12 @@
 .indicator-chip-outline-color-1 {
-  border: 1px solid green;
+  border: 1px solid var(--app-color-bg-1);
 }
 .indicator-chip-outline-color-2 {
-  border: 1px solid red;
+  border: 1px solid var(--app-color-bg-2);
+}
+.indicator-chip-outline-color-3 {
+  border: 1px solid var(--app-color-bg-3);
+}
+.indicator-chip-outline-color-4 {
+  border: 1px solid var(--app-color-bg-4);
 }

@@ -1,10 +1,9 @@
 <template>
   <div>
     <div class="table-listing">
-      <div v-if="loading">Loading...</div>
-      <div v-if="!loading && tables.allSchemaTable.length > 0">
-        <div v-for="table in tables.allSchemaTable" :key="table.id">
-          <oak-click-area @button-click="goToTable(table.id)">
+      <div>
+        <div v-for="table in getTable" :key="table.id">
+          <oak-click-area @click-area-click="goToTable(table.id)">
             <div class="table-listing__table-item">
               {{ table.name }}
             </div></oak-click-area
@@ -20,12 +19,11 @@ import { useQuery } from '@vue/apollo-composable';
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
 import { compose as dividerCompose } from '@oakui/core-stage/style-composer/OakDividerComposer';
-import { allSchemaTableQuery } from '../../../graphql/allTable.query';
 
 export default defineComponent({
   name: 'TableListing',
   computed: {
-    ...mapGetters(['getProfile']),
+    ...mapGetters(['getProfile', 'getTable']),
     dividerStyle() {
       return dividerCompose({ color: 'global', colorMode: 'darker' });
     }
@@ -37,13 +35,6 @@ export default defineComponent({
     goToTable(tableId: string) {
       this.$router.push(`/${this.getProfile.space}/table/${tableId}`);
     }
-  },
-  setup() {
-    const { result, loading, error } = useQuery(allSchemaTableQuery);
-    return {
-      tables: result,
-      loading
-    };
   }
 });
 </script>

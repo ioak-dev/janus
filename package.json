@@ -21,6 +21,7 @@
     "core-js": "^3.6.5",
     "graphql": "^15.5.0",
     "graphql-tag": "^2.11.0",
+    "rxjs": "^6.6.6",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue3-cookies": "^1.0.1",

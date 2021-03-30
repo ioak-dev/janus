@@ -1,24 +1,24 @@
 <template>
-  <div class="edit-detail">
-    <action-bar-edit :closeEdit="closeEdit" @save="handleSubmit" />
-    <app-section>
+  <div class="create-record">
+    <action-bar-create @save="handleSubmit" @close="$emit('close')" />
+    <app-section subtle>
       <div slot>
-        <div class="edit-table-detail">
-          <oak-form formGroupName="edit-table-detail-form" @form-submit="handleSubmit">
-            <div class="edit-table-detail__form">
+        <div class="create-record">
+          <oak-form formGroupName="create-record-form" @form-submit="handleSubmit">
+            <div class="create-record__form">
               <div
-                class="edit-table-detail__form__element"
+                class="create-record__form__element"
                 v-for="column in columnHeaders"
                 :key="column.id"
               >
-                <!-- <div class="edit-table-detail__form__element__label">{{ column.name }}</div> -->
-                <div class="edit-table-detail__form__element__value">
+                <!-- <div class="create-record__form__element__label">{{ column.name }}</div> -->
+                <div class="create-record__form__element__value">
                   <datatype-edit
                     :value="state[column.id]"
                     :rowData="rowData"
                     :cellHeader="column"
                     @change="handleChange"
-                    formGroupName="edit-table-detail-form"
+                    formGroupName="create-record-form"
                   />
                 </div>
               </div>
@@ -35,8 +35,9 @@ import { addSchemaTableDataMutation } from '@/graphql/addSchemaTableData.mutatio
 import { useMutation } from '@vue/apollo-composable';
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
+import { allSchemaTableDataQuery } from '@/graphql/allSchemaTableData.query';
 import AppSection from '@/components/ui/AppSection.vue';
-import ActionBarEdit from './ActionBarEdit.vue';
+import ActionBarCreate from './ActionBarCreate.vue';
 import DatatypeEdit from '../../DatatypeEdit/index.vue';
 
 export default defineComponent({
@@ -48,11 +49,38 @@ export default defineComponent({
     tableId: String,
     closeEdit: Function,
     columnHeaders: Array,
-    rowData: Object
+    record: Object
   },
-  components: { DatatypeEdit, AppSection, ActionBarEdit },
+  data() {
+    return {
+      state: {},
+      mutate: null as any
+    };
+  },
+  components: { DatatypeEdit, AppSection, ActionBarCreate },
   mounted() {
-    this.refreshStateValue();
+    const { mutate } = useMutation(addSchemaTableDataMutation, () => ({
+      update: (cache, mutationResult) => {
+        const data: any = cache.readQuery({
+          query: allSchemaTableDataQuery,
+          variables: {
+            tableId: this.tableId
+          }
+        });
+        cache.writeQuery({
+          query: allSchemaTableDataQuery,
+          variables: {
+            tableId: this.tableId
+          },
+          data: {
+            allSchemaTableData: data.allSchemaTableData.concat(
+              mutationResult.data.addSchemaTableData
+            )
+          }
+        });
+      }
+    }));
+    this.mutate = mutate;
   },
   methods: {
     handleChange(event: any) {
@@ -62,38 +90,25 @@ export default defineComponent({
     handleSubmit(event: any) {
       this.mutate({
         payload: {
-          id: this.rowData?.id,
           tableId: this.tableId,
           row: this.state
         }
-      }).then((response) => {
+      }).then(() => {
         if (this.closeEdit) {
           this.closeEdit();
         }
+        this.state = {};
         this.$emit('saved');
       });
-    },
-    refreshStateValue() {
-      if (this.columnHeaders && this.rowData) {
-        const localState: any = {};
-        this.columnHeaders.forEach((column: any) => {
-          localState[column.id] = this.rowData?.row[column.id];
-        });
-        this.state = { ...localState };
-      }
     }
   },
-  data() {
-    return {
-      state: {},
-      mutate: useMutation(addSchemaTableDataMutation, () => ({
-        variables: {}
-      })).mutate
-    };
-  },
   watch: {
-    columnHeaders() {
-      this.refreshStateValue();
+    record(newVal: any, oldVal: any) {
+      if (newVal?.row) {
+        this.state = { ...newVal.row };
+      } else {
+        this.state = {};
+      }
     }
   }
 });
@@ -101,25 +116,21 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.edit-detail {
+.create-record {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
-.edit-table-detail {
-}
-.edit-table-detail__form {
+.create-record__form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   column-gap: 20px;
 }
-.edit-table-detail__form__element {
+.create-record__form__element {
   display: flex;
   flex-direction: column;
 }
-.edit-table-detail__form__element__label {
+.create-record__form__element__label {
   font-weight: 600;
-}
-.edit-table-detail__form__element__value {
 }
 </style>

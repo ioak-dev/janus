@@ -2,7 +2,7 @@
   <div>
     <div class="table-listing">
       <div>
-        <div v-for="table in getTable" :key="table.id">
+        <div v-for="table in tables" :key="table.id">
           <oak-click-area @click-area-click="goToTable(table.id)">
             <div class="table-listing__table-item">
               {{ table.name }}
@@ -14,8 +14,7 @@
   </div>
 </template>
 
-<script lang="ts">
-import { useQuery } from '@vue/apollo-composable';
+<script>
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
 import { compose as dividerCompose } from '@oakui/core-stage/style-composer/OakDividerComposer';
@@ -23,17 +22,19 @@ import { compose as dividerCompose } from '@oakui/core-stage/style-composer/OakD
 export default defineComponent({
   name: 'TableListing',
   computed: {
-    ...mapGetters(['getProfile', 'getTable']),
+    ...mapGetters(['getSchema', 'getTableBySchema', 'getProfile']),
     dividerStyle() {
       return dividerCompose({ color: 'global', colorMode: 'darker' });
+    },
+    tables() {
+      return this.getTableBySchema(this.$route.params.schemaId);
     }
   },
   methods: {
-    goToCreate(event: any) {
-      this.$router.push(`/${this.getProfile.space}/table-management/create`);
-    },
-    goToTable(tableId: string) {
-      this.$router.push(`/${this.getProfile.space}/table/${tableId}`);
+    goToTable(tableId) {
+      this.$router.push(
+        `/${this.getProfile.space}/schema/${this.$route.params.schemaId}/table/${tableId}/manage`
+      );
     }
   }
 });

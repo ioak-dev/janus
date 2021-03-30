@@ -23,7 +23,9 @@ export default defineComponent({
   },
   methods: {
     goToCreate(event: any) {
-      this.$router.push(`/${this.getProfile.space}/table-management/create`);
+      this.$router.push(
+        `/${this.getProfile.space}/schema/${this.$route.params.schemaId}/createtable`
+      );
     }
   }
 });

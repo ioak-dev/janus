@@ -1,20 +1,27 @@
 <template>
   <div class="manage-table">
-    manage table
-    <field-listing :tableId="$route.params.tableId" />
+    <toolbar :table="table" />
+    <field-listing v-if="!isEdit" :tableId="$route.params.tableId" />
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
 import FieldListing from './FieldListing.vue';
+import Toolbar from './Toolbar.vue';
 
 export default defineComponent({
   name: 'ManageTable',
-  components: { FieldListing },
+  components: { FieldListing, Toolbar },
   computed: {
-    ...mapGetters(['getProfile'])
+    ...mapGetters(['getProfile', 'getTable']),
+    table() {
+      return this.getTable?.find((item) => item.id === this.$route.params.tableId);
+    }
+  },
+  data() {
+    return { isEdit: false };
   }
 });
 </script>

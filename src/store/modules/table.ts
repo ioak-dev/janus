@@ -3,8 +3,11 @@ const state = {
 };
 
 const getters = {
-  getTable: (state: any) => {
+  getTable: (state: any): any[] => {
     return state.data;
+  },
+  getTableBySchema: (state: any) => (schemaId: string) => {
+    return state.data.filter((item: any) => item.schemaId === schemaId);
   }
 };
 

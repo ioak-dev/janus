@@ -6,6 +6,15 @@
           <font-awesome-icon :icon="['fas', 'arrow-left']"
         /></oak-button>
         <div>{{ table?.name }}</div>
+        <oak-button
+          theme="info"
+          variant="block"
+          size="xsmall"
+          shape="sharp"
+          @button-click="goToManageTable"
+        >
+          <font-awesome-icon :icon="['fas', 'cog']"
+        /></oak-button>
       </div>
     </div>
     <div slot="right">
@@ -71,6 +80,11 @@ export default defineComponent({
   methods: {
     goBack() {
       this.$router.back();
+    },
+    goToManageTable() {
+      this.$router.push(
+        `/${this.getProfile.space}/schema/${this.$route.params.schemaId}/table/${this.$route.params.tableId}/manage`
+      );
     }
   }
 });

@@ -30,8 +30,8 @@ export default defineComponent({
           this.rowData?.row[this.cellHeader?.id].includes(item.value)
         );
       }
-      return this.cellHeader.meta.options.filter(
-        (item: any) => item.value === this.rowData?.row[this.cellHeader?.id]
+      return this.cellHeader.meta.options.filter((item: any) =>
+        this.rowData?.row[this.cellHeader?.id]?.includes(item.value)
       );
     }
   }

@@ -7,7 +7,7 @@
             theme="primary"
             :variant="selectedRecords.length > 0 ? 'appear' : 'appear'"
             shape="sharp"
-            @button-click="goToCreate"
+            @button-click="$emit('create')"
             ><font-awesome-icon :icon="['fas', 'plus']" />Create</oak-button
           >
           <oak-button
@@ -15,7 +15,7 @@
             theme="primary"
             variant="outline"
             shape="sharp"
-            @button-click="$emit('edit')"
+            @button-click="$emit('clone')"
             ><font-awesome-icon :icon="['fas', 'clone']" />Clone</oak-button
           >
           <oak-button

@@ -42,21 +42,21 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/:space/table-management',
+    path: '/:space/schema/:schemaId',
     name: 'ListTableView',
     component: ListTableView,
     meta: {
-      context: 'table',
-      middleware: [readSpace, authenticate]
+      context: 'schema',
+      middleware: [readSpace, readSchema, authenticate]
     }
   },
   {
-    path: '/:space/table-management/create',
+    path: '/:space/schema/:schemaId/create-table',
     name: 'CreateTableView',
     component: CreateTableView,
     meta: {
       context: 'table',
-      middleware: [readSpace, authenticate]
+      middleware: [readSpace, readSchema, authenticate]
     }
   },
   {

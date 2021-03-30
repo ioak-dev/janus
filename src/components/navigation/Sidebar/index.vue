@@ -4,9 +4,9 @@
     <user-profile />
     <div class="sidebar__container">
       <!-- <div class="sidebar-section__divider" /> -->
+      <primary-nav />
       <schema-nav />
       <!-- <div class="sidebar-section__divider" /> -->
-      <schema-nav />
       <static-nav />
     </div>
   </div>
@@ -17,6 +17,7 @@ import Header from './Header.vue';
 import UserProfile from './UserProfile.vue';
 import SchemaNav from './SchemaNav.vue';
 import StaticNav from './StaticNav.vue';
+import PrimaryNav from './PrimaryNav.vue';
 
 export default {
   name: 'Sidebar',
@@ -24,7 +25,8 @@ export default {
     Header,
     UserProfile,
     SchemaNav,
-    StaticNav
+    StaticNav,
+    PrimaryNav
   },
   computed: {
     ...mapGetters(['getProfile'])

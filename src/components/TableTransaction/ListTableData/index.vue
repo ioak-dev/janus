@@ -17,6 +17,8 @@
           :selectedRecords="selectedRecords"
           @clear-selection="clearSelectedRecords"
           @view="goToView"
+          @create="openCreateDialog"
+          @clone="openCloneDialog"
         />
         <div class="list-table-data__container__main__datagrid">
           <data-grid
@@ -35,6 +37,13 @@
       </div>
     </div>
   </div>
+  <create-record-prompt
+    v-if="table"
+    :isOpen="isCreatePaneOpen"
+    @close="closeCreateDialog"
+    :tableId="table.id"
+    :record="recordToClone"
+  />
 </template>
 
 <script lang="ts">
@@ -48,10 +57,11 @@ import Toolbar from './Toolbar.vue';
 import DataGrid from './Datagrid.vue';
 import ActionBar from './ActionBar.vue';
 import Sidepane from './Sidepane.vue';
+import CreateRecordPrompt from './CreateRecordPrompt.vue';
 
 export default defineComponent({
   name: 'ListTableData',
-  components: { DataGrid, Toolbar, ActionBar, Sidepane },
+  components: { DataGrid, Toolbar, ActionBar, Sidepane, CreateRecordPrompt },
   computed: {
     ...mapGetters(['getProfile']),
     datagridSpacingStyle() {
@@ -64,18 +74,28 @@ export default defineComponent({
   data() {
     return {
       selectedRecords: [] as string[],
+      selectedRecordsObject: [] as any[],
       dense: false,
       multiselect: false,
       preview: true,
       wrap: true,
-      isSidePaneOpen: false
+      isSidePaneOpen: false,
+      isCreatePaneOpen: false,
+      recordToClone: null
     };
   },
   methods: {
-    goToCreate() {
-      this.$router.push(
-        `/${this.getProfile.space}/table/${this.$route.params.tableId}/data/create`
-      );
+    openCreateDialog() {
+      this.recordToClone = null;
+      this.isCreatePaneOpen = true;
+    },
+    openCloneDialog() {
+      this.recordToClone =
+        this.selectedRecordsObject.length === 1 ? this.selectedRecordsObject[0] : null;
+      this.isCreatePaneOpen = true;
+    },
+    closeCreateDialog() {
+      this.isCreatePaneOpen = false;
     },
     goToEdit() {
       if (this.selectedRecords.length === 1) {
@@ -112,18 +132,24 @@ export default defineComponent({
     toggleWrap() {
       this.wrap = !this.wrap;
     },
-    handleRecordToggled(recordId: string, add: boolean) {
+    handleRecordToggled(record: any, add: boolean) {
       if (add) {
-        this.selectedRecords = [...this.selectedRecords, recordId];
+        this.selectedRecords = [...this.selectedRecords, record.id];
+        this.selectedRecordsObject = [...this.selectedRecordsObject, record];
       } else {
-        this.selectedRecords = this.selectedRecords.filter((item) => item !== recordId);
+        this.selectedRecords = this.selectedRecords.filter((item) => item !== record.id);
+        this.selectedRecordsObject = this.selectedRecordsObject.filter(
+          (item: any) => item !== record.id
+        );
       }
     },
-    handleRecordSelected(recordId: string) {
-      this.selectedRecords = [recordId];
+    handleRecordSelected(record: any) {
+      this.selectedRecords = [record.id];
+      this.selectedRecordsObject = [record];
     },
     clearSelectedRecords() {
       this.selectedRecords = [];
+      this.selectedRecordsObject = [];
     }
   },
   setup(props) {
@@ -174,7 +200,7 @@ export default defineComponent({
   &.active {
     @media (min-width: 1000px) {
       border-left: 1px solid var(--global-border-color);
-      width: 400px;
+      width: 360px;
     }
   }
 }

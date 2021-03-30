@@ -86,17 +86,18 @@ export default defineComponent({
     },
     recordSelectedEvent(event: any) {
       console.log(event.detail);
-      this.$emit('record-selected', event.detail.name);
+      const record = this.data.find((item: any) => item.id === event.detail.name);
+      this.$emit('record-selected', record);
     },
     handleRecordClick(record: any) {
       if (this.multiselect) {
         this.$emit(
           'record-toggled',
-          record.id,
+          record,
           !this.selectedRecords?.includes(record.id) ? 'active' : ''
         );
       } else {
-        this.$emit('record-selected', record.id);
+        this.$emit('record-selected', record);
       }
     }
   },

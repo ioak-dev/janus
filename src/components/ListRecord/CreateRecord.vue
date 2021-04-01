@@ -37,8 +37,8 @@ import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
 import { allSchemaTableDataQuery } from '@/graphql/allSchemaTableData.query';
 import AppSection from '@/components/ui/AppSection.vue';
+import DatatypeEdit from '@/components/DatatypeEdit/index.vue';
 import ActionBarCreate from './ActionBarCreate.vue';
-import DatatypeEdit from '../../DatatypeEdit/index.vue';
 
 export default defineComponent({
   name: 'EditDetail',

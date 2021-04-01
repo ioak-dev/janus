@@ -37,7 +37,7 @@ import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
 import AppSection from '@/components/ui/AppSection.vue';
 import ActionBarEdit from './ActionBarEdit.vue';
-import DatatypeEdit from '../../DatatypeEdit/index.vue';
+import DatatypeEdit from '../DatatypeEdit/index.vue';
 
 export default defineComponent({
   name: 'EditDetail',

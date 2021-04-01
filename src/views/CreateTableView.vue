@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import CreateTable from '@/components/TableManagement/CreateTable/index.vue';
+import CreateTable from '@/components/CreateTable/index.vue';
 
 export default defineComponent({
   name: 'CreateTableView',

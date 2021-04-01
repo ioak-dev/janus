@@ -1,6 +1,6 @@
 <template>
   <toolbar :tableId="tableId" :record="schemaTableDataByIdQueryResult" />
-  <view-table-data-main :tableId="tableId" :recordId="recordId" />
+  <view-record-main :tableId="tableId" :recordId="recordId" />
 </template>
 
 <script lang="ts">
@@ -11,10 +11,10 @@ import { mapGetters } from 'vuex';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import { compose as sectionCompose } from '@oakui/core-stage/style-composer/OakSectionComposer';
 import Toolbar from './Toolbar.vue';
-import ViewTableDataMain from './ViewTableDataMain.vue';
+import ViewRecordMain from './ViewRecordMain.vue';
 
 export default defineComponent({
-  name: 'ViewTableData',
+  name: 'ViewRecord',
   computed: {
     ...mapGetters(['getProfile']),
     mainSectionStyle() {
@@ -40,7 +40,7 @@ export default defineComponent({
     };
   },
   components: {
-    ViewTableDataMain,
+    ViewRecordMain,
     Toolbar
   },
   props: { tableId: String, recordId: String },

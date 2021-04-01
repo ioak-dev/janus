@@ -29,7 +29,7 @@ export default defineComponent({
         recordId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
       });
       this.$router.push({
-        name: 'ViewTableDataView',
+        name: 'ViewRecordView',
         params: {
           space: this.getProfile.space,
           tableId: this.cellHeader?.meta?.tableId,

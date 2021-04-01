@@ -1,6 +1,6 @@
 <template>
   <div>
-    <view-table-data-main
+    <view-record-main
       v-if="selectedRecords.length === 1"
       :tableId="table.id"
       :recordId="selectedRecords[0]"
@@ -15,11 +15,11 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import ViewTableDataMain from '@/components/TableTransaction/ViewTableData/ViewTableDataMain.vue';
+import ViewRecordMain from '@/components/ViewRecord/ViewRecordMain.vue';
 
 export default defineComponent({
   name: 'Sidepane',
-  components: { ViewTableDataMain },
+  components: { ViewRecordMain },
   props: {
     selectedRecords: Array,
     table: Object

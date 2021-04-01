@@ -45,7 +45,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { mapGetters } from 'vuex';
-import Datagrid from '@/components/TableTransaction/ListTableData/Datagrid.vue';
+import Datagrid from '@/components/ListRecord/Datagrid.vue';
 
 export default defineComponent({
   name: 'RelationEditDatatype',

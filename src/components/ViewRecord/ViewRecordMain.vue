@@ -1,5 +1,5 @@
 <template>
-  <div class="view-table-data-main">
+  <div class="view-record-main">
     <div v-if="!loading">
       <view-detail
         v-if="!isEdit"
@@ -37,7 +37,7 @@ import ViewDetail from './ViewDetail.vue';
 import EditDetail from './EditDetail.vue';
 
 export default defineComponent({
-  name: 'ViewTableDataMain',
+  name: 'ViewRecordMain',
   computed: {
     ...mapGetters(['getProfile', 'getColumnByTable']),
     columns() {
@@ -102,6 +102,6 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.view-table-data-main {
+.view-record-main {
 }
 </style>

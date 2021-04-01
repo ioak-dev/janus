@@ -5,6 +5,9 @@ const state = {
 const getters = {
   getSchema: (state: any) => {
     return state.data;
+  },
+  getSchemaById: (state: any) => (id: string) => {
+    return state.data.find((item: any) => item.id === id);
   }
 };
 

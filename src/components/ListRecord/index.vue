@@ -71,7 +71,7 @@ import Sidepane from './Sidepane.vue';
 import CreateRecordPrompt from './CreateRecordPrompt.vue';
 
 export default defineComponent({
-  name: 'ListTableData',
+  name: 'ListRecord',
   components: { DataGrid, Toolbar, ActionBar, Sidepane, CreateRecordPrompt, FilterPrompt },
   computed: {
     ...mapGetters(['getProfile']),

@@ -4,9 +4,8 @@ import Login from '../components/Auth/Login.vue';
 import ListSchemaView from '../views/ListSchemaView.vue';
 import ListTableView from '../views/ListTableView.vue';
 import CreateTableView from '../views/CreateTableView.vue';
-import ListTableDataView from '../views/ListTableDataView.vue';
-import CreateTableDataView from '../views/CreateTableDataView.vue';
-import ViewTableDataView from '../views/ViewTableDataView.vue';
+import ListRecordView from '../views/ListRecordView.vue';
+import ViewRecordView from '../views/ViewRecordView.vue';
 import ManageTableView from '../views/ManageTableView.vue';
 
 import {
@@ -61,8 +60,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/:space/schema/:schemaId/table/:tableId',
-    name: 'ListTableDataView',
-    component: ListTableDataView,
+    name: 'ListRecordView',
+    component: ListRecordView,
     meta: {
       context: 'table',
       middleware: [readSpace, readSchema, readTable, authenticate]
@@ -79,8 +78,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/:space/schema/:schemaId/table/:tableId/record/:recordId',
-    name: 'ViewTableDataView',
-    component: ViewTableDataView,
+    name: 'ViewRecordView',
+    component: ViewRecordView,
     meta: {
       context: 'table',
       middleware: [readSpace, readSchema, readTable, authenticate]

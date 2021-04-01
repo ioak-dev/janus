@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import AppSection from '@/components/ui/AppSection.vue';
-import DatatypeView from '../../DatatypeView/index.vue';
+import DatatypeView from '../DatatypeView/index.vue';
 import ActionBarView from './ActionBarView.vue';
 
 export default defineComponent({

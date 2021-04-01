@@ -19,14 +19,6 @@
             ><font-awesome-icon :icon="['fas', 'clone']" />Clone</oak-button
           >
           <oak-button
-            v-if="selectedRecords.length === 1"
-            theme="primary"
-            variant="outline"
-            shape="sharp"
-            @button-click="$emit('view')"
-            ><font-awesome-icon :icon="['fas', 'external-link-alt']" />Open</oak-button
-          >
-          <oak-button
             v-if="selectedRecords.length > 1"
             theme="primary"
             variant="outline"
@@ -39,7 +31,7 @@
             theme="danger"
             variant="outline"
             shape="sharp"
-            @button-click="goToCreate"
+            @button-click="$emit('delete')"
             ><font-awesome-icon :icon="['fas', 'trash-alt']" />Delete</oak-button
           >
           <oak-button
@@ -54,7 +46,12 @@
           >
         </div>
         <div>
-          <oak-button theme="default" variant="outline" shape="sharp" @button-click="goBack">
+          <oak-button
+            theme="default"
+            variant="outline"
+            shape="sharp"
+            @button-click="$emit('filter')"
+          >
             <font-awesome-icon :icon="['fas', 'filter']" />
             Filter</oak-button
           >

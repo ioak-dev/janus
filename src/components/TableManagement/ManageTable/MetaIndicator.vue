@@ -4,7 +4,7 @@
     name="indicator"
     label="Value display style"
     tooltip="How should the value shown?"
-    :value="meta.indicator"
+    :value="meta?.indicator"
     :options="['badge', 'chip', 'chip-outline']"
     @select-input="handleChange"
     autocompleteVariant="none"

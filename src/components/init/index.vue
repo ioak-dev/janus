@@ -5,6 +5,9 @@ import { allSchemaQuery } from '@/graphql/allSchema.query';
 import { userAuthorizedSubject } from '@/events/UserAuthorizedEvent';
 import { schemaChangedSubject } from '@/events/SchemaChangedEvent';
 import { allSchemaTableQuery } from '@/graphql/allSchemaTable.query';
+import { allSchemaTableColumnBySchemaIdQuery } from '@/graphql/allSchemaTableColumnBySchemaId.query';
+import { allSchemaTableFilterBySchemaIdQuery } from '@/graphql/allSchemaTableFilterBySchemaId.query';
+import { columnDefinitionChangedSubject } from '@/events/ColumnDefinitionChangedEvent';
 import { defaultClient } from '../../apollo';
 
 export default {
@@ -38,6 +41,17 @@ export default {
         this.fetchTable();
       }
     });
+    schemaChangedSubject.asObservable().subscribe((message) => {
+      if (message.id) {
+        this.fetchColumn(message.id);
+        this.fetchFilter(message.id);
+      }
+    });
+    columnDefinitionChangedSubject.asObservable().subscribe((message) => {
+      if (this.getProfile.schema) {
+        this.fetchSchema(this.getProfile.schema);
+      }
+    });
   },
   methods: {
     fetchSchema() {
@@ -48,7 +62,7 @@ export default {
         })
         .then((response) => {
           if (response) {
-            console.log(this.getProfile);
+            console.log(response.data.allSchema);
             store.dispatch('refreshSchema', response.data.allSchema);
             if (this.getProfile.schema && this.getProfile.schema !== '') {
               schemaChangedSubject.next({ id: this.getProfile.schema });
@@ -70,6 +84,43 @@ export default {
           console.log(response.data.allSchemaTable);
           if (response) {
             store.dispatch('refreshTable', response.data.allSchemaTable);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    fetchColumn(schemaId) {
+      defaultClient
+        .query({
+          query: allSchemaTableColumnBySchemaIdQuery,
+          variables: {
+            schemaId
+          }
+        })
+        .then((response) => {
+          console.log(response.data.allSchemaTableColumnBySchemaId);
+          if (response) {
+            store.dispatch('refreshColumn', response.data.allSchemaTableColumnBySchemaId);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    fetchFilter(schemaId) {
+      defaultClient
+        .query({
+          query: allSchemaTableFilterBySchemaIdQuery,
+          variables: {
+            schemaId
+          }
+        })
+        .then((response) => {
+          console.log('&&&&&&&&&&');
+          console.log(response.data.allSchemaTableFilterBySchemaId);
+          if (response) {
+            store.dispatch('refreshFilter', response.data.allSchemaTableFilterBySchemaId);
           }
         })
         .catch((error) => {

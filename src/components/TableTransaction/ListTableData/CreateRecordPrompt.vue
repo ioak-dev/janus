@@ -17,10 +17,9 @@
   </oak-sheet>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref } from 'vue';
-import { useQuery, useResult } from '@vue/apollo-composable';
-import { allSchemaTableColumnQuery } from '@/graphql/allSchemaTableColumn.query';
+import { mapGetters } from 'vuex';
 import CreateRecord from './CreateRecord.vue';
 
 export default defineComponent({
@@ -30,17 +29,11 @@ export default defineComponent({
   data() {
     return {};
   },
-  setup(props) {
-    const allSchemaTableColumnQueryOutput = useQuery(
-      allSchemaTableColumnQuery,
-      ref({
-        tableId: props.tableId
-      })
-    );
-    return {
-      columns: useResult(allSchemaTableColumnQueryOutput.result),
-      loading: allSchemaTableColumnQueryOutput.loading
-    };
+  computed: {
+    ...mapGetters(['getColumnByTable']),
+    columns() {
+      return this.getColumnByTable(this.tableId);
+    }
   }
 });
 </script>

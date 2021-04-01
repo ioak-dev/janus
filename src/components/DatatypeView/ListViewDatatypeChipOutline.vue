@@ -2,7 +2,7 @@
   <div v-if="options" class="list-view-datatype-chip-outline">
     <div
       v-for="option in options"
-      :key="option.value"
+      :key="option.id"
       :class="`list-view-datatype-chip-outline__item indicator-chip-outline-color-${option.color}`"
     >
       <div class="list-view-datatype-chip-outline__item__value">{{ option.value }}</div>
@@ -27,11 +27,11 @@ export default defineComponent({
       }
       if (this.cellHeader.meta.multiple) {
         return this.cellHeader.meta.options.filter((item: any) =>
-          this.rowData?.row[this.cellHeader?.id].includes(item.value)
+          this.rowData?.row[this.cellHeader?.id].includes(item.id)
         );
       }
       return this.cellHeader.meta.options.filter((item: any) =>
-        this.rowData?.row[this.cellHeader?.id]?.includes(item.value)
+        this.rowData?.row[this.cellHeader?.id]?.includes(item.id)
       );
     }
   }

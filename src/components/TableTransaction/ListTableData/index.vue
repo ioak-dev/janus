@@ -19,6 +19,8 @@
           @view="goToView"
           @create="openCreateDialog"
           @clone="openCloneDialog"
+          @delete="deleteSelectedRecords"
+          @filter="openFilterDialog"
         />
         <div class="list-table-data__container__main__datagrid">
           <data-grid
@@ -44,15 +46,24 @@
     :tableId="table.id"
     :record="recordToClone"
   />
+  <filter-prompt
+    v-if="table"
+    :isOpen="isFilterDialogOpen"
+    @close="closeFilterDialog"
+    :tableId="table.id"
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { mapGetters } from 'vuex';
 import { schemaTableByIdQuery } from '@/graphql/schemaTableById.query';
+import { deleteSchemaTableDataMutation } from '@/graphql/deleteSchemaTableData.mutation';
+import { allSchemaTableDataQuery } from '@/graphql/allSchemaTableData.query';
 import { useRoute } from 'vue-router';
-import { useQuery, useResult } from '@vue/apollo-composable';
+import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
+import FilterPrompt from '@/components/Filter/FilterPrompt.vue';
 import Toolbar from './Toolbar.vue';
 import DataGrid from './Datagrid.vue';
 import ActionBar from './ActionBar.vue';
@@ -61,7 +72,7 @@ import CreateRecordPrompt from './CreateRecordPrompt.vue';
 
 export default defineComponent({
   name: 'ListTableData',
-  components: { DataGrid, Toolbar, ActionBar, Sidepane, CreateRecordPrompt },
+  components: { DataGrid, Toolbar, ActionBar, Sidepane, CreateRecordPrompt, FilterPrompt },
   computed: {
     ...mapGetters(['getProfile']),
     datagridSpacingStyle() {
@@ -81,6 +92,7 @@ export default defineComponent({
       wrap: true,
       isSidePaneOpen: false,
       isCreatePaneOpen: false,
+      isFilterDialogOpen: false,
       recordToClone: null
     };
   },
@@ -96,6 +108,12 @@ export default defineComponent({
     },
     closeCreateDialog() {
       this.isCreatePaneOpen = false;
+    },
+    openFilterDialog() {
+      this.isFilterDialogOpen = true;
+    },
+    closeFilterDialog() {
+      this.isFilterDialogOpen = false;
     },
     goToEdit() {
       if (this.selectedRecords.length === 1) {
@@ -150,6 +168,12 @@ export default defineComponent({
     clearSelectedRecords() {
       this.selectedRecords = [];
       this.selectedRecordsObject = [];
+    },
+    deleteSelectedRecords() {
+      this.deleteRecords({ idList: this.selectedRecords }).then((response) => {
+        this.selectedRecords = [];
+        this.selectedRecordsObject = [];
+      });
     }
   },
   setup(props) {
@@ -160,8 +184,32 @@ export default defineComponent({
         id: route.params.tableId
       })
     );
+
+    const { mutate: deleteRecords } = useMutation(deleteSchemaTableDataMutation, () => ({
+      update: (cache, mutationResult) => {
+        const data: any = cache.readQuery({
+          query: allSchemaTableDataQuery,
+          variables: {
+            tableId: route.params.tableId
+          }
+        });
+        cache.writeQuery({
+          query: allSchemaTableDataQuery,
+          variables: {
+            tableId: route.params.tableId
+          },
+          data: {
+            allSchemaTableData: data.allSchemaTableData.filter(
+              (item: any) => !mutationResult.data.deleteSchemaTableData.idList.includes(item.id)
+            )
+          }
+        });
+      }
+    }));
+
     return {
       table: useResult(schemaTableByIdQueryOutput.result),
+      deleteRecords,
       loading: schemaTableByIdQueryOutput.loading
     };
   },

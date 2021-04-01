@@ -3,27 +3,21 @@
     :name="cellHeader.id"
     :label="cellHeader.name"
     :value="value"
-    :options="cellHeader?.meta?.options?.map((item) => item.value)"
+    :optionsAsKeyValue="
+      cellHeader?.meta?.options?.map((item) => {
+        return { id: item.id, value: item.value };
+      })
+    "
     @select-input="$emit('change', $event)"
     :formGroupName="formGroupName"
     autocompleteVariant="none"
     multiple
     gutterBottom
   />
-  <div v-if="options" class="list-edit-datatype-chip">
-    <div
-      v-for="option in options"
-      :key="option.value"
-      :class="`list-edit-datatype-chip__item indicator-chip-fill-color-${option.color}`"
-    >
-      <div class="list-edit-datatype-chip__item__value">{{ option.value }}</div>
-    </div>
-  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { mapGetters } from 'vuex';
 
 export default defineComponent({
   name: 'ListEditDatatypeChip',

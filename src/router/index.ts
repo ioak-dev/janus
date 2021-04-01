@@ -78,15 +78,6 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/:space/schema/:schemaId/table/:tableId/create',
-    name: 'CreateTableDataView',
-    component: CreateTableDataView,
-    meta: {
-      context: 'table',
-      middleware: [readSpace, readSchema, readTable, authenticate]
-    }
-  },
-  {
     path: '/:space/schema/:schemaId/table/:tableId/record/:recordId',
     name: 'ViewTableDataView',
     component: ViewTableDataView,

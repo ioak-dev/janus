@@ -50,8 +50,7 @@
   </div>
 </template>
 
-<script lang="ts">
-import { allSchemaTableColumnQuery } from '@/graphql/allSchemaTableColumn.query';
+<script>
 import { allSchemaTableDataQuery } from '@/graphql/allSchemaTableData.query';
 import { compose } from '@oakui/core-stage/style-composer/OakTableComposer';
 import { useQuery, useResult } from '@vue/apollo-composable';
@@ -70,26 +69,33 @@ export default defineComponent({
   },
   components: { DatatypeTableView },
   computed: {
-    ...mapGetters(['getProfile']),
-    tableStyle(): string {
+    ...mapGetters(['getProfile', 'getColumnByTable']),
+    columns() {
+      return this.getColumnByTable(this.id);
+    },
+    tableStyle() {
       return compose({ variant: 'outlined', fill: 'global', dense: this.dense });
     }
   },
   methods: {
-    goToView(record: any) {
+    goToView(record) {
       this.$router.push(
         `/${this.getProfile.space}/schema/${this.getProfile.schema}/table/${record.tableId}/record/${record.id}`
       );
     },
-    toggleRecordSelectionEvent(event: any) {
-      this.$emit('record-toggled', event.detail.name, event.detail.value);
+    toggleRecordSelectionEvent(event) {
+      const record = this.data.find((item) => item.id === event.detail.name);
+      this.$emit(
+        'record-toggled',
+        record,
+        !this.selectedRecords?.includes(record.id) ? 'active' : ''
+      );
     },
-    recordSelectedEvent(event: any) {
-      console.log(event.detail);
-      const record = this.data.find((item: any) => item.id === event.detail.name);
+    recordSelectedEvent(event) {
+      const record = this.data.find((item) => item.id === event.detail.name);
       this.$emit('record-selected', record);
     },
-    handleRecordClick(record: any) {
+    handleRecordClick(record) {
       if (this.multiselect) {
         this.$emit(
           'record-toggled',
@@ -102,12 +108,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const allSchemaTableColumnQueryOutput = useQuery(
-      allSchemaTableColumnQuery,
-      ref({
-        tableId: props.id
-      })
-    );
     const allSchemaTableDataQueryOutput = useQuery(
       allSchemaTableDataQuery,
       ref({
@@ -115,9 +115,8 @@ export default defineComponent({
       })
     );
     return {
-      columns: useResult(allSchemaTableColumnQueryOutput.result),
       data: useResult(allSchemaTableDataQueryOutput.result),
-      loading: allSchemaTableColumnQueryOutput.loading || allSchemaTableDataQueryOutput.loading
+      loading: allSchemaTableDataQueryOutput.loading
     };
   }
 });

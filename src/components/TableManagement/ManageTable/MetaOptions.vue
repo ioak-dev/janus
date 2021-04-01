@@ -57,6 +57,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { uuid } from 'uuidv4';
 
 export default defineComponent({
   name: 'MetaOptions',
@@ -81,7 +82,7 @@ export default defineComponent({
     },
     newOption() {
       if (this.meta?.options) {
-        this.emitChangeEvent([...this.meta?.options, {}]);
+        this.emitChangeEvent([...this.meta?.options, { id: uuid() }]);
       } else {
         this.emitChangeEvent([{}]);
       }

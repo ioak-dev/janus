@@ -5,14 +5,14 @@
         v-if="!isEdit"
         :openEdit="openEdit"
         :closeEdit="closeEdit"
-        :columnHeaders="allSchemaTableColumnQueryResult"
+        :columnHeaders="columns"
         :rowData="schemaTableDataByIdQueryResult"
       />
       <edit-detail
         v-else
         :openEdit="openEdit"
         :closeEdit="closeEdit"
-        :columnHeaders="allSchemaTableColumnQueryResult"
+        :columnHeaders="columns"
         :rowData="schemaTableDataByIdQueryResult"
         :tableId="tableId"
       />
@@ -25,24 +25,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import { allSchemaTableColumnQuery } from '@/graphql/allSchemaTableColumn.query';
+<script>
 import { schemaTableDataByIdQuery } from '@/graphql/schemaTableDataById.query';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import { defineComponent, ref, toRefs } from 'vue';
-import { useRoute } from 'vue-router';
 import { mapGetters } from 'vuex';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import { compose as sectionCompose } from '@oakui/core-stage/style-composer/OakSectionComposer';
 import AppSection from '@/components/ui/AppSection.vue';
-import Toolbar from './Toolbar.vue';
 import ViewDetail from './ViewDetail.vue';
 import EditDetail from './EditDetail.vue';
 
 export default defineComponent({
   name: 'ViewTableDataMain',
   computed: {
-    ...mapGetters(['getProfile']),
+    ...mapGetters(['getProfile', 'getColumnByTable']),
+    columns() {
+      return this.getColumnByTable(this.tableId);
+    },
     mainSectionStyle() {
       return sectionCompose({
         outlineColor: 'none',
@@ -84,13 +84,6 @@ export default defineComponent({
   },
   setup(props) {
     const propsRef = toRefs(props);
-    const allSchemaTableColumnQueryOutput = useQuery(
-      allSchemaTableColumnQuery,
-      ref({
-        tableId: propsRef.tableId
-      })
-    );
-    const allSchemaTableColumnQueryResult = useResult(allSchemaTableColumnQueryOutput.result);
 
     const schemaTableDataByIdQueryOutput = useQuery(schemaTableDataByIdQuery, {
       tableId: propsRef.tableId,
@@ -99,10 +92,9 @@ export default defineComponent({
     const schemaTableDataByIdQueryResult = useResult(schemaTableDataByIdQueryOutput.result);
 
     return {
-      allSchemaTableColumnQueryResult,
       schemaTableDataByIdQueryResult,
       schemaTableDataByIdQueryOutput,
-      loading: allSchemaTableColumnQueryOutput.loading || schemaTableDataByIdQueryOutput.loading
+      loading: schemaTableDataByIdQueryOutput.loading
     };
   }
 });

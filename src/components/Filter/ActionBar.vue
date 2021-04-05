@@ -1,35 +1,87 @@
 <template>
   <app-section subtle>
-    <div slot>
+    <div slot class="action-bar-footer">
       <div class="app-action-bar">
         <div>
-          <oak-button theme="primary" variant="regular" shape="sharp" @button-click="$emit('save')"
-            ><font-awesome-icon :icon="['fas', 'check']" />Save</oak-button
+          <oak-button
+            v-if="currentFilter.id || currentFilter.name"
+            theme="default"
+            variant="appear"
+            shape="sharp"
+            size="xsmall"
+            @button-click="$emit('save')"
+            ><font-awesome-icon :icon="['fas', 'plus']" />Save</oak-button
           >
-          <oak-button theme="default" variant="appear" shape="sharp" @button-click="$emit('close')"
-            ><font-awesome-icon :icon="['fas', 'times']" />Cancel</oak-button
+          <oak-button
+            v-if="!isFilterApplied"
+            theme="default"
+            variant="appear"
+            shape="sharp"
+            size="xsmall"
+            @button-click="$emit('apply')"
+            ><font-awesome-icon :icon="['fas', 'check']" />Apply</oak-button
+          >
+          <oak-button
+            v-if="isFilterApplied"
+            theme="default"
+            variant="outline"
+            shape="sharp"
+            size="xsmall"
+            @button-click="$emit('clear')"
+            ><font-awesome-icon :icon="['fas', 'times']" />Clear</oak-button
+          >
+          <oak-button
+            v-if="currentFilter.id"
+            theme="danger"
+            variant="outline"
+            shape="sharp"
+            size="xsmall"
+            @button-click="$emit('delete')"
+            ><font-awesome-icon :icon="['fas', 'trash-alt']" />Delete</oak-button
           >
         </div>
+      </div>
+      <div>
+        <filter-status :currentFilter="currentFilter" :appliedFilter="appliedFilter" />
       </div>
     </div>
   </app-section>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import AppSection from '@/components/ui/AppSection.vue';
+import { isEqual } from 'lodash';
+import FilterStatus from './FilterStatus.vue';
 
 export default defineComponent({
   name: 'ActionBar',
-  components: { AppSection },
-  computed: {
-    headerSpacingStyle() {
-      return spacingCompose({ marginVertical: 0, marginHorizontal: 2 });
-    }
+  components: { AppSection, FilterStatus },
+  props: { currentFilter: Object, appliedFilter: Object },
+  setup(props) {
+    const headerSpacingStyle = computed(() =>
+      spacingCompose({ marginVertical: 0, marginHorizontal: 2 })
+    );
+    const isFilterApplied = computed(() => {
+      console.log(
+        props.currentFilter,
+        props.appliedFilter,
+        isEqual(ref(props.currentFilter), ref(props.appliedFilter))
+      );
+      return isEqual(props.currentFilter, props.appliedFilter);
+    });
+
+    return { headerSpacingStyle, isFilterApplied };
   }
 });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.action-bar-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>

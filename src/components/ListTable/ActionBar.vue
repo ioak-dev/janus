@@ -1,18 +1,17 @@
 <template>
-  <app-section subtle>
-    <div slot>
-      <div class="app-action-bar">
-        <oak-button theme="primary" variant="regular" @button-click="goToCreate" shape="sharp"
-          ><font-awesome-icon :icon="['fas', 'plus']" />Create</oak-button
-        >
-      </div>
+  <teleport to="#toolbar-left">
+    <div>
+      <oak-click-area @click-area-click="goToCreate">
+        <div class="app-toolbar-action app-toolbar-action--primary">
+          <font-awesome-icon :icon="['fas', 'plus']" />Create
+        </div>
+      </oak-click-area>
     </div>
-  </app-section>
+  </teleport>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
-import AppSection from '@/components/ui/AppSection.vue';
 import { useStore } from 'vuex';
 
 export default defineComponent({
@@ -20,7 +19,6 @@ export default defineComponent({
   props: {
     selectedRecords: Array
   },
-  components: { AppSection },
   methods: {
     goToCreate(event: any) {
       this.$router.push(`/${this.profile.space}/schema/${this.$route.params.schemaId}/createtable`);

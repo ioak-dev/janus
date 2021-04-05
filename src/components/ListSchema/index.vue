@@ -1,11 +1,14 @@
 <template>
+  <teleport to="#toolbar-left">
+    <div>
+      <oak-click-area @click-area-click="goToCreate">
+        <div class="app-toolbar-action app-toolbar-action--primary">
+          <font-awesome-icon :icon="['fas', 'plus']" />Create
+        </div>
+      </oak-click-area>
+    </div>
+  </teleport>
   <div class="list-schema">
-    <oak-form-actions-container align="left">
-      <oak-button theme="primary" variant="regular" shape="sharp" @button-click="goToCreate"
-        >Create</oak-button
-      >
-    </oak-form-actions-container>
-    <oak-typography variant="h5">List of Schemas</oak-typography>
     <schema-listing />
   </div>
 </template>

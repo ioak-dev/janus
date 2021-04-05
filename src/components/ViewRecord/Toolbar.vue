@@ -1,7 +1,7 @@
 <template>
   <oak-toolbar fillColor="container" borderVariant="both">
     <div slot="left">
-      <div class="app-toolbar-action">
+      <div class="app-toolbar-action-container">
         <oak-button
           theme="info"
           :variant="dense ? 'regular' : 'block'"

@@ -11,8 +11,11 @@
   <div v-if="rowData?.row && cellHeader.datatype === 'relation'" class="data-cell">
     <relation-table-datatype :rowData="rowData" :cellHeader="cellHeader" />
   </div>
+  <div v-if="rowData?.row && cellHeader.datatype === 'user'" class="data-cell">
+    <user-table-datatype :rowData="rowData" :cellHeader="cellHeader" />
+  </div>
   <div
-    v-if="!['text', 'number', 'list', 'relation'].includes(cellHeader.datatype)"
+    v-if="!['text', 'number', 'list', 'relation', 'user'].includes(cellHeader.datatype)"
     class="data-cell"
   >
     datatype ({{ cellHeader.datatype }}) not supported
@@ -25,10 +28,11 @@ import { mapGetters } from 'vuex';
 import ListTableDatatype from './ListTableDatatype.vue';
 import RelationTableDatatype from './RelationTableDatatype.vue';
 import TextTableDatatype from './TextTableDatatype.vue';
+import UserTableDatatype from './UserTableDatatype.vue';
 
 export default defineComponent({
   name: 'DatatypeTableView',
-  components: { TextTableDatatype, RelationTableDatatype, ListTableDatatype },
+  components: { TextTableDatatype, RelationTableDatatype, ListTableDatatype, UserTableDatatype },
   props: {
     rowData: Object,
     cellHeader: Object,

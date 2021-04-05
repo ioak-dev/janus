@@ -1,14 +1,12 @@
 <template>
-  <oak-toolbar fillColor="container" borderVariant="both">
-    <div slot="left">
-      <div class="app-toolbar-action">
-        <oak-button theme="info" variant="block" size="xsmall" shape="sharp" @button-click="goBack">
-          <font-awesome-icon :icon="['fas', 'arrow-left']"
-        /></oak-button>
-        <div>{{ schema?.name }}</div>
-      </div>
+  <teleport to="#topbar-left">
+    <div class="app-toolbar-action-container">
+      <oak-button theme="info" variant="block" size="xsmall" shape="sharp" @button-click="goBack">
+        <font-awesome-icon :icon="['fas', 'arrow-left']"
+      /></oak-button>
+      <div>{{ schema?.name }}</div>
     </div>
-  </oak-toolbar>
+  </teleport>
 </template>
 
 <script lang="ts">

@@ -5,9 +5,12 @@ import { allSchemaQuery } from '@/graphql/allSchema.query';
 import { userAuthorizedSubject } from '@/events/UserAuthorizedEvent';
 import { schemaChangedSubject } from '@/events/SchemaChangedEvent';
 import { allSchemaTableQuery } from '@/graphql/allSchemaTable.query';
+import { userQuery } from '@/graphql/user.query';
 import { allSchemaTableColumnBySchemaIdQuery } from '@/graphql/allSchemaTableColumnBySchemaId.query';
 import { allSchemaTableFilterBySchemaIdQuery } from '@/graphql/allSchemaTableFilterBySchemaId.query';
 import { columnDefinitionChangedSubject } from '@/events/ColumnDefinitionChangedEvent';
+import { filterDefinitionChangedSubject } from '@/events/FilterDefinitionChangedEvent';
+import { httpGet } from '@/library/RestTemplate';
 import { defaultClient } from '../../apollo';
 
 export default {
@@ -35,10 +38,12 @@ export default {
     }
   },
   mounted() {
+    this.fetchSpace();
     userAuthorizedSubject.asObservable().subscribe((message) => {
       if (message.isAuth) {
         this.fetchSchema();
         this.fetchTable();
+        this.fetchUser();
       }
     });
     schemaChangedSubject.asObservable().subscribe((message) => {
@@ -52,8 +57,20 @@ export default {
         this.fetchSchema(this.getProfile.schema);
       }
     });
+    filterDefinitionChangedSubject.asObservable().subscribe((message) => {
+      if (this.getProfile.schema) {
+        this.fetchFilter(this.getProfile.schema);
+      }
+    });
   },
   methods: {
+    fetchSpace() {
+      httpGet('/space/introspect', null).then((response) => {
+        if (response.status === 200) {
+          store.dispatch('refreshSpace', response.data.data);
+        }
+      });
+    },
     fetchSchema() {
       defaultClient
         .query({
@@ -67,6 +84,23 @@ export default {
             if (this.getProfile.schema && this.getProfile.schema !== '') {
               schemaChangedSubject.next({ id: this.getProfile.schema });
             }
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    fetchUser() {
+      console.log('********************');
+      defaultClient
+        .query({
+          query: userQuery,
+          variables: {}
+        })
+        .then((response) => {
+          console.log(response.data.user);
+          if (response) {
+            store.dispatch('refreshUser', response.data.user);
           }
         })
         .catch((error) => {

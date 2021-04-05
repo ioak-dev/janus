@@ -3,58 +3,60 @@
     <app-section subtle>
       <div slot>
         <div>
-          <div v-for="filter in filters" :key="filter.id">
-            <oak-click-area @click-area-click="goToFilter(filter.id)">
-              <div class="filter-listing__filter-item">
-                {{ filter.name }}
-              </div></oak-click-area
-            >
-          </div>
+          <oak-select
+            name="operator"
+            fill="float"
+            label="Choose filter"
+            placeholder="Choose a filter"
+            :value="currentFilter.id"
+            :optionsAsKeyValue="filterList"
+            size="small"
+            @select-change="handleFilterChange"
+            gutterBottom="true"
+          />
+          <create-filter
+            :tableId="tableId"
+            :filter="currentFilter"
+            @change="$emit('change', $event)"
+          />
         </div>
       </div>
     </app-section>
   </div>
 </template>
 
-<script>
-import { computed, defineComponent } from 'vue';
+<script lang="ts">
+import { computed, defineComponent, ref } from 'vue';
 import { useStore } from 'vuex';
 import AppSection from '@/components/ui/AppSection.vue';
-import { useAddSchemaTableDataMutation } from './FilterService';
+import CreateFilter from './CreateFilter.vue';
 
 export default defineComponent({
   name: 'FilterListing',
   props: {
     tableId: String,
-    closeEdit: Function
+    currentFilter: Object,
+    appliedFilter: Object
   },
-  components: { AppSection },
+  components: { AppSection, CreateFilter },
   setup(props) {
     const store = useStore();
     const columns = computed(() => store.getters.getColumnByTable(props.tableId));
     const filters = computed(() => store.getters.getFilterByTable(props.tableId));
-    const tableMutate = useAddSchemaTableDataMutation(props.tableId);
+    const filterList = computed(() =>
+      store.getters.getFilterByTable(props.tableId).map((item: any) => {
+        return { id: item.id, value: item.name };
+      })
+    );
 
-    return { columns, filters, tableMutate };
+    return { columns, filters, filterList };
   },
   methods: {
-    handleChange(event) {
-      console.log(event);
-      this.state = { ...this.state, [event.detail.name]: event.detail.value };
-    },
-    handleSubmit(event) {
-      this.mutate({
-        payload: {
-          tableId: this.tableId,
-          row: this.state
-        }
-      }).then(() => {
-        if (this.closeEdit) {
-          this.closeEdit();
-        }
-        this.state = {};
-        this.$emit('saved');
-      });
+    handleFilterChange(event: any) {
+      this.$emit(
+        'change',
+        this.filters.find((item: any) => item.id === event.detail.value)
+      );
     }
   }
 });
@@ -72,10 +74,21 @@ export default defineComponent({
 .filter-listing__filter-item {
   padding: 10px 6px;
   width: 100%;
+  display: grid;
+  grid-template-columns: 12px 1fr;
+  column-gap: 6px;
+  align-items: center;
   // background-color: var(--color-container);
   &:hover {
     background-color: var(--color-primary-semitransparent2);
     cursor: pointer;
   }
+  border-bottom: 1px solid var(--color-global-darker);
+}
+
+.filter-listing__filter-item__check {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -11,6 +11,7 @@
       :tableId="tableId"
       :columnHeaders="columns"
       :record="record"
+      :filter="filter"
       @saved="$emit('close')"
       @close="$emit('close')"
     />
@@ -25,7 +26,7 @@ import CreateRecord from './CreateRecord.vue';
 export default defineComponent({
   components: { CreateRecord },
   name: 'CreateRecordPrompt',
-  props: { isOpen: Boolean, tableId: String, record: Object },
+  props: { isOpen: Boolean, tableId: String, record: Object, filter: Object },
   data() {
     return {};
   },

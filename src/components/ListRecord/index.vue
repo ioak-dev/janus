@@ -15,6 +15,7 @@
       <div class="list-table-data__container__main">
         <action-bar
           :selectedRecords="selectedRecords"
+          :multiselect="multiselect"
           @clear-selection="clearSelectedRecords"
           @view="goToView"
           @create="openCreateDialog"
@@ -29,6 +30,10 @@
             :dense="dense"
             :multiselect="multiselect"
             :wrap="wrap"
+            :filter="filter"
+            :isSelectAll="isSelectAll"
+            @select-none="clearSelectedRecords"
+            @select-all="selectAllRecords"
             @record-toggled="handleRecordToggled"
             @record-selected="handleRecordSelected"
           />
@@ -45,25 +50,30 @@
     @close="closeCreateDialog"
     :tableId="table.id"
     :record="recordToClone"
+    :filter="filter"
   />
   <filter-prompt
     v-if="table"
     :isOpen="isFilterDialogOpen"
+    :filter="filter"
     @close="closeFilterDialog"
+    @apply="handleApplyFilter"
+    @clear="handleClearFilter"
     :tableId="table.id"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { mapGetters } from 'vuex';
+import { computed, defineComponent, ref } from 'vue';
+import { mapGetters, useStore } from 'vuex';
 import { schemaTableByIdQuery } from '@/graphql/schemaTableById.query';
-import { deleteSchemaTableDataMutation } from '@/graphql/deleteSchemaTableData.mutation';
-import { allSchemaTableDataQuery } from '@/graphql/allSchemaTableData.query';
 import { useRoute } from 'vue-router';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
+import store from '@/store';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import FilterPrompt from '@/components/Filter/FilterPrompt.vue';
+import { deleteRecords } from '@/services/TableDataService';
+import { deleteSchemaTableDataMutation } from '@/graphql/deleteSchemaTableData.mutation';
 import Toolbar from './Toolbar.vue';
 import DataGrid from './Datagrid.vue';
 import ActionBar from './ActionBar.vue';
@@ -73,27 +83,19 @@ import CreateRecordPrompt from './CreateRecordPrompt.vue';
 export default defineComponent({
   name: 'ListRecord',
   components: { DataGrid, Toolbar, ActionBar, Sidepane, CreateRecordPrompt, FilterPrompt },
-  computed: {
-    ...mapGetters(['getProfile']),
-    datagridSpacingStyle() {
-      if (this.dense) {
-        return spacingCompose({ marginVertical: 3, marginHorizontal: 1 });
-      }
-      return spacingCompose({ marginVertical: 6, marginHorizontal: 1 });
-    }
-  },
   data() {
     return {
       selectedRecords: [] as string[],
       selectedRecordsObject: [] as any[],
-      dense: false,
-      multiselect: false,
+      multiselect: true,
       preview: true,
       wrap: true,
       isSidePaneOpen: false,
       isCreatePaneOpen: false,
       isFilterDialogOpen: false,
-      recordToClone: null
+      recordToClone: null,
+      filter: null,
+      isSelectAll: false
     };
   },
   methods: {
@@ -118,23 +120,24 @@ export default defineComponent({
     goToEdit() {
       if (this.selectedRecords.length === 1) {
         this.$router.push(
-          `/${this.getProfile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords[0]}`
+          `/${this.profile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords[0]}`
         );
       } else if (this.selectedRecords.length > 1) {
         this.$router.push(
-          `/${this.getProfile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords}`
+          `/${this.profile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords}`
         );
       }
     },
     goToView() {
       this.$router.push(
-        `/${this.getProfile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords[0]}`
+        `/${this.profile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords[0]}`
       );
     },
     toggleDenseView() {
       this.dense = !this.dense;
     },
     toggleMultiselect() {
+      this.isSelectAll = false;
       if (this.multiselect) {
         if (this.selectedRecords.length > 1) {
           this.selectedRecords = [this.selectedRecords[this.selectedRecords.length - 1]];
@@ -151,6 +154,7 @@ export default defineComponent({
       this.wrap = !this.wrap;
     },
     handleRecordToggled(record: any, add: boolean) {
+      this.isSelectAll = false;
       if (add) {
         this.selectedRecords = [...this.selectedRecords, record.id];
         this.selectedRecordsObject = [...this.selectedRecordsObject, record];
@@ -162,22 +166,45 @@ export default defineComponent({
       }
     },
     handleRecordSelected(record: any) {
-      this.selectedRecords = [record.id];
-      this.selectedRecordsObject = [record];
+      this.isSelectAll = false;
+      if (this.selectedRecords.includes(record.id)) {
+        this.selectedRecords = [];
+        this.selectedRecordsObject = [];
+      } else {
+        this.selectedRecords = [record.id];
+        this.selectedRecordsObject = [record];
+      }
     },
     clearSelectedRecords() {
       this.selectedRecords = [];
       this.selectedRecordsObject = [];
+      this.isSelectAll = false;
+    },
+    selectAllRecords(records: any[]) {
+      this.isSelectAll = true;
+      this.selectedRecords = records.map((item) => item.id);
+      this.selectedRecordsObject = records;
     },
     deleteSelectedRecords() {
-      this.deleteRecords({ idList: this.selectedRecords }).then((response) => {
+      this.remove({ idList: this.selectedRecords }).then((response) => {
+        store.dispatch('deleteRecord', response.data.deleteSchemaTableData.idList);
         this.selectedRecords = [];
         this.selectedRecordsObject = [];
+        this.isSelectAll = false;
       });
+    },
+    handleApplyFilter(filter: any) {
+      this.filter = filter;
+    },
+    handleClearFilter() {
+      this.filter = null;
     }
   },
-  setup(props) {
+  setup() {
+    const dense = ref(false);
     const route = useRoute();
+    const profile = computed(() => store.getters.getProfile);
+    const { mutate: remove } = useMutation(deleteSchemaTableDataMutation);
     const schemaTableByIdQueryOutput = useQuery(
       schemaTableByIdQuery,
       ref({
@@ -185,37 +212,24 @@ export default defineComponent({
       })
     );
 
-    const { mutate: deleteRecords } = useMutation(deleteSchemaTableDataMutation, () => ({
-      update: (cache, mutationResult) => {
-        const data: any = cache.readQuery({
-          query: allSchemaTableDataQuery,
-          variables: {
-            tableId: route.params.tableId
-          }
-        });
-        cache.writeQuery({
-          query: allSchemaTableDataQuery,
-          variables: {
-            tableId: route.params.tableId
-          },
-          data: {
-            allSchemaTableData: data.allSchemaTableData.filter(
-              (item: any) => !mutationResult.data.deleteSchemaTableData.idList.includes(item.id)
-            )
-          }
-        });
+    const datagridSpacingStyle = computed(() => {
+      if (dense.value) {
+        return spacingCompose({ marginVertical: 3, marginHorizontal: 1 });
       }
-    }));
+      return spacingCompose({ marginVertical: 6, marginHorizontal: 1 });
+    });
 
     return {
       table: useResult(schemaTableByIdQueryOutput.result),
-      deleteRecords,
+      profile,
+      dense,
+      remove,
+      datagridSpacingStyle,
       loading: schemaTableByIdQueryOutput.loading
     };
   },
   watch: {
-    selectedRecords(newVal, oldVal) {
-      console.log(oldVal, newVal);
+    selectedRecords(newVal, _) {
       if (newVal.length > 0) {
         this.isSidePaneOpen = true;
       } else {
@@ -237,7 +251,7 @@ export default defineComponent({
   overflow-x: auto;
 }
 .list-table-data__container__main__datagrid {
-  margin-top: 20px;
+  // margin-top: 20px;
 }
 
 .list-table-data__container__side {

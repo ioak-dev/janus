@@ -35,6 +35,7 @@ import { addSchemaTableDataMutation } from '@/graphql/addSchemaTableData.mutatio
 import { useMutation } from '@vue/apollo-composable';
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
+import store from '@/store';
 import AppSection from '@/components/ui/AppSection.vue';
 import ActionBarEdit from './ActionBarEdit.vue';
 import DatatypeEdit from '../DatatypeEdit/index.vue';
@@ -70,6 +71,7 @@ export default defineComponent({
         if (this.closeEdit) {
           this.closeEdit();
         }
+        store.dispatch('editRecord', response.data.addSchemaTableData);
         this.$emit('saved');
       });
     },

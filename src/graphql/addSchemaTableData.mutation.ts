@@ -6,6 +6,7 @@ export const addSchemaTableDataMutation = gql`
       id
       tableId
       row
+      relation
     }
   }
 `;

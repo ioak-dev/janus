@@ -2,10 +2,12 @@
   <div class="topbar">
     <div class="topbar__left">
       <schema-info />
+      <div id="topbar-left" />
     </div>
     <div class="topbar__right">
       <dark-mode-switch />
       <user-account />
+      <div id="topbar-right" />
     </div>
   </div>
 </template>

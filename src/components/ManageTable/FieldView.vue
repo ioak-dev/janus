@@ -39,18 +39,26 @@
             name="datatype"
             label="Datatype"
             :value="field.datatype"
-            :options="['text', 'number', 'list']"
+            :options="['text', 'number', 'list', 'relation', 'user']"
             @select-input="handleChange"
             autocompleteVariant="none"
             gutterBottom
           />
-          <oak-checkbox
-            name="multiple"
-            :value="field.multiple"
-            @input-input="handleChange"
-            gutterBottom
-            >Can have multiple values?</oak-checkbox
-          >
+          <meta-user-impersonate
+            v-if="field.datatype === 'user'"
+            :meta="field.meta"
+            @meta-change="handleChange"
+          />
+          <meta-relation
+            v-if="field.datatype === 'relation'"
+            :meta="field.meta"
+            @meta-change="handleChange"
+          />
+          <meta-multiple
+            v-if="['list', 'relation', 'user'].includes(field.datatype)"
+            :meta="field.meta"
+            @meta-change="handleChange"
+          />
           <meta-indicator
             v-if="field.datatype === 'list'"
             :meta="field.meta"
@@ -68,9 +76,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
+import { useStore } from 'vuex';
 import MetaIndicator from './MetaIndicator.vue';
 import MetaOptions from './MetaOptions.vue';
+import MetaRelation from './MetaRelation.vue';
+import MetaMultiple from './MetaMultiple.vue';
+import MetaUserImpersonate from './MetaUserImpersonate.vue';
 
 export default defineComponent({
   name: 'FieldView',
@@ -82,7 +94,7 @@ export default defineComponent({
   props: {
     field: Object
   },
-  components: { MetaOptions, MetaIndicator },
+  components: { MetaOptions, MetaIndicator, MetaRelation, MetaUserImpersonate, MetaMultiple },
   methods: {
     handleExpand() {
       this.isExpanded = true;

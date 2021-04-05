@@ -1,76 +1,55 @@
 <template>
-  <app-section subtle>
-    <div slot>
-      <div class="app-action-bar">
-        <div>
-          <oak-button
-            theme="primary"
-            :variant="selectedRecords.length > 0 ? 'appear' : 'appear'"
-            shape="sharp"
-            @button-click="$emit('create')"
-            ><font-awesome-icon :icon="['fas', 'plus']" />Create</oak-button
-          >
-          <oak-button
-            v-if="selectedRecords.length === 1"
-            theme="primary"
-            variant="outline"
-            shape="sharp"
-            @button-click="$emit('clone')"
-            ><font-awesome-icon :icon="['fas', 'clone']" />Clone</oak-button
-          >
-          <oak-button
-            v-if="selectedRecords.length > 1"
-            theme="primary"
-            variant="outline"
-            shape="sharp"
-            @button-click="$emit('edit')"
-            ><font-awesome-icon :icon="['fas', 'pencil-alt']" />Bulk edit</oak-button
-          >
-          <oak-button
-            v-if="selectedRecords.length > 0"
-            theme="danger"
-            variant="outline"
-            shape="sharp"
-            @button-click="$emit('delete')"
-            ><font-awesome-icon :icon="['fas', 'trash-alt']" />Delete</oak-button
-          >
-          <oak-button
-            v-if="selectedRecords.length > 0"
-            theme="default"
-            variant="outline"
-            shape="sharp"
-            @button-click="$emit('clear-selection')"
-            ><font-awesome-icon :icon="['fas', 'times']" />Clear ({{
-              selectedRecords.length
-            }})</oak-button
-          >
+  <teleport to="#toolbar-left">
+    <div class="app-toolbar-action-container">
+      <oak-click-area @click-area-click="$emit('create')">
+        <div class="app-toolbar-action app-toolbar-action--primary">
+          <font-awesome-icon :icon="['fas', 'plus']" />Create
         </div>
-        <div>
-          <oak-button
-            theme="default"
-            variant="outline"
-            shape="sharp"
-            @button-click="$emit('filter')"
-          >
-            <font-awesome-icon :icon="['fas', 'filter']" />
-            Filter</oak-button
-          >
+      </oak-click-area>
+      <oak-click-area v-if="selectedRecords.length === 1" @click-area-click="$emit('clone')">
+        <div class="app-toolbar-action app-toolbar-action--primary">
+          <font-awesome-icon :icon="['fas', 'clone']" />Clone
         </div>
-      </div>
+      </oak-click-area>
+      <oak-click-area v-if="selectedRecords.length > 1" @click-area-click="$emit('edit')">
+        <div class="app-toolbar-action app-toolbar-action--primary">
+          <font-awesome-icon :icon="['fas', 'pencil-alt']" />Bulk edit
+        </div>
+      </oak-click-area>
+      <oak-click-area v-if="selectedRecords.length > 0" @click-area-click="$emit('delete')">
+        <div class="app-toolbar-action app-toolbar-action--danger">
+          <font-awesome-icon :icon="['fas', 'trash-alt']" />Delete
+        </div>
+      </oak-click-area>
+      <oak-click-area
+        v-if="selectedRecords.length > 0 && multiselect"
+        @click-area-click="$emit('clear-selection')"
+      >
+        <div class="app-toolbar-action">
+          <font-awesome-icon :icon="['fas', 'times']" />Clear ({{ selectedRecords.length }})
+        </div>
+      </oak-click-area>
     </div>
-  </app-section>
+  </teleport>
+  <teleport to="#toolbar-right">
+    <div class="app-toolbar-action-container">
+      <div class="record-cound">24 records</div>
+      <oak-click-area @click-area-click="$emit('filter')">
+        <div class="app-toolbar-action"><font-awesome-icon :icon="['fas', 'filter']" />Filter</div>
+      </oak-click-area>
+    </div>
+  </teleport>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import AppSection from '@/components/ui/AppSection.vue';
 
 export default defineComponent({
   name: 'ActionBar',
   props: {
-    selectedRecords: Array
+    selectedRecords: Array,
+    multiselect: Boolean
   },
-  components: { AppSection },
   methods: {
     goBack() {
       this.$router.back();
@@ -80,4 +59,8 @@ export default defineComponent({
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.record-cound {
+  font-size: 12px;
+}
+</style>

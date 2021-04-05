@@ -1,41 +1,31 @@
 <template>
-  <app-section subtle>
-    <div slot>
-      <div class="app-action-bar">
-        <div>
-          <oak-button theme="primary" variant="appear" shape="sharp" @button-click="$emit('add')"
-            ><font-awesome-icon :icon="['fas', 'plus']" />Add column</oak-button
-          >
-          <oak-button
-            v-if="editing"
-            theme="primary"
-            variant="regular"
-            shape="sharp"
-            @button-click="$emit('save')"
-            ><font-awesome-icon :icon="['fas', 'check']" />Save</oak-button
-          >
-          <oak-button
-            v-if="editing"
-            theme="default"
-            variant="outline"
-            shape="sharp"
-            @button-click="$emit('reset')"
-            ><font-awesome-icon :icon="['fas', 'times']" />Reset</oak-button
-          >
+  <teleport to="#toolbar-left">
+    <div class="app-toolbar-action-container">
+      <oak-click-area @click-area-click="$emit('add')">
+        <div class="app-toolbar-action app-toolbar-action--primary">
+          <font-awesome-icon :icon="['fas', 'plus']" />Add column
         </div>
-      </div>
+      </oak-click-area>
+      <oak-click-area @click-area-click="$emit('save')" v-if="editing">
+        <div class="app-toolbar-action app-toolbar-action--primary">
+          <font-awesome-icon :icon="['fas', 'check']" />Save
+        </div>
+      </oak-click-area>
+      <oak-click-area @click-area-click="$emit('reset')" v-if="editing">
+        <div class="app-toolbar-action app-toolbar-action">
+          <font-awesome-icon :icon="['fas', 'times']" />Reset
+        </div>
+      </oak-click-area>
     </div>
-  </app-section>
+  </teleport>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
-import AppSection from '@/components/ui/AppSection.vue';
 
 export default defineComponent({
   name: 'ActionBar',
-  components: { AppSection },
   props: { editing: Boolean },
   computed: {
     headerSpacingStyle() {

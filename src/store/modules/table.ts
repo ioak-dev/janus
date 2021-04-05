@@ -8,6 +8,9 @@ const getters = {
   },
   getTableBySchema: (state: any) => (schemaId: string) => {
     return state.data.filter((item: any) => item.schemaId === schemaId);
+  },
+  getTableInCurrentSchema: (state: any, rootState: any) => {
+    return state.data.filter((item: any) => item.schemaId === rootState.getProfile.schema);
   }
 };
 

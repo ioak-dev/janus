@@ -1,30 +1,30 @@
 <template>
-  <oak-toolbar fillColor="container" borderVariant="both">
-    <div slot="left">
-      <div class="app-toolbar-action">
-        <oak-button
-          theme="info"
-          :variant="dense ? 'regular' : 'block'"
-          size="xsmall"
-          shape="sharp"
-          @button-click="goBack"
-        >
-          <font-awesome-icon :icon="['fas', 'arrow-left']"
-        /></oak-button>
-        <div>{{ table?.name }}</div>
-        <oak-button
-          theme="info"
-          :variant="dense ? 'regular' : 'block'"
-          size="xsmall"
-          shape="sharp"
-          @button-click="goToDatagrid"
-        >
-          <font-awesome-icon :icon="['fas', 'table']"
-        /></oak-button>
-      </div>
+  <teleport to="#topbar-left">
+    <div class="app-toolbar-action-container">
+      <oak-button
+        theme="info"
+        :variant="dense ? 'regular' : 'block'"
+        size="xsmall"
+        shape="sharp"
+        @button-click="goBack"
+      >
+        <font-awesome-icon :icon="['fas', 'arrow-left']"
+      /></oak-button>
+      <div>{{ table?.name }}</div>
+      <oak-button
+        theme="info"
+        :variant="dense ? 'regular' : 'block'"
+        size="xsmall"
+        shape="sharp"
+        @button-click="goToDatagrid"
+      >
+        <font-awesome-icon :icon="['fas', 'table']"
+      /></oak-button>
     </div>
-    <div slot="right">right side</div>
-  </oak-toolbar>
+  </teleport>
+  <teleport to="#topbar-right">
+    <div>right side</div>
+  </teleport>
 </template>
 
 <script>

@@ -4,7 +4,9 @@
       <oak-typography variant="body2"> {{ cellHeader.name }}</oak-typography>
     </div>
     <div>
-      {{ value }}
+      <div v-for="(item, index) in selectedRecordsObject" :key="index">
+        {{ item.row[cellHeader.meta.columnId] }}
+      </div>
       <oak-link @link-click="openChoosePrompt" color="primary">Choose</oak-link>
     </div>
   </div>
@@ -43,15 +45,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { mapGetters } from 'vuex';
+import { computed, defineComponent, reactive, ref } from 'vue';
+import { mapGetters, useStore } from 'vuex';
 import Datagrid from '@/components/ListRecord/Datagrid.vue';
 
 export default defineComponent({
   name: 'RelationEditDatatype',
-  computed: {
-    ...mapGetters(['getProfile'])
-  },
   components: { Datagrid },
   props: {
     value: Object,
@@ -61,8 +60,19 @@ export default defineComponent({
   data() {
     return {
       showChoosePrompt: false,
-      selectedRecords: [] as string[]
+      selectedRecords: [] as any[],
+      selectedRecordsObject: [] as any[]
     };
+  },
+  mounted() {
+    if (this.rowData?.relation[this.cellHeader?.id]?.length > 0) {
+      this.selectedRecordsObject = [...this.rowData?.relation[this.cellHeader?.id]];
+      if (this.selectedRecordsObject) {
+        this.selectedRecordsObject.forEach((item) => {
+          this.selectedRecords.push(item._id);
+        });
+      }
+    }
   },
   methods: {
     openChoosePrompt() {
@@ -71,18 +81,22 @@ export default defineComponent({
     closeChoosePrompt() {
       this.showChoosePrompt = false;
     },
-    handleRecordToggled(recordId: string, add: boolean) {
+    handleRecordToggled(record: any, add: boolean) {
       if (add) {
-        this.selectedRecords = [...this.selectedRecords, recordId];
+        this.selectedRecords = [...this.selectedRecords, record.id];
+        this.selectedRecordsObject = [...this.selectedRecords, record];
       } else {
-        this.selectedRecords = this.selectedRecords.filter((item) => item !== recordId);
+        this.selectedRecords = this.selectedRecords.filter((item) => item !== record.id);
+        this.selectedRecordsObject = this.selectedRecordsObject.filter(
+          (item) => item !== record.id
+        );
       }
     },
-    handleRecordSelected(recordId: string) {
-      this.selectedRecords = [recordId];
+    handleRecordSelected(record: any) {
+      this.selectedRecords = [record.id];
+      this.selectedRecordsObject = [record];
     },
     handleChange() {
-      console.log(this.selectedRecords[0]);
       this.$emit('change', {
         detail: {
           name: this.cellHeader?.id,
@@ -98,6 +112,7 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .relation-edit-datatype {
+  margin-bottom: 10px;
 }
 .sheet-container {
   display: grid;

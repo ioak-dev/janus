@@ -35,7 +35,9 @@ import { addSchemaTableDataMutation } from '@/graphql/addSchemaTableData.mutatio
 import { useMutation } from '@vue/apollo-composable';
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
+import store from '@/store';
 import { allSchemaTableDataQuery } from '@/graphql/allSchemaTableData.query';
+import { searchSchemaTableDataQuery } from '@/graphql/searchSchemaTableData.query';
 import AppSection from '@/components/ui/AppSection.vue';
 import DatatypeEdit from '@/components/DatatypeEdit/index.vue';
 import ActionBarCreate from './ActionBarCreate.vue';
@@ -49,7 +51,8 @@ export default defineComponent({
     tableId: String,
     closeEdit: Function,
     columnHeaders: Array,
-    record: Object
+    record: Object,
+    filter: Object
   },
   data() {
     return {
@@ -59,27 +62,7 @@ export default defineComponent({
   },
   components: { DatatypeEdit, AppSection, ActionBarCreate },
   mounted() {
-    const { mutate } = useMutation(addSchemaTableDataMutation, () => ({
-      update: (cache, mutationResult) => {
-        const data: any = cache.readQuery({
-          query: allSchemaTableDataQuery,
-          variables: {
-            tableId: this.tableId
-          }
-        });
-        cache.writeQuery({
-          query: allSchemaTableDataQuery,
-          variables: {
-            tableId: this.tableId
-          },
-          data: {
-            allSchemaTableData: data.allSchemaTableData.concat(
-              mutationResult.data.addSchemaTableData
-            )
-          }
-        });
-      }
-    }));
+    const { mutate } = useMutation(addSchemaTableDataMutation);
     this.mutate = mutate;
   },
   methods: {
@@ -88,12 +71,14 @@ export default defineComponent({
       this.state = { ...this.state, [event.detail.name]: event.detail.value };
     },
     handleSubmit(event: any) {
+      console.log('*******');
       this.mutate({
         payload: {
           tableId: this.tableId,
           row: this.state
         }
-      }).then(() => {
+      }).then((response: any) => {
+        store.dispatch('appendRecord', [response.data.addSchemaTableData]);
         if (this.closeEdit) {
           this.closeEdit();
         }

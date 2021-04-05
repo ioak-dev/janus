@@ -12,6 +12,10 @@
         <topbar />
       </div>
       <div slot="main" class="content-container">
+        <oak-toolbar fillColor="container" paddingHorizontal="1" paddingVertical="0">
+          <div slot="left" id="toolbar-left" />
+          <div slot="right" id="toolbar-right" />
+        </oak-toolbar>
         <router-view :key="$route.fullPath" />
       </div>
       <div slot="sidebar" class="sidebar-container">

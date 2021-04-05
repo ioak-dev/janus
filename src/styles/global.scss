@@ -10,15 +10,40 @@
   justify-content: space-between;
   div {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     flex-wrap: wrap;
   }
 }
 
-.app-toolbar-action {
+.app-toolbar-action-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 6px;
+  // gap: 6px;
   align-items: center;
+}
+
+.app-toolbar-action {
+  cursor: pointer;
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: 6px;
+  align-content: center;
+  height: calc(var(--oak-toolbar-min-height) - 4px);
+  padding: 0 10px;
+  border: 1px dotted transparent;
+  transition: border-color 250ms ease-in-out;
+  &:hover {
+    border-color: var(--color-default);
+  }
+  &.app-toolbar-action--primary {
+    &:hover {
+      border-color: var(--color-primary);
+    }
+  }
+  &.app-toolbar-action--danger {
+    &:hover {
+      border-color: var(--color-danger);
+    }
+  }
 }

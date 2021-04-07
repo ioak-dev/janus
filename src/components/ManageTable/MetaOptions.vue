@@ -22,23 +22,17 @@
           @input-input="handleChange($event, option, index)"
           gutterBottom
         />
-        <oak-input
-          fill="global"
-          size="xsmall"
-          name="color"
+        <color-swatch
           label="Color"
+          name="color"
           :value="option.color"
-          @input-input="handleChange($event, option, index)"
-          gutterBottom
+          @change="handleChange($event, option, index)"
         />
-        <oak-input
-          fill="global"
-          size="xsmall"
+        <icon-swatch
+          label="Badge"
           name="badge"
-          label="Badge or Icon"
           :value="option.badge"
-          @input-input="handleChange($event, option, index)"
-          gutterBottom
+          @change="handleChange($event, option, index)"
         />
         <oak-form-actions-container align="left">
           <oak-button
@@ -58,9 +52,12 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { uuid } from 'uuidv4';
+import ColorSwatch from '@/components/ColorSwatch/index.vue';
+import IconSwatch from '@/components/IconSwatch/index.vue';
 
 export default defineComponent({
   name: 'MetaOptions',
+  components: { ColorSwatch, IconSwatch },
   data() {
     return {
       isExpanded: false

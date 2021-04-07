@@ -7,10 +7,11 @@ import filter from './modules/filter';
 import record from './modules/record';
 import space from './modules/space';
 import user from './modules/user';
+import faicon from './modules/faicon';
 
 export default createStore({
   state: {},
   mutations: {},
   actions: {},
-  modules: { profile, schema, table, column, filter, record, space, user }
+  modules: { profile, schema, table, column, filter, record, space, user, faicon }
 });

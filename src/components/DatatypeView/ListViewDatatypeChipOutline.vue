@@ -3,7 +3,7 @@
     <div
       v-for="option in options"
       :key="option.id"
-      :class="`list-view-datatype-chip-outline__item indicator-chip-outline-color-${option.color}`"
+      :class="`list-view-datatype-chip-outline__item  app-swatch-outline-${option.color}`"
     >
       <div class="list-view-datatype-chip-outline__item__value">{{ option.value }}</div>
     </div>

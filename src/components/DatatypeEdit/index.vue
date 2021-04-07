@@ -23,6 +23,7 @@
       :value="value"
       :cellHeader="cellHeader"
       :rowData="rowData"
+      :formGroupName="formGroupName"
       @change="$emit('change', $event)"
     />
   </div>
@@ -31,25 +32,44 @@
       :value="value"
       :cellHeader="cellHeader"
       :rowData="rowData"
+      :formGroupName="formGroupName"
       @change="$emit('change', $event)"
     />
   </div>
-  <div v-if="!['text', 'list', 'relation', 'user'].includes(cellHeader.datatype)" class="data-cell">
+  <div v-if="cellHeader.datatype === 'percentage'" class="data-cell">
+    <percentage-edit-datatype
+      :value="value"
+      :cellHeader="cellHeader"
+      :rowData="rowData"
+      :formGroupName="formGroupName"
+      @change="$emit('change', $event)"
+    />
+  </div>
+  <div
+    v-if="!['text', 'list', 'relation', 'user', 'percentage'].includes(cellHeader.datatype)"
+    class="data-cell"
+  >
     datatype ({{ cellHeader.datatype }}) not supported
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { mapGetters } from 'vuex';
 import ListEditDatatype from './ListEditDatatype.vue';
 import RelationEditDatatype from './RelationEditDatatype.vue';
 import TextEditDatatype from './TextEditDatatype.vue';
 import UserEditDatatype from './UserEditDatatype.vue';
+import PercentageEditDatatype from './PercentageEditDatatype.vue';
 
 export default defineComponent({
   name: 'DatatypeEdit',
-  components: { TextEditDatatype, RelationEditDatatype, ListEditDatatype, UserEditDatatype },
+  components: {
+    TextEditDatatype,
+    RelationEditDatatype,
+    ListEditDatatype,
+    UserEditDatatype,
+    PercentageEditDatatype
+  },
   props: {
     formGroupName: String,
     value: Object,

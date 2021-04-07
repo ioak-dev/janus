@@ -15,6 +15,8 @@ import '@oakui/core-stage';
 import { defaultClient } from './apollo';
 
 library.add(fas);
+library.add(far);
+library.add(fab);
 
 // Create the default apollo client
 // const defaultClient = new ApolloClient({

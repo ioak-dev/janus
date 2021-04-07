@@ -11,6 +11,7 @@ import { allSchemaTableFilterBySchemaIdQuery } from '@/graphql/allSchemaTableFil
 import { columnDefinitionChangedSubject } from '@/events/ColumnDefinitionChangedEvent';
 import { filterDefinitionChangedSubject } from '@/events/FilterDefinitionChangedEvent';
 import { httpGet } from '@/library/RestTemplate';
+import IconsList from '@/components/IconSwatch/IconsList.json';
 import { defaultClient } from '../../apollo';
 
 export default {
@@ -39,6 +40,7 @@ export default {
   },
   mounted() {
     this.fetchSpace();
+    this.fetchIcon();
     userAuthorizedSubject.asObservable().subscribe((message) => {
       if (message.isAuth) {
         this.fetchSchema();
@@ -70,6 +72,9 @@ export default {
           store.dispatch('refreshSpace', response.data.data);
         }
       });
+    },
+    fetchIcon() {
+      store.dispatch('refreshIcon', IconsList.icons);
     },
     fetchSchema() {
       defaultClient
@@ -151,8 +156,6 @@ export default {
           }
         })
         .then((response) => {
-          console.log('&&&&&&&&&&');
-          console.log(response.data.allSchemaTableFilterBySchemaId);
           if (response) {
             store.dispatch('refreshFilter', response.data.allSchemaTableFilterBySchemaId);
           }

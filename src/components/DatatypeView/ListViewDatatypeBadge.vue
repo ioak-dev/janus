@@ -2,10 +2,7 @@
   <div v-if="options" class="list-view-datatype-badge">
     <div v-for="option in options" :key="option.id" class="list-view-datatype-badge__item">
       <div class="list-view-datatype-badge__item__indicator">
-        <font-awesome-icon
-          :class="`indicator-color-${option.color}`"
-          :icon="['fas', option.badge]"
-        />
+        <font-awesome-icon :class="`app-swatch-bg-i-${option.color}`" :icon="option.badge" />
       </div>
       <div class="list-view-datatype-badge__item__value">{{ option.value }}</div>
     </div>

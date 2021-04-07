@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serveprod": "vue-cli-service serve --mode production",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
@@ -18,17 +19,22 @@
     "@oakui/core-stage": "file:oakui-core-stage-1.0.0.tgz",
     "@types/lodash": "^4.14.168",
     "@vue/apollo-composable": "^4.0.0-alpha.12",
+    "@vue/component-compiler-utils": "^3.2.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "graphql": "^15.5.0",
     "graphql-tag": "^2.11.0",
     "lodash": "^4.17.21",
     "rxjs": "^6.6.6",
+    "tinycolor2": "^1.4.2",
     "uuidv4": "^6.2.7",
     "vue": "^3.0.0",
+    "vue-loader": "^16.0.0-beta.8",
     "vue-router": "^4.0.0-0",
+    "vue-template-compiler": "^2.6.10",
     "vue3-cookies": "^1.0.1",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "webpack-chain": "^6.5.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.19",
@@ -41,7 +47,7 @@
     "@vue/cli-plugin-unit-jest": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/compiler-sfc": "^3.0.11",
     "@vue/eslint-config-airbnb": "^5.0.2",
     "@vue/eslint-config-typescript": "^5.0.2",
     "@vue/test-utils": "^2.0.0-0",

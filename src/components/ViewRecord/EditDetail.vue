@@ -61,19 +61,22 @@ export default defineComponent({
       this.state = { ...this.state, [event.detail.name]: event.detail.value };
     },
     handleSubmit(event: any) {
-      this.mutate({
-        payload: {
-          id: this.rowData?.id,
-          tableId: this.tableId,
-          row: this.state
-        }
-      }).then((response) => {
-        if (this.closeEdit) {
-          this.closeEdit();
-        }
-        store.dispatch('editRecord', response.data.addSchemaTableData);
-        this.$emit('saved');
-      });
+      console.log(event.detail);
+      if (event.detail.isValid) {
+        this.mutate({
+          payload: {
+            id: this.rowData?.id,
+            tableId: this.tableId,
+            row: this.state
+          }
+        }).then((response) => {
+          if (this.closeEdit) {
+            this.closeEdit();
+          }
+          store.dispatch('editRecord', response.data.addSchemaTableData);
+          this.$emit('saved');
+        });
+      }
     },
     refreshStateValue() {
       if (this.columnHeaders && this.rowData) {

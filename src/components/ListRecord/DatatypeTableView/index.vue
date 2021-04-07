@@ -14,8 +14,13 @@
   <div v-if="rowData?.row && cellHeader.datatype === 'user'" class="data-cell">
     <user-table-datatype :rowData="rowData" :cellHeader="cellHeader" />
   </div>
+  <div v-if="rowData?.row && cellHeader.datatype === 'percentage'" class="data-cell">
+    <percentage-table-datatype :rowData="rowData" :cellHeader="cellHeader" />
+  </div>
   <div
-    v-if="!['text', 'number', 'list', 'relation', 'user'].includes(cellHeader.datatype)"
+    v-if="
+      !['text', 'number', 'list', 'relation', 'user', 'percentage'].includes(cellHeader.datatype)
+    "
     class="data-cell"
   >
     datatype ({{ cellHeader.datatype }}) not supported
@@ -29,10 +34,17 @@ import ListTableDatatype from './ListTableDatatype.vue';
 import RelationTableDatatype from './RelationTableDatatype.vue';
 import TextTableDatatype from './TextTableDatatype.vue';
 import UserTableDatatype from './UserTableDatatype.vue';
+import PercentageTableDatatype from './PercentageTableDatatype.vue';
 
 export default defineComponent({
   name: 'DatatypeTableView',
-  components: { TextTableDatatype, RelationTableDatatype, ListTableDatatype, UserTableDatatype },
+  components: {
+    TextTableDatatype,
+    RelationTableDatatype,
+    ListTableDatatype,
+    UserTableDatatype,
+    PercentageTableDatatype
+  },
   props: {
     rowData: Object,
     cellHeader: Object,

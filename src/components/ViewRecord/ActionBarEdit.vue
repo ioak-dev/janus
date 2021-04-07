@@ -3,7 +3,13 @@
     <div slot>
       <div class="app-action-bar">
         <div>
-          <oak-button theme="primary" variant="regular" shape="sharp" @button-click="$emit('save')"
+          <oak-button
+            type="submit"
+            formGroupName="edit-table-detail-form"
+            theme="primary"
+            variant="regular"
+            shape="sharp"
+            @button-click="$emit('save')"
             ><font-awesome-icon :icon="['fas', 'check']" />Save</oak-button
           >
           <oak-button theme="default" variant="appear" shape="sharp" @button-click="closeEdit"

@@ -5,6 +5,7 @@
     </div>
     <oak-nav-element @button-click="goToSchema()">Schema</oak-nav-element>
     <oak-nav-element @button-click="goToTable()">Table</oak-nav-element>
+    <oak-nav-element @button-click="goToSwatch()">Swatch</oak-nav-element>
   </div>
 </template>
 <script>
@@ -29,6 +30,9 @@ export default {
     },
     goToSchema() {
       this.$router.push(`/${this.getProfile.space}/schema`);
+    },
+    goToSwatch() {
+      this.$router.push(`/${this.getProfile.space}/swatch`);
     }
   }
 };

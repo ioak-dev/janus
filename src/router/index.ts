@@ -7,6 +7,7 @@ import CreateTableView from '../views/CreateTableView.vue';
 import ListRecordView from '../views/ListRecordView.vue';
 import ViewRecordView from '../views/ViewRecordView.vue';
 import ManageTableView from '../views/ManageTableView.vue';
+import SwatchGenerator from '../components/ColorSwatch/SwatchGenerator.vue';
 
 import {
   middlewarePipeline,
@@ -30,6 +31,15 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/:space/swatch',
+    name: 'SwatchGenerator',
+    component: SwatchGenerator,
+    meta: {
+      context: 'schema',
+      middleware: [readSpace, authenticate]
+    }
   },
   {
     path: '/:space/schema',

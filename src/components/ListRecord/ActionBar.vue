@@ -35,7 +35,7 @@
     <div class="app-toolbar-action-container">
       <div class="record-cound">24 records</div>
       <oak-click-area @click-area-click="$emit('filter')">
-        <div class="app-toolbar-action"><font-awesome-icon :icon="['fas', 'filter']" />Filter</div>
+        <div class="app-toolbar-action"><font-awesome-icon :icon="['fas', 'filter']" /></div>
       </oak-click-area>
     </div>
   </teleport>

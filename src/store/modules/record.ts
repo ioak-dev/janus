@@ -1,21 +1,56 @@
 import { uniqBy } from 'lodash';
 
 const state = {
-  data: []
+  data: [],
+  parameter: {
+    tableId: '',
+    pageNo: 0,
+    pageSize: 15,
+    filter: null,
+    hasMore: true
+  },
+  secondaryData: [],
+  secondaryParameter: {
+    tableId: '',
+    pageNo: 0,
+    pageSize: 15,
+    filter: null,
+    hasMore: true
+  }
 };
 
 const getters = {
-  getRecord: (state: any) => {
-    return state.data;
+  getRecord: (state: any) => (secondary = false) => {
+    console.log('0000000000000000000000000000000000000', secondary);
+    return secondary ? state.secondaryData : state.data;
+  },
+  getRecordParameter: (state: any) => (secondary = false) => {
+    return secondary ? state.secondaryParameter : state.parameter;
   }
 };
 
 const actions = {
-  refreshRecord({ commit }: any, payload: any) {
-    commit('REFRESH_RECORD', payload);
+  refreshRecordParameter({ commit }: any, { payload, secondary }: any) {
+    if (secondary) {
+      commit('REFRESH_SECONDARY_RECORD_PARAMETER', payload);
+    } else {
+      commit('REFRESH_RECORD_PARAMETER', payload);
+    }
   },
-  appendRecord({ commit }: any, payload: any) {
-    commit('APPEND_RECORD', payload);
+  refreshRecord({ commit }: any, { payload, secondary }: any) {
+    console.log('0000000000000 record.ts', secondary);
+    if (secondary) {
+      commit('REFRESH_SECONDARY_RECORD', payload);
+    } else {
+      commit('REFRESH_RECORD', payload);
+    }
+  },
+  appendRecord({ commit }: any, { payload, secondary }: any) {
+    if (secondary) {
+      commit('APPEND_SECONDARY_RECORD', payload);
+    } else {
+      commit('APPEND_RECORD', payload);
+    }
   },
   editRecord({ commit }: any, payload: any) {
     commit('EDIT_RECORD', payload);
@@ -29,8 +64,20 @@ const mutations = {
   REFRESH_RECORD: (state: any, payload: any) => {
     state.data = payload;
   },
+  REFRESH_RECORD_PARAMETER: (state: any, payload: any) => {
+    state.parameter = { ...state.parameter, ...payload };
+  },
+  REFRESH_SECONDARY_RECORD: (state: any, payload: any) => {
+    state.secondaryData = payload;
+  },
+  REFRESH_SECONDARY_RECORD_PARAMETER: (state: any, payload: any) => {
+    state.secondaryParameter = { ...state.secondaryParameter, ...payload };
+  },
   APPEND_RECORD: (state: any, payload: any) => {
     state.data = uniqBy([...state.data, ...payload], 'id');
+  },
+  APPEND_SECONDARY_RECORD: (state: any, payload: any) => {
+    state.secondaryData = uniqBy([...state.data, ...payload], 'id');
   },
   EDIT_RECORD: (state: any, payload: any) => {
     const _data = [...state.data];

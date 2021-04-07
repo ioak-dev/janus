@@ -3,10 +3,10 @@
     <oak-table navPlacement="none" fill="global" elevation="0" :dense="dense">
       <oak-infinite-scroll
         variant="custom-selector"
-        customSelector="#datagrid-table-reference"
+        :customSelector="`#${scrollId}`"
         @infinite-scroll-change="loadMore"
       >
-        <div :class="tableStyle" class="datagrid__table" id="datagrid-table-reference">
+        <div :class="tableStyle" class="datagrid__table" :id="scrollId">
           <table>
             <thead>
               <tr
@@ -90,44 +90,61 @@
 </template>
 
 <script>
-import { defaultClient } from '@/apollo';
 import store from '@/store';
-import { searchSchemaTableDataQuery } from '@/graphql/searchSchemaTableData.query';
 import { compose } from '@oakui/core-stage/style-composer/OakTableComposer';
 import { computed, defineComponent, reactive, ref } from 'vue';
 import { mapGetters, useStore } from 'vuex';
+import { recordParameterChangedSubject } from '@/events/RecordParameterChangedEvent';
+import { loadMoreRecordCommandSubject } from '@/events/LoadMoreRecordCommand';
 import DatatypeForm from './DatatypeForm.vue';
 import DatatypeTableView from './DatatypeTableView/index.vue';
 
 export default defineComponent({
-  name: 'DataGrid',
+  name: 'Datagrid',
   props: {
-    id: String,
+    tableId: String,
     selectedRecords: Array,
     dense: Boolean,
     multiselect: Boolean,
     wrap: Boolean,
     filter: Object,
-    isSelectAll: Boolean
+    isSelectAll: Boolean,
+    secondaryGrid: Boolean,
+    scrollId: String
   },
   components: { DatatypeTableView, DatatypeForm },
   computed: {
     ...mapGetters(['getProfile', 'getColumnByTable']),
     columns() {
-      return this.getColumnByTable(this.id);
+      return this.getColumnByTable(this.tableId);
     },
     tableStyle() {
       return compose({ variant: 'outlined', fill: 'global', dense: this.dense });
     }
   },
   mounted() {
-    this.updateScrollHeight();
-    this.fetchRecords();
+    if (!this.secondaryGrid) {
+      this.updateScrollHeight();
+    }
+  },
+  created() {
+    // this.fetchRecords();
+    recordParameterChangedSubject.next({
+      tableId: this.tableId,
+      filter: this.filter,
+      secondary: this.secondaryGrid
+    });
   },
   methods: {
+    loadMore() {
+      console.log('*********');
+      loadMoreRecordCommandSubject.next({
+        secondary: this.secondaryGrid
+      });
+    },
     updateScrollHeight() {
       const el = document.getElementById('datagrid-reference');
-      const tableEl = document.getElementById('datagrid-table-reference');
+      const tableEl = document.getElementById(this.scrollId);
       const actionBarEl = document.getElementById('action-bar-reference');
       if (tableEl) {
         tableEl.style.height = `${window.innerHeight - 42 - 20 - 20}px`;
@@ -182,67 +199,13 @@ export default defineComponent({
       } else {
         this.$emit('record-selected', record);
       }
-    },
-    fetchRecords() {
-      this.pageNo = 0;
-      defaultClient
-        .query({
-          query: searchSchemaTableDataQuery,
-          variables: {
-            tableId: this.id,
-            anonymousFilter: this.filter,
-            pageSize: 14,
-            pageNo: this.pageNo
-          }
-        })
-        .then((response) => {
-          if (response) {
-            console.log(response.data.searchSchemaTableData);
-            this.pageNo = response.data.searchSchemaTableData.pageNo;
-            this.hasMore = response.data.searchSchemaTableData.hasMore;
-            store.dispatch('refreshRecord', response.data.searchSchemaTableData.results);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    loadMore() {
-      if (!this.hasMore) {
-        return;
-      }
-      defaultClient
-        .query({
-          query: searchSchemaTableDataQuery,
-          variables: {
-            tableId: this.id,
-            anonymousFilter: this.filter,
-            pageSize: 14,
-            pageNo: this.pageNo
-          }
-        })
-        .then((response) => {
-          if (response) {
-            console.log(response.data.searchSchemaTableData);
-            this.pageNo = response.data.searchSchemaTableData.pageNo;
-            this.hasMore = response.data.searchSchemaTableData.hasMore;
-            store.dispatch('appendRecord', response.data.searchSchemaTableData.results);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     }
   },
-  setup() {
-    const pageNo = ref(0);
-    const hasMore = ref(true);
-    const records = computed(() => store.getters.getRecord);
+  setup(props) {
+    const records = computed(() => store.getters.getRecord(props.secondaryGrid));
     const isShowQuickFilter = ref(false);
     const quickFilter = reactive({});
     return {
-      pageNo,
-      hasMore,
       records,
       isShowQuickFilter,
       quickFilter
@@ -250,7 +213,12 @@ export default defineComponent({
   },
   watch: {
     filter(newVal, _) {
-      this.fetchRecords();
+      // this.fetchRecords();
+      recordParameterChangedSubject.next({
+        tableId: this.tableId,
+        filter: newVal,
+        secondary: this.secondaryGrid
+      });
     }
   }
 });

@@ -35,6 +35,7 @@
       <datagrid
         :id="cellHeader?.meta?.tableId"
         :selectedRecords="selectedRecords"
+        secondaryGrid
         @record-toggled="handleRecordToggled"
         @record-selected="handleRecordSelected"
       />

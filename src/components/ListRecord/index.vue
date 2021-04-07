@@ -24,14 +24,15 @@
           @filter="openFilterDialog"
         />
         <div class="list-table-data__container__main__datagrid">
-          <data-grid
-            :id="$route.params.tableId"
+          <datagrid
+            :tableId="$route.params.tableId"
             :selectedRecords="selectedRecords"
             :dense="dense"
             :multiselect="multiselect"
             :wrap="wrap"
             :filter="filter"
             :isSelectAll="isSelectAll"
+            scrollId="iscroll-1"
             @select-none="clearSelectedRecords"
             @select-all="selectAllRecords"
             @record-toggled="handleRecordToggled"
@@ -72,17 +73,16 @@ import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import store from '@/store';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import FilterPrompt from '@/components/Filter/FilterPrompt.vue';
-import { deleteRecords } from '@/services/TableDataService';
 import { deleteSchemaTableDataMutation } from '@/graphql/deleteSchemaTableData.mutation';
 import Toolbar from './Toolbar.vue';
-import DataGrid from './Datagrid.vue';
+import Datagrid from './Datagrid.vue';
 import ActionBar from './ActionBar.vue';
 import Sidepane from './Sidepane.vue';
 import CreateRecordPrompt from './CreateRecordPrompt.vue';
 
 export default defineComponent({
   name: 'ListRecord',
-  components: { DataGrid, Toolbar, ActionBar, Sidepane, CreateRecordPrompt, FilterPrompt },
+  components: { Datagrid, Toolbar, ActionBar, Sidepane, CreateRecordPrompt, FilterPrompt },
   data() {
     return {
       selectedRecords: [] as string[],
@@ -94,7 +94,7 @@ export default defineComponent({
       isCreatePaneOpen: false,
       isFilterDialogOpen: false,
       recordToClone: null,
-      filter: null,
+      filter: undefined as any,
       isSelectAll: false
     };
   },

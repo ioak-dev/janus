@@ -16,37 +16,42 @@
     sizeVertical="two-third"
     sizeHorizontal="full"
     :isOpen="showChoosePrompt"
+    paddingVertical="0"
+    paddingHorizontal="0"
     @sheet-close="closeChoosePrompt"
   >
-    <div class="sheet-container">
-      <app-section subtle>
-        <div slot>
-          <div class="app-action-bar">
-            <div>
-              <oak-button
-                theme="primary"
-                :variant="selectedRecords.length > 0 ? 'appear' : 'appear'"
-                shape="sharp"
-                @button-click="handleChange"
-                ><font-awesome-icon :icon="['fas', 'plus']" />Choose selected</oak-button
-              >
+    <div class="sheet-container" id="iscroll-2">
+      <div class="sheet-container__content">
+        <app-section>
+          <div slot>
+            <div class="app-action-bar">
+              <div>
+                <oak-button
+                  theme="primary"
+                  :variant="selectedRecords.length > 0 ? 'appear' : 'appear'"
+                  shape="sharp"
+                  @button-click="handleChange"
+                  ><font-awesome-icon :icon="['fas', 'plus']" />Choose selected</oak-button
+                >
+              </div>
             </div>
           </div>
-        </div>
-      </app-section>
-      <datagrid
-        :id="cellHeader?.meta?.tableId"
-        :selectedRecords="selectedRecords"
-        @record-toggled="handleRecordToggled"
-        @record-selected="handleRecordSelected"
-      />
+        </app-section>
+        <datagrid
+          :tableId="cellHeader?.meta?.tableId"
+          :selectedRecords="selectedRecords"
+          scrollId="iscroll-2"
+          secondaryGrid
+          @record-toggled="handleRecordToggled"
+          @record-selected="handleRecordSelected"
+        />
+      </div>
     </div>
   </oak-sheet>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue';
-import { mapGetters, useStore } from 'vuex';
 import Datagrid from '@/components/ListRecord/Datagrid.vue';
 
 export default defineComponent({
@@ -117,5 +122,10 @@ export default defineComponent({
 .sheet-container {
   display: grid;
   grid-auto-flow: row;
+  height: 100%;
+  overflow: auto;
+}
+.sheet-container__content {
+  padding: 10px;
 }
 </style>

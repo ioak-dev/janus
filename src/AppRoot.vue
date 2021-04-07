@@ -1,9 +1,10 @@
 <template>
   <div :class="getProfile.theme">
     <init />
+    <record-init />
     <oak-app-layout
       topbarVariant="sticky"
-      topbarColor="surface"
+      topbarColor="container"
       topbarElevation="0"
       sidebarElevation="0"
       sidebarColor="container"
@@ -12,7 +13,7 @@
         <topbar />
       </div>
       <div slot="main" class="content-container">
-        <oak-toolbar fillColor="container" paddingHorizontal="1" paddingVertical="0">
+        <oak-toolbar fillColor="primary" paddingHorizontal="0" paddingVertical="0">
           <div slot="left" id="toolbar-left" />
           <div slot="right" id="toolbar-right" />
         </oak-toolbar>
@@ -29,13 +30,15 @@ import { mapGetters } from 'vuex';
 import Sidebar from '@/components/navigation/Sidebar/index.vue';
 import Topbar from '@/components/navigation/Topbar.vue';
 import Init from '@/components/Init/index.vue';
+import RecordInit from '@/components/Init/RecordInit.vue';
 
 export default {
   name: 'AppRoot',
   components: {
     Topbar,
     Sidebar,
-    Init
+    Init,
+    RecordInit
   },
   computed: {
     ...mapGetters(['getProfile'])

@@ -4,10 +4,11 @@
     <record-init />
     <oak-app-layout
       topbarVariant="sticky"
-      topbarColor="container"
+      topbarColor="custom"
       topbarElevation="0"
       sidebarElevation="0"
-      sidebarColor="container"
+      sidebarColor="global"
+      sidebarOutlined="true"
     >
       <div slot="topbar" class="topbar-container">
         <topbar />
@@ -70,7 +71,6 @@ body {
 }
 
 .topbar-container {
-  height: 40px;
   display: flex;
   align-items: center;
   padding: 0 10px;

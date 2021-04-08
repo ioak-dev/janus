@@ -30,8 +30,6 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 60px;
-  line-height: 60px;
   margin: 0px 10px;
   .action-icon {
     cursor: pointer;

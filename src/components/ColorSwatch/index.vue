@@ -18,7 +18,7 @@ import Swatch from './Swatch.vue';
 export default {
   name: 'ColorSwatch',
   components: { Swatch },
-  props: { label: String, name: String, value: String },
+  props: { label: String, name: String, value: Number },
   setup() {
     const isDialogOpen = ref(false);
 

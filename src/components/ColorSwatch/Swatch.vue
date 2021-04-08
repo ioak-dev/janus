@@ -13,7 +13,7 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'Swatch',
-  props: { value: String }
+  props: { value: Number }
 };
 </script>
 <style lang="scss" scoped>

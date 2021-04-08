@@ -112,6 +112,7 @@ export default defineComponent({
     secondaryGrid: Boolean,
     scrollId: String
   },
+  emits: ['record-toggled', 'record-selected', 'select-all', 'select-none'],
   components: { DatatypeTableView, DatatypeForm },
   computed: {
     ...mapGetters(['getProfile', 'getColumnByTable']),

@@ -38,7 +38,7 @@ import Swatch from './Swatch.vue';
 export default {
   name: 'IconSwatch',
   components: { Swatch },
-  props: { label: String, name: String, value: String },
+  props: { label: String, name: String, value: Array },
   mounted() {
     // console.log('********Reading Fa.json');
     // console.log(Fa);

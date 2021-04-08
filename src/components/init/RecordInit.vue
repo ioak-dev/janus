@@ -12,13 +12,11 @@ export default {
   name: 'RecordInit',
   mounted() {
     recordParameterChangedSubject.asObservable().subscribe((message) => {
-      console.log('0000000000000', message);
       if (message.secondary) {
         const parameterChanged =
           message.tableId &&
           (this.secondaryRecordParameter.tableId !== message.tableId ||
             !isEqual(this.secondaryRecordParameter.filter, message.filter));
-        console.log('0000000000000', parameterChanged);
         if (parameterChanged) {
           this.fetchRecords(message.tableId, message.filter, true);
         }

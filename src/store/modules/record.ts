@@ -21,7 +21,6 @@ const state = {
 
 const getters = {
   getRecord: (state: any) => (secondary = false) => {
-    console.log('0000000000000000000000000000000000000', secondary);
     return secondary ? state.secondaryData : state.data;
   },
   getRecordParameter: (state: any) => (secondary = false) => {
@@ -38,7 +37,6 @@ const actions = {
     }
   },
   refreshRecord({ commit }: any, { payload, secondary }: any) {
-    console.log('0000000000000 record.ts', secondary);
     if (secondary) {
       commit('REFRESH_SECONDARY_RECORD', payload);
     } else {

@@ -13,7 +13,7 @@ import { mapGetters, useStore } from 'vuex';
 
 export default {
   name: 'Swatch',
-  props: { value: String, searchText: String, showAll: Boolean },
+  props: { searchText: String, showAll: Boolean },
   setup(props) {
     const store = useStore();
     const iconsList = computed(() => {

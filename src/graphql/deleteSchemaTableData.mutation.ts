@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const deleteSchemaTableDataMutation = gql`
-  mutation deleteSchemaTableData($idList: [ID!]) {
-    deleteSchemaTableData(idList: $idList) {
+  mutation deleteSchemaTableData($tableId: ID!, $idList: [ID!]) {
+    deleteSchemaTableData(tableId: $tableId, idList: $idList) {
       idList
     }
   }

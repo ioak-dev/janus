@@ -42,6 +42,7 @@
       </div>
       <div :class="`list-table-data__container__side ${preview ? 'active' : ''}`">
         <sidepane :table="table" :selectedRecords="selectedRecords" />
+        <activity :table="table" :selectedRecords="selectedRecords" />
       </div>
     </div>
   </div>
@@ -65,8 +66,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
-import { mapGetters, useStore } from 'vuex';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import { schemaTableByIdQuery } from '@/graphql/schemaTableById.query';
 import { useRoute } from 'vue-router';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
@@ -74,6 +74,7 @@ import store from '@/store';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import FilterPrompt from '@/components/Filter/FilterPrompt.vue';
 import { deleteSchemaTableDataMutation } from '@/graphql/deleteSchemaTableData.mutation';
+import Activity from '@/components/Activity/index.vue';
 import Toolbar from './Toolbar.vue';
 import Datagrid from './Datagrid.vue';
 import ActionBar from './ActionBar.vue';
@@ -82,7 +83,15 @@ import CreateRecordPrompt from './CreateRecordPrompt.vue';
 
 export default defineComponent({
   name: 'ListRecord',
-  components: { Datagrid, Toolbar, ActionBar, Sidepane, CreateRecordPrompt, FilterPrompt },
+  components: {
+    Datagrid,
+    Toolbar,
+    ActionBar,
+    Sidepane,
+    CreateRecordPrompt,
+    FilterPrompt,
+    Activity
+  },
   data() {
     return {
       selectedRecords: [] as string[],
@@ -159,7 +168,7 @@ export default defineComponent({
         this.selectedRecords = [...this.selectedRecords, record.id];
         this.selectedRecordsObject = [...this.selectedRecordsObject, record];
       } else {
-        this.selectedRecords = this.selectedRecords.filter((item) => item !== record.id);
+        this.selectedRecords = this.selectedRecords.filter((item: any) => item !== record.id);
         this.selectedRecordsObject = this.selectedRecordsObject.filter(
           (item: any) => item !== record.id
         );
@@ -186,7 +195,7 @@ export default defineComponent({
       this.selectedRecordsObject = records;
     },
     deleteSelectedRecords() {
-      this.remove({ idList: this.selectedRecords }).then((response) => {
+      this.remove({ tableId: this.table.id, idList: this.selectedRecords }).then((response) => {
         store.dispatch('deleteRecord', response.data.deleteSchemaTableData.idList);
         this.selectedRecords = [];
         this.selectedRecordsObject = [];

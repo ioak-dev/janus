@@ -67,18 +67,19 @@ export default defineComponent({
   },
   methods: {
     handleChange(event: any) {
-      console.log(event);
       this.state = { ...this.state, [event.detail.name]: event.detail.value };
     },
     handleSubmit(event: any) {
-      console.log('*******');
       this.mutate({
         payload: {
           tableId: this.tableId,
           row: this.state
         }
       }).then((response: any) => {
-        store.dispatch('appendRecord', [response.data.addSchemaTableData]);
+        store.dispatch('appendRecord', {
+          secondary: false,
+          payload: [response.data.addSchemaTableData]
+        });
         if (this.closeEdit) {
           this.closeEdit();
         }

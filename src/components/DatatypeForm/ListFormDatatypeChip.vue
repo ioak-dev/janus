@@ -1,7 +1,7 @@
 <template>
   <oak-select
     :name="cellHeader.id"
-    :label="cellHeader.name"
+    :label="hideLabel ? null : cellHeader.name"
     :value="value"
     fill="container"
     :optionsAsKeyValue="
@@ -13,7 +13,7 @@
     :formGroupName="formGroupName"
     autocompleteVariant="none"
     multiple
-    gutterBottom
+    :gutterBottom="!hideLabel"
   />
 </template>
 
@@ -24,7 +24,9 @@ export default defineComponent({
   name: 'ListFormDatatypeChip',
   props: {
     value: Object,
-    cellHeader: Object
+    cellHeader: Object,
+    hideLabel: Boolean,
+    formGroupName: String
   }
 });
 </script>

@@ -1,23 +1,20 @@
 <template>
-  <teleport to="#toolbar-left">
-    <div class="app-toolbar-action-container">
-      <oak-click-area @click-area-click="$emit('add')">
-        <div class="app-toolbar-action app-toolbar-action--primary">
-          <font-awesome-icon :icon="['fas', 'plus']" />Add column
-        </div>
-      </oak-click-area>
-      <oak-click-area @click-area-click="$emit('save')" v-if="editing">
-        <div class="app-toolbar-action app-toolbar-action--primary">
-          <font-awesome-icon :icon="['fas', 'check']" />Save
-        </div>
-      </oak-click-area>
-      <oak-click-area @click-area-click="$emit('reset')" v-if="editing">
-        <div class="app-toolbar-action app-toolbar-action">
-          <font-awesome-icon :icon="['fas', 'times']" />Reset
-        </div>
-      </oak-click-area>
-    </div>
-  </teleport>
+  <div class="action-footer action-footer-sidepane position-right">
+    <oak-button
+      v-if="editing"
+      theme="primary"
+      variant="outline"
+      shape="sharp"
+      @button-click="$emit('save')"
+      ><font-awesome-icon :icon="['fas', 'check']" />Save</oak-button
+    >
+    <oak-button theme="default" variant="outline" shape="sharp" @button-click="$emit('add')"
+      ><font-awesome-icon :icon="['fas', 'plus']" />Add column</oak-button
+    >
+    <oak-button theme="default" variant="outline" shape="sharp" @button-click="$emit('reset')"
+      ><font-awesome-icon :icon="['fas', 'times']" />Reset</oak-button
+    >
+  </div>
 </template>
 
 <script lang="ts">

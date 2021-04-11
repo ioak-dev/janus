@@ -1,28 +1,26 @@
 <template>
-  <app-section subtle>
-    <div slot>
-      <div class="app-action-bar">
-        <div>
-          <oak-button theme="primary" variant="regular" shape="sharp" @button-click="$emit('save')"
-            ><font-awesome-icon :icon="['fas', 'check']" />Save</oak-button
-          >
-          <oak-button theme="default" variant="appear" shape="sharp" @button-click="$emit('close')"
-            ><font-awesome-icon :icon="['fas', 'times']" />Cancel</oak-button
-          >
-        </div>
-      </div>
-    </div>
-  </app-section>
+  <div class="action-footer action-footer-sidepane position-right">
+    <oak-button
+      theme="primary"
+      variant="outline"
+      shape="sharp"
+      :formGroupName="formGroupName"
+      type="submit"
+      ><font-awesome-icon :icon="['fas', 'check']" />Save</oak-button
+    >
+    <oak-button theme="default" variant="outline" shape="sharp" @button-click="$emit('close')"
+      ><font-awesome-icon :icon="['fas', 'times']" />Cancel</oak-button
+    >
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
-import AppSection from '@/components/ui/AppSection.vue';
 
 export default defineComponent({
   name: 'ActionBarEdit',
-  components: { AppSection },
+  props: { formGroupName: String },
   computed: {
     headerSpacingStyle() {
       return spacingCompose({ marginVertical: 0, marginHorizontal: 2 });

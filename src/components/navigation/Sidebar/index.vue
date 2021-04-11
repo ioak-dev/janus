@@ -1,7 +1,6 @@
 <template>
   <div class="sidebar">
     <Header />
-    <user-profile />
     <div class="sidebar__container">
       <!-- <div class="sidebar-section__divider" /> -->
       <primary-nav />
@@ -9,6 +8,8 @@
       <!-- <div class="sidebar-section__divider" /> -->
       <static-nav />
     </div>
+    <user-account />
+    <user-profile />
   </div>
 </template>
 <script>
@@ -18,6 +19,7 @@ import UserProfile from './UserProfile.vue';
 import SchemaNav from './SchemaNav.vue';
 import StaticNav from './StaticNav.vue';
 import PrimaryNav from './PrimaryNav.vue';
+import UserAccount from '../UserAccount.vue';
 
 export default {
   name: 'Sidebar',
@@ -26,7 +28,8 @@ export default {
     UserProfile,
     SchemaNav,
     StaticNav,
-    PrimaryNav
+    PrimaryNav,
+    UserAccount
   },
   computed: {
     ...mapGetters(['getProfile'])

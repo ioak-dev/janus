@@ -7,6 +7,7 @@ const state = {
     pageNo: 0,
     pageSize: 15,
     filter: null,
+    quickFilter: null,
     hasMore: true
   },
   secondaryData: [],
@@ -15,6 +16,7 @@ const state = {
     pageNo: 0,
     pageSize: 15,
     filter: null,
+    quickFilter: null,
     hasMore: true
   }
 };

@@ -1,5 +1,4 @@
 import { allSchemaTableFilterBySchemaIdQuery } from '@/graphql/allSchemaTableFilterBySchemaId.query';
-import { allSchemaTableDataQuery } from '@/graphql/allSchemaTableData.query';
 import { updateSchemaTableFilterMutation } from '@/graphql/updateSchemaTableFilter.mutation';
 import { useMutation } from '@vue/apollo-composable';
 

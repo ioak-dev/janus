@@ -13,32 +13,6 @@
       </oak-nav-element>
     </div>
   </oak-nav-group>
-  <oak-nav-group name="administration-dup" groupName="sidebar-nav"
-    ><div slot="header">
-      <div>{{ currentSchema?.name }}</div>
-    </div>
-    <div slot="main">
-      <oak-nav-group
-        name="administration-sub"
-        groupName="sidebar-nav-sub"
-        parentName="administration-dup"
-        parentGroupName="sidebar-nav"
-        level="2"
-        ><div slot="header">
-          <div>{{ currentSchema?.name }}</div>
-        </div>
-        <div slot="main">
-          <oak-nav-element
-            v-for="item in tablesInCurrentSchema"
-            @button-click="goToTable(item)"
-            :key="item.id"
-          >
-            {{ item.name }}
-          </oak-nav-element>
-        </div>
-      </oak-nav-group>
-    </div>
-  </oak-nav-group>
 </template>
 <script>
 import { mapGetters } from 'vuex';

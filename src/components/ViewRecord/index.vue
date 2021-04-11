@@ -1,10 +1,14 @@
 <template>
-  <toolbar :tableId="tableId" :record="schemaTableDataByIdQueryResult" />
-  <view-record-main :tableId="tableId" :recordId="recordId" />
+  <toolbar :tableId="tableId" :record="schemaTableDataByReferenceQueryResult" />
+  <view-record-main
+    v-if="schemaTableDataByReferenceQueryResult?.id"
+    :tableId="tableId"
+    :recordId="schemaTableDataByReferenceQueryResult?.id"
+  />
 </template>
 
 <script lang="ts">
-import { schemaTableDataByIdQuery } from '@/graphql/schemaTableDataById.query';
+import { schemaTableDataByReferenceQuery } from '@/graphql/schemaTableDataByReference.query';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import { defineComponent, ref } from 'vue';
 import { mapGetters } from 'vuex';
@@ -43,7 +47,7 @@ export default defineComponent({
     ViewRecordMain,
     Toolbar
   },
-  props: { tableId: String, recordId: String },
+  props: { tableId: String, recordRef: String },
   methods: {
     goBack() {
       this.$router.back();
@@ -56,18 +60,20 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const schemaTableDataByIdQueryOutput = useQuery(
-      schemaTableDataByIdQuery,
+    const schemaTableDataByReferenceQueryOutput = useQuery(
+      schemaTableDataByReferenceQuery,
       ref({
         tableId: props.tableId,
-        id: props.recordId
+        reference: Number(props.recordRef)
       })
     );
-    const schemaTableDataByIdQueryResult = useResult(schemaTableDataByIdQueryOutput.result);
+    const schemaTableDataByReferenceQueryResult = useResult(
+      schemaTableDataByReferenceQueryOutput.result
+    );
 
     return {
-      schemaTableDataByIdQueryResult,
-      loading: schemaTableDataByIdQueryOutput.loading
+      schemaTableDataByReferenceQueryResult,
+      loading: schemaTableDataByReferenceQueryOutput.loading
     };
   }
 });

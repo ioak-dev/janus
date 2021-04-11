@@ -7,6 +7,7 @@ export const searchSchemaTableDataQuery = gql`
     $pageNo: Int
     $filterId: String
     $anonymousFilter: JSON
+    $quickFilter: JSON
   ) {
     searchSchemaTableData(
       tableId: $tableId
@@ -14,12 +15,14 @@ export const searchSchemaTableDataQuery = gql`
       pageNo: $pageNo
       filterId: $filterId
       anonymousFilter: $anonymousFilter
+      quickFilter: $quickFilter
     ) {
       pageNo
       hasMore
       total
       results {
         id
+        reference
         tableId
         row
         relation

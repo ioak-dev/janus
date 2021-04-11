@@ -1,78 +1,124 @@
 <template>
   <div class="list-table">
-    <Toolbar :schemaId="$route.params.schemaId" />
-    <action-bar />
-    <app-section subtle>
-      <div class="table-listing">
-        <div>
-          <div v-for="table in tables" :key="table.id">
-            <oak-click-area @click-area-click="goToTable(table.id)">
-              <div class="table-listing__table-item">
-                {{ table.name }}
-              </div></oak-click-area
-            >
-          </div>
-        </div>
+    <action-bar
+      @create="openCreate('create')"
+      @clone="updateSidepaneContent('clone')"
+      @edit="updateSidepaneContent('edit')"
+      @delete="handleDelete"
+      @clear-selection="handleClear"
+      :selectedTables="selectedTables"
+      :sidepaneContent="sidepaneContent"
+    />
+    <div class="list-table__container">
+      <div class="list-table__container__main">
+        <table-listing :selectedTables="selectedTables" @change-selection="handleSelect" />
       </div>
-    </app-section>
+      <div class="list-table__container__side" :class="sidepaneStyle">
+        <create-record
+          v-if="['create', 'clone'].includes(sidepaneContent)"
+          :schemaId="$route.params.schemaId"
+          :table="tableToClone"
+          :isSidepaneExpanded="isSidepaneExpanded"
+          @saved="updateSidepaneContent(sidepaneContent)"
+          @close="updateSidepaneContent(sidepaneContent)"
+          @expand="expandSidepane"
+          @collapse="collapseSidepane"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import { compose as dividerCompose } from '@oakui/core-stage/style-composer/OakDividerComposer';
 import { useRoute } from 'vue-router';
-import AppSection from '@/components/ui/AppSection.vue';
-import Toolbar from './Toolbar.vue';
 import ActionBar from './ActionBar.vue';
+import TableListing from './TableListing.vue';
 
 export default defineComponent({
   name: 'ListTable',
-  components: { Toolbar, ActionBar, AppSection },
+  components: { ActionBar, TableListing },
   methods: {
+    updateSidepaneContent(contentType: string) {
+      this.sidepaneContent = this.sidepaneContent === contentType ? '' : contentType;
+    },
+    openCreate() {
+      // this.recordToClone = null;
+      this.updateSidepaneContent('create');
+    },
+    openClone() {
+      // this.recordToClone =
+      //   this.selectedRecordsObject.length === 1 ? this.selectedRecordsObject[0] : null;
+      this.updateSidepaneContent('clone');
+    },
+    expandSidepane() {
+      this.isSidepaneExpanded = true;
+    },
+    collapseSidepane() {
+      this.isSidepaneExpanded = false;
+    },
     goToTable(tableId: string) {
       this.$router.push(
-        `/${this.profile.space}/schema/${this.$route.params.schemaId}/table/${tableId}/manage`
+        `/${this.profile.space}/schema/${this.$route.params.schemaId}/table/${tableId}`
       );
+    },
+    handleSelect(event: any) {
+      console.log(event.detail);
+      if (event.detail.value) {
+        this.selectedTables.push(event.detail.name);
+      } else {
+        this.selectedTables.splice(this.selectedTables.indexOf(event.detail.name), 1);
+      }
+    },
+    handleClear() {
+      this.selectedTables.splice(0, this.selectedTables.length);
     }
   },
   setup() {
-    const route = useRoute();
+    const selectedTables = reactive([] as any);
+    const isSidepaneExpanded = ref(false);
+    const sidepaneContent = ref('');
+    const sidepaneStyle = computed(() => {
+      return `${isSidepaneExpanded.value ? '' : 'sidepane-collapsed'} sidepane-active--${
+        sidepaneContent.value
+      }`;
+    });
     const store = useStore();
-    const tables = computed(() => store.getters.getTableBySchema(route.params.schemaId));
     const profile = computed(() => store.getters.getProfile);
 
-    const dividerStyle = computed(() => dividerCompose({ color: 'global', colorMode: 'darker' }));
-    return { tables, profile, dividerStyle };
+    return { isSidepaneExpanded, sidepaneContent, sidepaneStyle, profile, selectedTables };
   }
 });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.table-listing {
-  display: flex;
-  flex-direction: column;
-  justify-items: flex-start;
+.list-table__container {
+  overflow-x: hidden;
+  display: grid;
+  grid-template-columns: 1fr auto;
 }
-
-.table_listing__item {
-  padding: 10px 6px;
-  display: flex;
-  &:hover {
-    background-color: var(--color-container);
-    cursor: pointer;
-  }
+.list-table__container__main {
+  height: calc(100vh - var(--oak-app-layout-topbar-height) - var(--oak-toolbar-min-height));
+  overflow-x: auto;
 }
+.list-table__container__side {
+  width: 0px;
+  transition: width 100ms ease-in-out;
+  text-overflow: hidden;
 
-.table-listing__table-item {
-  padding: 10px 6px;
-  width: 100%;
-  background-color: var(--color-container);
-  &:hover {
-    background-color: var(--color-primary-semitransparent2);
-    cursor: pointer;
+  &.sidepane-active--create,
+  &.sidepane-active--clone,
+  &.sidepane-active--edit {
+    width: 100vw;
+    &.sidepane-collapsed {
+      @media (min-width: 1000px) {
+        width: 360px;
+        border-left: 1px solid var(--global-border-color);
+      }
+    }
   }
 }
 </style>

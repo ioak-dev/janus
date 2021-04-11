@@ -6,8 +6,6 @@
       :dense="dense"
       :multiselect="multiselect"
       @toggle-multiselect="toggleMultiselect"
-      :preview="preview"
-      @toggle-preview="togglePreview"
       :wrap="wrap"
       @toggle-wrap="toggleWrap"
     />
@@ -16,12 +14,16 @@
         <action-bar
           :selectedRecords="selectedRecords"
           :multiselect="multiselect"
+          :sidepaneContent="sidepaneContent"
           @clear-selection="clearSelectedRecords"
           @view="goToView"
-          @create="openCreateDialog"
-          @clone="openCloneDialog"
           @delete="deleteSelectedRecords"
-          @filter="openFilterDialog"
+          @create="openCreate"
+          @clone="openClone"
+          @settings="updateSidepaneContent('settings')"
+          @filter="updateSidepaneContent('filter')"
+          @activity="updateSidepaneContent('activity')"
+          @edit="updateSidepaneContent('edit')"
         />
         <div class="list-table-data__container__main__datagrid">
           <datagrid
@@ -40,29 +42,62 @@
           />
         </div>
       </div>
-      <div :class="`list-table-data__container__side ${preview ? 'active' : ''}`">
-        <sidepane :table="table" :selectedRecords="selectedRecords" />
-        <activity :table="table" :selectedRecords="selectedRecords" />
+      <div class="list-table-data__container__side" :class="sidepaneStyle">
+        <manage-table
+          v-if="sidepaneContent === 'settings'"
+          @saved="updateSidepaneContent(sidepaneContent)"
+          :tableId="table.id"
+          :selectedRecords="selectedRecordsObject"
+          :isSidepaneExpanded="isSidepaneExpanded"
+          @close="updateSidepaneContent(sidepaneContent)"
+          @expand="expandSidepane"
+          @collapse="collapseSidepane"
+        />
+        <edit-record
+          v-if="sidepaneContent === 'edit'"
+          @saved="handleRecordUpdate"
+          :tableId="table.id"
+          :selectedRecords="selectedRecordsObject"
+          :isSidepaneExpanded="isSidepaneExpanded"
+          @close="updateSidepaneContent(sidepaneContent)"
+          @expand="expandSidepane"
+          @collapse="collapseSidepane"
+        />
+        <activity
+          v-if="sidepaneContent === 'activity'"
+          :table="table"
+          :selectedRecords="selectedRecords"
+          :isSidepaneExpanded="isSidepaneExpanded"
+          @close="updateSidepaneContent(sidepaneContent)"
+          @expand="expandSidepane"
+          @collapse="collapseSidepane"
+        />
+        <create-record
+          v-if="['create', 'clone'].includes(sidepaneContent)"
+          :tableId="table?.id"
+          :record="recordToClone"
+          :filter="filter"
+          :isSidepaneExpanded="isSidepaneExpanded"
+          @saved="updateSidepaneContent(sidepaneContent)"
+          @close="updateSidepaneContent(sidepaneContent)"
+          @expand="expandSidepane"
+          @collapse="collapseSidepane"
+        />
+        <filter-pane
+          v-if="sidepaneContent === 'filter'"
+          :isOpen="isFilterDialogOpen"
+          :tableId="table.id"
+          :filter="filter"
+          :isSidepaneExpanded="isSidepaneExpanded"
+          @close="updateSidepaneContent(sidepaneContent)"
+          @expand="expandSidepane"
+          @collapse="collapseSidepane"
+          @apply="handleApplyFilter"
+          @clear="handleClearFilter"
+        />
       </div>
     </div>
   </div>
-  <create-record-prompt
-    v-if="table"
-    :isOpen="isCreatePaneOpen"
-    @close="closeCreateDialog"
-    :tableId="table.id"
-    :record="recordToClone"
-    :filter="filter"
-  />
-  <filter-prompt
-    v-if="table"
-    :isOpen="isFilterDialogOpen"
-    :filter="filter"
-    @close="closeFilterDialog"
-    @apply="handleApplyFilter"
-    @clear="handleClearFilter"
-    :tableId="table.id"
-  />
 </template>
 
 <script lang="ts">
@@ -72,14 +107,15 @@ import { useRoute } from 'vue-router';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import store from '@/store';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
-import FilterPrompt from '@/components/Filter/FilterPrompt.vue';
 import { deleteSchemaTableDataMutation } from '@/graphql/deleteSchemaTableData.mutation';
 import Activity from '@/components/Activity/index.vue';
+import ManageTable from '@/components/ManageTable/index.vue';
 import Toolbar from './Toolbar.vue';
 import Datagrid from './Datagrid.vue';
 import ActionBar from './ActionBar.vue';
-import Sidepane from './Sidepane.vue';
-import CreateRecordPrompt from './CreateRecordPrompt.vue';
+import CreateRecord from './CreateRecord.vue';
+import EditRecord from './EditRecord.vue';
+import FilterPane from '../Filter/FilterPane.vue';
 
 export default defineComponent({
   name: 'ListRecord',
@@ -87,44 +123,41 @@ export default defineComponent({
     Datagrid,
     Toolbar,
     ActionBar,
-    Sidepane,
-    CreateRecordPrompt,
-    FilterPrompt,
-    Activity
+    CreateRecord,
+    EditRecord,
+    Activity,
+    FilterPane,
+    ManageTable
   },
   data() {
     return {
       selectedRecords: [] as string[],
       selectedRecordsObject: [] as any[],
       multiselect: true,
-      preview: true,
       wrap: true,
-      isSidePaneOpen: false,
-      isCreatePaneOpen: false,
-      isFilterDialogOpen: false,
       recordToClone: null,
       filter: undefined as any,
       isSelectAll: false
     };
   },
   methods: {
-    openCreateDialog() {
-      this.recordToClone = null;
-      this.isCreatePaneOpen = true;
+    updateSidepaneContent(contentType: string) {
+      this.sidepaneContent = this.sidepaneContent === contentType ? '' : contentType;
     },
-    openCloneDialog() {
+    openCreate() {
+      this.recordToClone = null;
+      this.updateSidepaneContent('create');
+    },
+    openClone() {
       this.recordToClone =
         this.selectedRecordsObject.length === 1 ? this.selectedRecordsObject[0] : null;
-      this.isCreatePaneOpen = true;
+      this.updateSidepaneContent('clone');
     },
-    closeCreateDialog() {
-      this.isCreatePaneOpen = false;
+    expandSidepane() {
+      this.isSidepaneExpanded = true;
     },
-    openFilterDialog() {
-      this.isFilterDialogOpen = true;
-    },
-    closeFilterDialog() {
-      this.isFilterDialogOpen = false;
+    collapseSidepane() {
+      this.isSidepaneExpanded = false;
     },
     goToEdit() {
       if (this.selectedRecords.length === 1) {
@@ -156,11 +189,15 @@ export default defineComponent({
         this.multiselect = !this.multiselect;
       }
     },
-    togglePreview() {
-      this.preview = !this.preview;
-    },
     toggleWrap() {
       this.wrap = !this.wrap;
+    },
+    handleRecordUpdate(_updatedObject: any) {
+      const index = this.selectedRecordsObject.findIndex(
+        (item: any) => item.id === _updatedObject.id
+      );
+      this.selectedRecordsObject[index] = _updatedObject;
+      this.updateSidepaneContent(this.sidepaneContent);
     },
     handleRecordToggled(record: any, add: boolean) {
       this.isSelectAll = false;
@@ -170,7 +207,7 @@ export default defineComponent({
       } else {
         this.selectedRecords = this.selectedRecords.filter((item: any) => item !== record.id);
         this.selectedRecordsObject = this.selectedRecordsObject.filter(
-          (item: any) => item !== record.id
+          (item: any) => item.id !== record.id
         );
       }
     },
@@ -210,6 +247,13 @@ export default defineComponent({
     }
   },
   setup() {
+    const isSidepaneExpanded = ref(false);
+    const sidepaneContent = ref('');
+    const sidepaneStyle = computed(() => {
+      return `${isSidepaneExpanded.value ? '' : 'sidepane-collapsed'} sidepane-active--${
+        sidepaneContent.value
+      }`;
+    });
     const dense = ref(false);
     const route = useRoute();
     const profile = computed(() => store.getters.getProfile);
@@ -229,6 +273,9 @@ export default defineComponent({
     });
 
     return {
+      sidepaneContent,
+      sidepaneStyle,
+      isSidepaneExpanded,
       table: useResult(schemaTableByIdQueryOutput.result),
       profile,
       dense,
@@ -239,11 +286,11 @@ export default defineComponent({
   },
   watch: {
     selectedRecords(newVal, _) {
-      if (newVal.length > 0) {
-        this.isSidePaneOpen = true;
-      } else {
-        this.isSidePaneOpen = false;
-      }
+      // if (newVal.length > 0) {
+      //   this.isSidePaneOpen = true;
+      // } else {
+      //   this.isSidePaneOpen = false;
+      // }
     }
   }
 });
@@ -265,13 +312,21 @@ export default defineComponent({
 
 .list-table-data__container__side {
   width: 0px;
-  transition: width 250ms ease-in-out;
+  transition: width 100ms ease-in-out;
   text-overflow: hidden;
 
-  &.active {
-    @media (min-width: 1000px) {
-      border-left: 1px solid var(--global-border-color);
-      width: 360px;
+  &.sidepane-active--create,
+  &.sidepane-active--clone,
+  &.sidepane-active--edit,
+  &.sidepane-active--filter,
+  &.sidepane-active--settings,
+  &.sidepane-active--activity {
+    width: 100vw;
+    &.sidepane-collapsed {
+      @media (min-width: 1000px) {
+        width: 360px;
+        border-left: 1px solid var(--global-border-color);
+      }
     }
   }
 }

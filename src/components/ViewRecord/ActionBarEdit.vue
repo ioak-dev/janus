@@ -5,7 +5,7 @@
         <div>
           <oak-button
             type="submit"
-            formGroupName="edit-table-detail-form"
+            :formGroupName="formGroupName"
             theme="primary"
             variant="regular"
             shape="sharp"
@@ -31,7 +31,8 @@ export default defineComponent({
   props: {
     isEdit: Boolean,
     closeEdit: Function,
-    openEdit: Function
+    openEdit: Function,
+    formGroupName: String
   },
   components: { AppSection },
   computed: {

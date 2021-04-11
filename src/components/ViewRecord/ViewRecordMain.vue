@@ -8,14 +8,15 @@
         :columnHeaders="columns"
         :rowData="schemaTableDataByIdQueryResult"
       />
-      <edit-detail
-        v-else
-        :openEdit="openEdit"
-        :closeEdit="closeEdit"
-        :columnHeaders="columns"
-        :rowData="schemaTableDataByIdQueryResult"
-        :tableId="tableId"
-      />
+      <div v-else>
+        <action-bar-edit @save="handleSubmit" :formGroupName="formId" />
+        <edit-detail
+          @saved="closeEdit"
+          :rowData="schemaTableDataByIdQueryResult"
+          :tableId="tableId"
+          :formGroupName="formId"
+        />
+      </div>
     </div>
     <app-section>
       <div slot>
@@ -30,11 +31,13 @@ import { schemaTableDataByIdQuery } from '@/graphql/schemaTableDataById.query';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import { defineComponent, ref, toRefs } from 'vue';
 import { mapGetters } from 'vuex';
+import { uuid } from 'uuidv4';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import { compose as sectionCompose } from '@oakui/core-stage/style-composer/OakSectionComposer';
 import AppSection from '@/components/ui/AppSection.vue';
 import ViewDetail from './ViewDetail.vue';
 import EditDetail from './EditDetail.vue';
+import ActionBarEdit from './ActionBarEdit.vue';
 
 export default defineComponent({
   name: 'ViewRecordMain',
@@ -62,13 +65,15 @@ export default defineComponent({
   },
   data() {
     return {
-      isEdit: false
+      isEdit: false,
+      formId: uuid()
     };
   },
   components: {
     ViewDetail,
     EditDetail,
-    AppSection
+    AppSection,
+    ActionBarEdit
   },
   props: { tableId: String, recordId: String },
   methods: {
@@ -87,7 +92,7 @@ export default defineComponent({
 
     const schemaTableDataByIdQueryOutput = useQuery(schemaTableDataByIdQuery, {
       tableId: propsRef.tableId,
-      id: propsRef.recordId
+      id: propsRef.recordId || ''
     });
     const schemaTableDataByIdQueryResult = useResult(schemaTableDataByIdQueryOutput.result);
 

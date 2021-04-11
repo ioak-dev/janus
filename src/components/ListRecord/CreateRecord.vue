@@ -1,75 +1,85 @@
 <template>
   <div class="create-record">
-    <action-bar-create @save="handleSubmit" @close="$emit('close')" />
-    <app-section subtle>
-      <div slot>
-        <div class="create-record">
-          <oak-form formGroupName="create-record-form" @form-submit="handleSubmit">
-            <div class="create-record__form">
-              <div
-                class="create-record__form__element"
-                v-for="column in columnHeaders"
-                :key="column.id"
-              >
-                <!-- <div class="create-record__form__element__label">{{ column.name }}</div> -->
-                <div class="create-record__form__element__value">
-                  <datatype-edit
-                    :value="state[column.id]"
-                    :rowData="rowData"
-                    :cellHeader="column"
-                    @change="handleChange"
-                    formGroupName="create-record-form"
-                  />
+    <sidepane-heading
+      :heading="record ? `Clone based on #${record.reference}` : 'Create new record'"
+      @close="$emit('close')"
+      @expand="$emit('expand')"
+      @collapse="$emit('collapse')"
+      :isSidepaneExpanded="isSidepaneExpanded"
+    />
+    <div class="sidepane-main">
+      <action-bar-create @close="$emit('close')" :formGroupName="formId" />
+      <app-section>
+        <div slot>
+          <div class="edit-detail">
+            <oak-form :formGroupName="formId" @form-submit="handleSubmit">
+              <div class="create-record__form">
+                <div
+                  class="create-record__form__element"
+                  v-for="column in columns"
+                  :key="column.id"
+                >
+                  <!-- <div class="create-record__form__element__label">{{ column.name }}</div> -->
+                  <div class="create-record__form__element__value">
+                    <datatype-edit
+                      :value="state[column.id]"
+                      :rowData="rowData"
+                      :cellHeader="column"
+                      @change="handleChange"
+                      :formGroupName="formId"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          </oak-form>
+            </oak-form>
+          </div>
         </div>
-      </div>
-    </app-section>
+      </app-section>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { addSchemaTableDataMutation } from '@/graphql/addSchemaTableData.mutation';
 import { useMutation } from '@vue/apollo-composable';
-import { defineComponent } from 'vue';
-import { mapGetters } from 'vuex';
+import { computed, defineComponent } from 'vue';
+import { mapGetters, useStore } from 'vuex';
 import store from '@/store';
-import { allSchemaTableDataQuery } from '@/graphql/allSchemaTableData.query';
-import { searchSchemaTableDataQuery } from '@/graphql/searchSchemaTableData.query';
-import AppSection from '@/components/ui/AppSection.vue';
+import { uuid } from 'uuidv4';
 import DatatypeEdit from '@/components/DatatypeEdit/index.vue';
+import AppSection from '@/components/ui/AppSection.vue';
+import SidepaneHeading from '@/components/ui/SidepaneHeading.vue';
 import ActionBarCreate from './ActionBarCreate.vue';
 
 export default defineComponent({
   name: 'EditDetail',
-  computed: {
-    ...mapGetters(['getProfile'])
-  },
   props: {
     tableId: String,
-    closeEdit: Function,
-    columnHeaders: Array,
     record: Object,
-    filter: Object
+    filter: Object,
+    isSidepaneExpanded: Boolean
   },
   data() {
     return {
       state: {},
-      mutate: null as any
+      formId: uuid()
     };
   },
-  components: { DatatypeEdit, AppSection, ActionBarCreate },
-  mounted() {
+  components: { DatatypeEdit, ActionBarCreate, SidepaneHeading, AppSection },
+  setup(props) {
+    const storeVuex = useStore();
+    const columns = computed(() => storeVuex.getters.getColumnByTable(props.tableId));
+
     const { mutate } = useMutation(addSchemaTableDataMutation);
-    this.mutate = mutate;
+
+    return { mutate, columns };
   },
   methods: {
     handleChange(event: any) {
       this.state = { ...this.state, [event.detail.name]: event.detail.value };
     },
     handleSubmit(event: any) {
+      console.log(123);
       this.mutate({
         payload: {
           tableId: this.tableId,
@@ -80,12 +90,14 @@ export default defineComponent({
           secondary: false,
           payload: [response.data.addSchemaTableData]
         });
-        if (this.closeEdit) {
-          this.closeEdit();
-        }
         this.state = {};
         this.$emit('saved');
       });
+    }
+  },
+  mounted() {
+    if (this.record?.row) {
+      this.state = { ...this.record.row };
     }
   },
   watch: {
@@ -102,21 +114,9 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.create-record {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
 .create-record__form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   column-gap: 20px;
-}
-.create-record__form__element {
-  display: flex;
-  flex-direction: column;
-}
-.create-record__form__element__label {
-  font-weight: 600;
 }
 </style>

@@ -28,34 +28,10 @@
       >
         <font-awesome-icon :icon="['fas', 'text-height']" />
       </oak-button>
-      <oak-button
-        class="hide-preview-on-smallscreen"
-        theme="info"
-        :variant="preview ? 'regular' : 'block'"
-        size="xsmall"
-        shape="sharp"
-        @button-click="$emit('toggle-preview')"
-      >
-        <font-awesome-icon :icon="['fas', 'binoculars']" />
-      </oak-button>
     </div>
   </teleport>
   <teleport to="#topbar-left">
-    <div class="app-toolbar-action-container">
-      <oak-button theme="info" variant="block" size="xsmall" shape="sharp" @button-click="goBack">
-        <font-awesome-icon :icon="['fas', 'arrow-left']"
-      /></oak-button>
-      <div>{{ table?.name }}</div>
-      <oak-button
-        theme="info"
-        variant="block"
-        size="xsmall"
-        shape="sharp"
-        @button-click="goToManageTable"
-      >
-        <font-awesome-icon :icon="['fas', 'cog']"
-      /></oak-button>
-    </div>
+    <div class="desktop-only">{{ table?.name }}</div>
   </teleport>
 </template>
 
@@ -74,16 +50,6 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters(['getProfile'])
-  },
-  methods: {
-    goBack() {
-      this.$router.back();
-    },
-    goToManageTable() {
-      this.$router.push(
-        `/${this.getProfile.space}/schema/${this.$route.params.schemaId}/table/${this.$route.params.tableId}/manage`
-      );
-    }
   }
 });
 </script>

@@ -6,6 +6,7 @@ export const schemaTableDataByIdQuery = gql`
       id
       tableId
       row
+      reference
       relation
     }
   }

@@ -1,10 +1,12 @@
 <template>
-  <ViewRecord :tableId="$route.params.tableId" :recordId="$route.params.recordId" />
+  <ViewRecord :tableId="$route.params.tableId" :recordRef="$route.params.recordRef" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import ViewRecord from '@/components/ViewRecord/index.vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'ViewRecordView',

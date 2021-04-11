@@ -16,9 +16,10 @@ export default {
 
 <style lang="scss">
 .sidebar-header {
-  height: var(--topbar-height);
+  height: var(--oak-app-layout-topbar-height);
   display: flex;
+  justify-content: center;
   align-items: center;
-  margin: 0 10px;
+  // margin: 0 10px;
 }
 </style>

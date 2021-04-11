@@ -7,8 +7,10 @@
       @change="$emit('change', $event)"
     /> -->
     <list-form-datatype-chip
+      :hideLabel="hideLabel"
       :value="value"
       :cellHeader="cellHeader"
+      :formGroupName="formGroupName"
       @change="$emit('change', $event)"
     />
     <!-- <list-edit-datatype-chip-outline
@@ -29,7 +31,9 @@ export default defineComponent({
   name: 'ListFormDatatype',
   props: {
     value: Object,
-    cellHeader: Object
+    cellHeader: Object,
+    hideLabel: Boolean,
+    formGroupName: String
   }
 });
 </script>

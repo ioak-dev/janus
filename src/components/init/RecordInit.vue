@@ -12,21 +12,25 @@ export default {
   name: 'RecordInit',
   mounted() {
     recordParameterChangedSubject.asObservable().subscribe((message) => {
+      const quickFilter = { ...message.quickFilter };
       if (message.secondary) {
         const parameterChanged =
           message.tableId &&
           (this.secondaryRecordParameter.tableId !== message.tableId ||
-            !isEqual(this.secondaryRecordParameter.filter, message.filter));
+            !isEqual(this.secondaryRecordParameter.filter, message.filter) ||
+            !isEqual(this.secondaryRecordParameter.quickFilter, quickFilter));
         if (parameterChanged) {
-          this.fetchRecords(message.tableId, message.filter, true);
+          this.fetchRecords(message.tableId, message.filter, quickFilter, true);
         }
       } else {
+        console.log(this.recordParameter.quickFilter, quickFilter, message.filter);
         const parameterChanged =
           message.tableId &&
           (this.recordParameter.tableId !== message.tableId ||
-            !isEqual(this.recordParameter.filter, message.filter));
+            !isEqual(this.recordParameter.filter, message.filter) ||
+            !isEqual(this.recordParameter.quickFilter, quickFilter));
         if (parameterChanged) {
-          this.fetchRecords(message.tableId, message.filter);
+          this.fetchRecords(message.tableId, message.filter, quickFilter);
         }
       }
     });
@@ -54,13 +58,14 @@ export default {
     return { recordParameter, secondaryRecordParameter };
   },
   methods: {
-    fetchRecords(tableId, filter, secondary = false) {
+    fetchRecords(tableId, filter, quickFilter, secondary = false) {
       defaultClient
         .query({
           query: searchSchemaTableDataQuery,
           variables: {
             tableId,
             anonymousFilter: filter,
+            quickFilter,
             pageSize: this.recordParameter.pageSize,
             pageNo: 0
           }
@@ -70,8 +75,9 @@ export default {
             const { pageNo, hasMore, results } = response.data.searchSchemaTableData;
             store.dispatch('refreshRecordParameter', {
               secondary,
-              payload: { pageNo, hasMore, filter, tableId }
+              payload: { pageNo, hasMore, filter, quickFilter, tableId }
             });
+            console.log('((((((((((((((((((((', quickFilter);
             store.dispatch('refreshRecord', { secondary, payload: results });
           }
         })
@@ -93,6 +99,7 @@ export default {
           variables: {
             tableId: param.tableId,
             anonymousFilter: param.filter,
+            quickFilter: param.quickFilter,
             pageSize: param.pageSize,
             pageNo: param.pageNo
           }

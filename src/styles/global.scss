@@ -1,3 +1,18 @@
+// .action-footer {
+//   // height: 50px;
+//   display: flex;
+//   flex-wrap: wrap;
+//   flex-direction: row;
+//   align-items: center;
+//   margin: 10px 15px;
+//   justify-content: flex-end;
+//   column-gap: 4px;
+// }
+
+.action-footer-sidepane {
+  margin: 10px 15px;
+}
+
 .app-action-bar {
   display: flex;
   flex-direction: row;
@@ -25,21 +40,24 @@
   grid-auto-flow: column;
   column-gap: 6px;
   align-content: center;
-  height: calc(var(--oak-toolbar-min-height) - 4px);
+  height: var(--oak-toolbar-min-height);
   padding: 0 10px;
-  border: 1px dotted transparent;
-  transition: border-color 250ms ease-in-out;
+  // border: 1px dotted transparent;
+  transition: background-color 250ms ease-in-out;
   &:hover {
-    border-color: var(--color-default);
+    background-color: var(--color-container-darker);
   }
-  &.app-toolbar-action--primary {
-    &:hover {
-      border-color: var(--color-primary);
-    }
+  &.app-toolbar-action--active {
+    background-color: var(--color-surface);
+    color: var(--color-secondary);
   }
-  &.app-toolbar-action--danger {
-    &:hover {
-      border-color: var(--color-danger);
-    }
-  }
+}
+
+.sidepane-main {
+  height: calc(
+    100vh - var(--oak-toolbar-min-height) - var(--oak-app-layout-topbar-height) -
+      50px - 1px
+  );
+  overflow-y: auto;
+  overflow-x: hidden;
 }

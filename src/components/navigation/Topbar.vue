@@ -1,12 +1,12 @@
 <template>
   <div class="topbar">
     <div class="topbar__left">
-      <schema-info />
+      <schema-info class="desktop-only" />
       <div id="topbar-left" />
     </div>
     <div class="topbar__right">
+      <global-search />
       <dark-mode-switch />
-      <user-account />
       <div id="topbar-right" />
     </div>
   </div>
@@ -16,13 +16,14 @@ import { mapGetters, mapActions } from 'vuex';
 import DarkModeSwitch from './DarkModeSwitch.vue';
 import UserAccount from './UserAccount.vue';
 import SchemaInfo from './Topbar/SchemaInfo.vue';
+import GlobalSearch from './GlobalSearch.vue';
 
 export default {
   name: 'Topbar',
   components: {
     DarkModeSwitch,
-    UserAccount,
-    SchemaInfo
+    SchemaInfo,
+    GlobalSearch
   },
   computed: {
     ...mapGetters(['getProfile'])

@@ -2,7 +2,7 @@
   <div class="nav-section">
     <div class="nav-section__title">
       <!-- <div class="nav-section__title__divider" /> -->
-      <div>Applications</div>
+      <div>Schema explorer</div>
     </div>
     <table-nav v-for="item in getSchema" :key="item.id" :schemaId="item.id"></table-nav>
   </div>

@@ -4,11 +4,11 @@
       type="text"
       fill="container"
       :name="cellHeader.id"
-      :label="cellHeader.name"
+      :label="hideLabel ? null : cellHeader.name"
       :value="value"
       @input-input="$emit('change', $event)"
       :formGroupName="formGroupName"
-      gutterBottom
+      :gutterBottom="!hideLabel"
     />
   </div>
 </template>
@@ -22,7 +22,8 @@ export default defineComponent({
   props: {
     formGroupName: String,
     value: Object,
-    cellHeader: Object
+    cellHeader: Object,
+    hideLabel: Boolean
   }
 });
 </script>

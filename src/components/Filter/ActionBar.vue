@@ -1,63 +1,51 @@
 <template>
-  <app-section subtle>
-    <div slot class="action-bar-footer">
-      <div class="app-action-bar">
-        <div>
-          <oak-button
-            v-if="currentFilter.id || currentFilter.name"
-            theme="default"
-            variant="appear"
-            shape="sharp"
-            size="xsmall"
-            @button-click="$emit('save')"
-            ><font-awesome-icon :icon="['fas', 'plus']" />Save</oak-button
-          >
-          <oak-button
-            v-if="!isFilterApplied"
-            theme="default"
-            variant="appear"
-            shape="sharp"
-            size="xsmall"
-            @button-click="$emit('apply')"
-            ><font-awesome-icon :icon="['fas', 'check']" />Apply</oak-button
-          >
-          <oak-button
-            v-if="isFilterApplied"
-            theme="default"
-            variant="outline"
-            shape="sharp"
-            size="xsmall"
-            @button-click="$emit('clear')"
-            ><font-awesome-icon :icon="['fas', 'times']" />Clear</oak-button
-          >
-          <oak-button
-            v-if="currentFilter.id"
-            theme="danger"
-            variant="outline"
-            shape="sharp"
-            size="xsmall"
-            @button-click="$emit('delete')"
-            ><font-awesome-icon :icon="['fas', 'trash-alt']" />Delete</oak-button
-          >
-        </div>
-      </div>
-      <div>
+  <div class="action-footer action-footer-sidepane position-right">
+    <oak-button
+      v-if="currentFilter.id || currentFilter.name"
+      theme="default"
+      variant="outline"
+      shape="sharp"
+      @button-click="$emit('save')"
+      ><font-awesome-icon :icon="['fas', 'plus']" />Save</oak-button
+    >
+    <oak-button
+      v-if="!isFilterApplied"
+      theme="default"
+      variant="outline"
+      shape="sharp"
+      @button-click="$emit('apply')"
+      ><font-awesome-icon :icon="['fas', 'check']" />Apply</oak-button
+    >
+    <oak-button
+      v-if="isFilterApplied"
+      theme="default"
+      variant="outline"
+      shape="sharp"
+      @button-click="$emit('clear')"
+      ><font-awesome-icon :icon="['fas', 'times']" />Clear</oak-button
+    >
+    <oak-button
+      v-if="currentFilter.id"
+      theme="danger"
+      variant="outline"
+      shape="sharp"
+      @button-click="$emit('delete')"
+      ><font-awesome-icon :icon="['fas', 'trash-alt']" />Delete</oak-button
+    >
+  </div>
+  <!-- <div>
         <filter-status :currentFilter="currentFilter" :appliedFilter="appliedFilter" />
-      </div>
-    </div>
-  </app-section>
+      </div> -->
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
-import AppSection from '@/components/ui/AppSection.vue';
 import { isEqual } from 'lodash';
 import FilterStatus from './FilterStatus.vue';
 
 export default defineComponent({
   name: 'ActionBar',
-  components: { AppSection, FilterStatus },
   props: { currentFilter: Object, appliedFilter: Object },
   setup(props) {
     const headerSpacingStyle = computed(() =>

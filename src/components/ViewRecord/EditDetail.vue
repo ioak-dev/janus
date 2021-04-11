@@ -1,24 +1,19 @@
 <template>
   <div class="edit-detail">
-    <action-bar-edit :closeEdit="closeEdit" @save="handleSubmit" />
     <app-section>
       <div slot>
-        <div class="edit-table-detail">
-          <oak-form formGroupName="edit-table-detail-form" @form-submit="handleSubmit">
-            <div class="edit-table-detail__form">
-              <div
-                class="edit-table-detail__form__element"
-                v-for="column in columnHeaders"
-                :key="column.id"
-              >
-                <!-- <div class="edit-table-detail__form__element__label">{{ column.name }}</div> -->
-                <div class="edit-table-detail__form__element__value">
+        <div class="edit-detail">
+          <oak-form :formGroupName="formGroupName" @form-submit="handleSubmit">
+            <div class="edit-detail__form">
+              <div class="edit-detail__form__element" v-for="column in columns" :key="column.id">
+                <!-- <div class="edit-detail__form__element__label">{{ column.name }}</div> -->
+                <div class="edit-detail__form__element__value">
                   <datatype-edit
                     :value="state[column.id]"
                     :rowData="rowData"
                     :cellHeader="column"
                     @change="handleChange"
-                    formGroupName="edit-table-detail-form"
+                    :formGroupName="formGroupName"
                   />
                 </div>
               </div>
@@ -33,11 +28,10 @@
 <script lang="ts">
 import { addSchemaTableDataMutation } from '@/graphql/addSchemaTableData.mutation';
 import { useMutation } from '@vue/apollo-composable';
-import { defineComponent } from 'vue';
-import { mapGetters } from 'vuex';
+import { computed, defineComponent } from 'vue';
+import { mapGetters, useStore } from 'vuex';
 import store from '@/store';
 import AppSection from '@/components/ui/AppSection.vue';
-import ActionBarEdit from './ActionBarEdit.vue';
 import DatatypeEdit from '../DatatypeEdit/index.vue';
 
 export default defineComponent({
@@ -47,21 +41,18 @@ export default defineComponent({
   },
   props: {
     tableId: String,
-    closeEdit: Function,
-    columnHeaders: Array,
-    rowData: Object
+    rowData: Object,
+    formGroupName: String
   },
-  components: { DatatypeEdit, AppSection, ActionBarEdit },
+  components: { DatatypeEdit, AppSection },
   mounted() {
     this.refreshStateValue();
   },
   methods: {
     handleChange(event: any) {
-      console.log(event);
       this.state = { ...this.state, [event.detail.name]: event.detail.value };
     },
     handleSubmit(event: any) {
-      console.log(event.detail);
       if (event.detail.isValid) {
         this.mutate({
           payload: {
@@ -70,18 +61,15 @@ export default defineComponent({
             row: this.state
           }
         }).then((response) => {
-          if (this.closeEdit) {
-            this.closeEdit();
-          }
           store.dispatch('editRecord', response.data.addSchemaTableData);
-          this.$emit('saved');
+          this.$emit('saved', response.data.addSchemaTableData);
         });
       }
     },
     refreshStateValue() {
-      if (this.columnHeaders && this.rowData) {
+      if (this.columns && this.rowData) {
         const localState: any = {};
-        this.columnHeaders.forEach((column: any) => {
+        this.columns.forEach((column: any) => {
           localState[column.id] = this.rowData?.row[column.id];
         });
         this.state = { ...localState };
@@ -96,8 +84,13 @@ export default defineComponent({
       })).mutate
     };
   },
+  setup(props) {
+    const storeVuex = useStore();
+    const columns = computed(() => storeVuex.getters.getColumnByTable(props.tableId));
+    return { columns };
+  },
   watch: {
-    columnHeaders() {
+    columns() {
       this.refreshStateValue();
     }
   }
@@ -111,20 +104,20 @@ export default defineComponent({
   flex-direction: column;
   width: 100%;
 }
-.edit-table-detail {
+.edit-detail {
 }
-.edit-table-detail__form {
+.edit-detail__form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   column-gap: 20px;
 }
-.edit-table-detail__form__element {
+.edit-detail__form__element {
   display: flex;
   flex-direction: column;
 }
-.edit-table-detail__form__element__label {
+.edit-detail__form__element__label {
   font-weight: 600;
 }
-.edit-table-detail__form__element__value {
+.edit-detail__form__element__value {
 }
 </style>

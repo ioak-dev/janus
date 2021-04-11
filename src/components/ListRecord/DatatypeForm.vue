@@ -1,6 +1,7 @@
 <template>
   <div v-if="cellHeader.datatype === 'text'" class="data-cell">
     <text-form-datatype
+      :hideLabel="hideLabel"
       :value="value"
       :cellHeader="cellHeader"
       :formGroupName="formGroupName"
@@ -9,6 +10,7 @@
   </div>
   <div v-if="cellHeader.datatype === 'list'" class="data-cell">
     <list-form-datatype
+      :hideLabel="hideLabel"
       :value="value"
       :cellHeader="cellHeader"
       :formGroupName="formGroupName"
@@ -17,6 +19,7 @@
   </div>
   <div v-if="cellHeader.datatype === 'relation'" class="data-cell">
     <relation-form-datatype
+      :hideLabel="hideLabel"
       :value="value"
       :cellHeader="cellHeader"
       :rowData="rowData"
@@ -38,11 +41,17 @@ export default defineComponent({
   name: 'DatatypeForm',
   components: { TextFormDatatype, RelationFormDatatype, ListFormDatatype },
   props: {
+    hideLabel: Boolean,
     value: Object,
-    cellHeader: Object
+    cellHeader: Object,
+    formGroupName: String
   }
 });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.data-cell {
+  width: 100%;
+}
+</style>

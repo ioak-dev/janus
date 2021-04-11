@@ -1,6 +1,6 @@
 <template>
   <div class="relation-edit-datatype">
-    <div>
+    <div v-if="!hideLabel">
       <oak-typography variant="body2"> {{ cellHeader.name }}</oak-typography>
     </div>
     <div>
@@ -43,7 +43,7 @@
   </oak-sheet>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref } from 'vue';
 import Datagrid from '@/components/ListRecord/Datagrid.vue';
 
@@ -53,12 +53,13 @@ export default defineComponent({
   props: {
     value: Object,
     cellHeader: Object,
-    rowData: Object
+    rowData: Object,
+    hideLabel: Boolean
   },
   data() {
     return {
       showChoosePrompt: false,
-      selectedRecords: [] as string[]
+      selectedRecords: []
     };
   },
   methods: {
@@ -68,14 +69,14 @@ export default defineComponent({
     closeChoosePrompt() {
       this.showChoosePrompt = false;
     },
-    handleRecordToggled(recordId: string, add: boolean) {
+    handleRecordToggled(recordId, add) {
       if (add) {
         this.selectedRecords = [...this.selectedRecords, recordId];
       } else {
         this.selectedRecords = this.selectedRecords.filter((item) => item !== recordId);
       }
     },
-    handleRecordSelected(recordId: string) {
+    handleRecordSelected(recordId) {
       this.selectedRecords = [recordId];
     },
     handleChange() {

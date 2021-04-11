@@ -87,7 +87,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/:space/schema/:schemaId/table/:tableId/record/:recordId',
+    path: '/:space/schema/:schemaId/table/:tableId/record/:recordRef',
     name: 'ViewRecordView',
     component: ViewRecordView,
     meta: {

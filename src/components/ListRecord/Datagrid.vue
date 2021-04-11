@@ -1,5 +1,6 @@
 <template>
   <div class="datagrid" v-if="!loading" id="datagrid-reference">
+    <oak-form :formGroupName="formId" @form-submit="applyQuickFilter" />
     <oak-table navPlacement="none" fill="global" elevation="0" :dense="dense">
       <oak-infinite-scroll
         variant="custom-selector"
@@ -9,12 +10,7 @@
         <div :class="tableStyle" class="datagrid__table" :id="scrollId">
           <table>
             <thead>
-              <tr
-                tabindex="0"
-                @click="toggleQuickFilter"
-                @keyup="headerKeyup"
-                id="datagrid-table-header-reference"
-              >
+              <tr tabindex="0" @keyup="headerKeyup" id="datagrid-table-header-reference">
                 <th className="checkbox">
                   <oak-checkbox
                     v-if="multiselect"
@@ -24,8 +20,8 @@
                     color="secondary"
                   ></oak-checkbox>
                 </th>
-                <th>Reference</th>
-                <th v-for="item in columns" :key="item.id">
+                <th @click="toggleQuickFilter">#</th>
+                <th v-for="item in columns" :key="item.id" @click="toggleQuickFilter">
                   {{ item.name }}
                 </th>
               </tr>
@@ -35,14 +31,56 @@
                 class="datagrid__table__filter"
                 :class="`${isShowQuickFilter ? 'datagrid__table__filter--active' : ''}`"
               >
-                <td />
-                <td />
+                <td colspan="2">
+                  <div class="datagrid__table__filter__action">
+                    <oak-button
+                      size="xsmall"
+                      shape="icon"
+                      variant="appear"
+                      theme="info"
+                      @button-click="applyQuickFilter"
+                    >
+                      <font-awesome-icon :icon="['fas', 'save']" />
+                    </oak-button>
+                    <oak-button
+                      size="xsmall"
+                      shape="icon"
+                      variant="appear"
+                      theme="info"
+                      @button-click="applyQuickFilter"
+                    >
+                      <font-awesome-icon :icon="['fas', 'upload']" />
+                    </oak-button>
+                    <oak-button
+                      v-if="isQuickFilterApplied"
+                      size="xsmall"
+                      shape="icon"
+                      variant="appear"
+                      theme="info"
+                      @button-click="clearQuickFilter"
+                    >
+                      <font-awesome-icon :icon="['fas', 'times']" />
+                    </oak-button>
+                    <oak-button
+                      v-else
+                      size="xsmall"
+                      shape="icon"
+                      variant="appear"
+                      theme="primary"
+                      @button-click="applyQuickFilter"
+                    >
+                      <font-awesome-icon :icon="['fas', 'check']" />
+                    </oak-button>
+                  </div>
+                </td>
                 <td v-for="column in columns" :key="column.id">
                   <div>
                     <datatype-form
-                      :value="quickFilter[column.id]"
+                      hideLabel
+                      :value="quickFilter.current[column.id]"
                       :cellHeader="column"
                       @change="handleQuickFilterValueChange"
+                      :formGroupName="formId"
                     />
                   </div>
                 </td>
@@ -68,9 +106,9 @@
                     color="secondary"
                   ></oak-checkbox>
                 </td>
-                <td>
+                <td class="link-column">
                   <oak-link @link-click="goToView(item)" color="primary"
-                    ><oak-typography variant="body2">Link-125</oak-typography></oak-link
+                    ><oak-typography variant="body2">{{ item.reference }}</oak-typography></oak-link
                   >
                 </td>
                 <!-- <td @click="goToEdit(item)" v-for="column in columns" :key="column.id"> -->
@@ -92,8 +130,10 @@
 <script>
 import store from '@/store';
 import { compose } from '@oakui/core-stage/style-composer/OakTableComposer';
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
 import { mapGetters, useStore } from 'vuex';
+import { uuid } from 'uuidv4';
+import { isEqual } from 'lodash';
 import { recordParameterChangedSubject } from '@/events/RecordParameterChangedEvent';
 import { loadMoreRecordCommandSubject } from '@/events/LoadMoreRecordCommand';
 import DatatypeForm from './DatatypeForm.vue';
@@ -123,16 +163,12 @@ export default defineComponent({
       return compose({ variant: 'outlined', fill: 'global', dense: this.dense });
     }
   },
-  mounted() {
-    if (!this.secondaryGrid) {
-      this.updateScrollHeight();
-    }
-  },
   created() {
     // this.fetchRecords();
     recordParameterChangedSubject.next({
       tableId: this.tableId,
       filter: this.filter,
+      quickFilter: this.quickFilter.current,
       secondary: this.secondaryGrid
     });
   },
@@ -143,33 +179,42 @@ export default defineComponent({
         secondary: this.secondaryGrid
       });
     },
-    updateScrollHeight() {
-      const el = document.getElementById('datagrid-reference');
-      const tableEl = document.getElementById(this.scrollId);
-      const actionBarEl = document.getElementById('action-bar-reference');
-      if (tableEl) {
-        tableEl.style.height = `${window.innerHeight - 42 - 20 - 20}px`;
-      } else {
-        setTimeout(() => {
-          this.updateScrollHeight();
-        }, 250);
-      }
-    },
     goToView(record) {
       this.$router.push(
-        `/${this.getProfile.space}/schema/${this.getProfile.schema}/table/${record.tableId}/record/${record.id}`
+        `/${this.getProfile.space}/schema/${this.getProfile.schema}/table/${record.tableId}/record/${record.reference}`
       );
     },
     headerKeyup(event) {
-      console.log(event);
-      console.log(event.srcElement.id);
+      if (event.srcElement.id === 'datagrid-table-header-reference' && event.key === 'Enter') {
+        this.toggleQuickFilter();
+      }
     },
-    toggleQuickFilter(event) {
-      console.log(event);
-      // this.isShowQuickFilter = !this.isShowQuickFilter;
+    toggleQuickFilter() {
+      this.isShowQuickFilter = !this.isShowQuickFilter;
     },
     handleQuickFilterValueChange(event) {
       console.log(event);
+      this.quickFilter.current[event.detail.name] = event.detail.value;
+    },
+    applyQuickFilter(event) {
+      this.quickFilter.applied = { ...this.quickFilter.current };
+      recordParameterChangedSubject.next({
+        tableId: this.tableId,
+        filter: this.filter,
+        quickFilter: this.quickFilter.current,
+        secondary: this.secondaryGrid
+      });
+      this.$emit('select-none');
+    },
+    clearQuickFilter() {
+      this.quickFilter.current = {};
+      this.quickFilter.applied = {};
+      recordParameterChangedSubject.next({
+        tableId: this.tableId,
+        filter: this.filter,
+        quickFilter: this.quickFilter.current,
+        secondary: this.secondaryGrid
+      });
     },
     toggleRecordSelectionEvent(event) {
       const record = this.records.find((item) => item.id === event.detail.name);
@@ -203,13 +248,17 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const formId = uuid();
     const records = computed(() => store.getters.getRecord(props.secondaryGrid));
     const isShowQuickFilter = ref(false);
-    const quickFilter = reactive({});
+    const quickFilter = reactive({ current: {}, applied: {} });
+    const isQuickFilterApplied = computed(() => isEqual(quickFilter.current, quickFilter.applied));
     return {
       records,
       isShowQuickFilter,
-      quickFilter
+      quickFilter,
+      isQuickFilterApplied,
+      formId
     };
   },
   watch: {
@@ -218,8 +267,10 @@ export default defineComponent({
       recordParameterChangedSubject.next({
         tableId: this.tableId,
         filter: newVal,
+        quickFilter: this.quickFilter.current,
         secondary: this.secondaryGrid
       });
+      this.$emit('select-none');
     }
   }
 });
@@ -248,6 +299,10 @@ table {
   tbody tr td.checkbox {
     min-width: 0px;
   }
+  tbody tr td.link-column {
+    min-width: 0px;
+  }
+
   // tbody {
   //   display: block;
   //   height: 100px;
@@ -261,6 +316,7 @@ table {
 }
 .datagrid__table {
   overflow: auto;
+  height: calc(100vh - var(--oak-app-layout-topbar-height) - var(--oak-toolbar-min-height));
 }
 table {
   border-collapse: collapse;
@@ -281,7 +337,7 @@ table thead tr:focus {
 }
 .datagrid__table__filter,
 .datagrid__table__filter td,
-.datagrid__table__filter td div {
+.datagrid__table__filter td > div {
   transition: height 250ms ease-in-out;
   height: 0px;
   overflow-y: hidden;
@@ -289,10 +345,10 @@ table thead tr:focus {
 }
 .datagrid__table__filter--active,
 .datagrid__table__filter--active td,
-.datagrid__table__filter--active td div {
+.datagrid__table__filter--active td > div {
   height: 50px;
 }
-.datagrid__table__filter td div {
+.datagrid__table__filter td > div {
   display: flex;
   align-items: center;
   padding: 0px 10px;
@@ -300,5 +356,10 @@ table thead tr:focus {
 .datagrid__table__filter:hover,
 .datagrid__table__filter:hover td {
   background-color: transparent;
+}
+.datagrid__table__filter__action {
+  display: grid;
+  justify-content: flex-end;
+  column-gap: 4px;
 }
 </style>

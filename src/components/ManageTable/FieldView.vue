@@ -39,7 +39,7 @@
             name="datatype"
             label="Datatype"
             :value="field.datatype"
-            :options="['text', 'number', 'list', 'relation', 'user', 'percentage']"
+            :options="['text', 'number', 'list', 'relation', 'user', 'percentage', 'computed']"
             @select-input="handleChange"
             autocompleteVariant="none"
             gutterBottom
@@ -51,6 +51,11 @@
           />
           <meta-relation
             v-if="field.datatype === 'relation'"
+            :meta="field.meta"
+            @meta-change="handleChange"
+          />
+          <meta-computed
+            v-if="field.datatype === 'computed'"
             :meta="field.meta"
             @meta-change="handleChange"
           />
@@ -89,6 +94,7 @@ import MetaRelation from './MetaRelation.vue';
 import MetaMultiple from './MetaMultiple.vue';
 import MetaUserImpersonate from './MetaUserImpersonate.vue';
 import MetaPercentage from './MetaPercentage.vue';
+import MetaComputed from './MetaComputed.vue';
 
 export default defineComponent({
   name: 'FieldView',
@@ -106,7 +112,8 @@ export default defineComponent({
     MetaRelation,
     MetaUserImpersonate,
     MetaMultiple,
-    MetaPercentage
+    MetaPercentage,
+    MetaComputed
   },
   methods: {
     handleExpand() {

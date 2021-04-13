@@ -1,5 +1,8 @@
 <template>
-  <div v-if="rowData?.relation" class="relation-view-datatype">
+  <div
+    v-if="rowData?.relation && rowData?.relation[cellHeader?.id]?.length > 0"
+    class="relation-view-datatype"
+  >
     <oak-link @link-click="goToRecord">
       <oak-typography variant="body2" underline="hover" color="primary">
         {{ rowData?.relation[cellHeader?.id][0]?.row[cellHeader?.meta?.columnId] }}
@@ -23,11 +26,6 @@ export default defineComponent({
   },
   methods: {
     goToRecord() {
-      console.log({
-        space: this.getProfile.space,
-        id: this.cellHeader?.meta?.tableId,
-        recordId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
-      });
       this.$router.push({
         name: 'ViewRecordView',
         params: {

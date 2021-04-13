@@ -5,6 +5,9 @@ const state = {
 const getters = {
   getColumnByTable: (state: any) => (tableId: string) => {
     return state.data.filter((item: any) => item.tableId === tableId);
+  },
+  getColumn: (state: any) => {
+    return state.data;
   }
 };
 

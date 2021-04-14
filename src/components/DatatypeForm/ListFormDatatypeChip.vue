@@ -5,7 +5,7 @@
     :value="value"
     fill="container"
     :optionsAsKeyValue="
-      cellHeader?.meta?.options?.map((item) => {
+      cellHeader?.options?.map((item) => {
         return { id: item.id, value: item.value };
       })
     "

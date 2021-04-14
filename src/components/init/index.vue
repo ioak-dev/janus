@@ -55,9 +55,7 @@ export default {
       }
     });
     columnDefinitionChangedSubject.asObservable().subscribe((message) => {
-      if (this.getProfile.schema) {
-        this.fetchSchema(this.getProfile.schema);
-      }
+      this.replaceColumn(message.tableId, message.columnList);
     });
     filterDefinitionChangedSubject.asObservable().subscribe((message) => {
       if (this.getProfile.schema) {
@@ -163,6 +161,9 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    replaceColumn(tableId, payload) {
+      store.dispatch('replaceColumnByTableId', { tableId, payload });
     }
   }
 };

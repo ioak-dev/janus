@@ -136,8 +136,8 @@ import { uuid } from 'uuidv4';
 import { isEqual } from 'lodash';
 import { recordParameterChangedSubject } from '@/events/RecordParameterChangedEvent';
 import { loadMoreRecordCommandSubject } from '@/events/LoadMoreRecordCommand';
+import DatatypeTableView from '@/components/DatatypeTableView/index.vue';
 import DatatypeForm from './DatatypeForm.vue';
-import DatatypeTableView from './DatatypeTableView/index.vue';
 
 export default defineComponent({
   name: 'Datagrid',
@@ -221,7 +221,8 @@ export default defineComponent({
       this.$emit(
         'record-toggled',
         record,
-        !this.selectedRecords?.includes(record.id) ? 'active' : ''
+        !this.selectedRecords?.includes(record.id) ? 'active' : '',
+        true
       );
     },
     recordSelectedEvent(event) {
@@ -361,5 +362,10 @@ table thead tr:focus {
   display: grid;
   justify-content: flex-end;
   column-gap: 4px;
+}
+.oak-table-extern--dense {
+  tr {
+    border-top: none;
+  }
 }
 </style>

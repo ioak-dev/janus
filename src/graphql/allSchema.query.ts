@@ -5,6 +5,7 @@ export const allSchemaQuery = gql`
     allSchema {
       id
       name
+      description
     }
   }
 `;

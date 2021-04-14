@@ -1,51 +1,62 @@
 <template>
-  <div class="meta-computed__title">
-    <div>Variables</div>
-    <oak-button
-      theme="primary"
-      variant="regular"
-      @button-click="newVariable"
-      shape="sharp"
-      size="xsmall"
-      >New variable</oak-button
-    >
-  </div>
-  <div class="meta-computed__choices" v-if="meta">
-    <div
-      class="meta-computed__choices__item"
-      v-for="(variable, index) in meta.variables"
-      :key="index"
-    >
-      <oak-input
-        fill="global"
-        name="name"
-        label="Variable name"
-        :value="variable.name"
-        @input-input="handleChange($event, variable, index)"
-        autocompleteVariant="none"
-        gutterBottom
-      />
-      <oak-select
-        fill="global"
-        name="tableId"
-        label="Table"
-        :value="variable.tableId"
-        :optionsAsKeyValue="tableList"
-        @select-input="handleChange($event, variable, index)"
-        autocompleteVariant="none"
-        gutterBottom
-      />
-      <oak-select
-        fill="global"
-        name="columnId"
-        label="Column"
-        :value="variable.columnId"
-        :optionsAsKeyValue="columnMap[variable.tableId]"
-        @select-input="handleChange($event, variable, index)"
-        autocompleteVariant="none"
-        gutterBottom
-      />
+  <div class="meta-computed-variables">
+    <div class="meta-computed__title">
+      <div>Variables</div>
+      <oak-button
+        theme="primary"
+        variant="regular"
+        @button-click="newVariable"
+        shape="sharp"
+        size="xsmall"
+        >New variable</oak-button
+      >
     </div>
+    <div class="meta-computed__choices" v-if="meta">
+      <div
+        class="meta-computed__choices__item"
+        v-for="(variable, index) in meta.variables"
+        :key="index"
+      >
+        <oak-input
+          fill="global"
+          name="name"
+          label="Variable name"
+          :value="variable.name"
+          @input-input="handleChange($event, variable, index)"
+          autocompleteVariant="none"
+          gutterBottom
+        />
+        <oak-select
+          fill="global"
+          name="tableId"
+          label="Table"
+          :value="variable.tableId"
+          :optionsAsKeyValue="tableList"
+          @select-input="handleChange($event, variable, index)"
+          autocompleteVariant="none"
+          gutterBottom
+        />
+        <oak-select
+          fill="global"
+          name="columnId"
+          label="Column"
+          :value="variable.columnId"
+          :optionsAsKeyValue="columnMap[variable.tableId]"
+          @select-input="handleChange($event, variable, index)"
+          autocompleteVariant="none"
+          gutterBottom
+        />
+      </div>
+    </div>
+  </div>
+  <div class="meta-computed-template">
+    <oak-input
+      fill="global"
+      @input-input="handleTemplateChange"
+      label="Template"
+      name="template"
+      :value="meta.template"
+    />
   </div>
 </template>
 
@@ -77,6 +88,9 @@ export default defineComponent({
       } else {
         this.emitChangeEvent('variables', [{}]);
       }
+    },
+    handleTemplateChange(event: any) {
+      this.emitChangeEvent(event.detail.name, event.detail.value);
     },
     emitChangeEvent(name: string, value: any) {
       return this.$emit('meta-change', {
@@ -117,6 +131,9 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.meta-computed-variables {
+  margin-bottom: 10px;
+}
 .meta-computed__title {
   margin-bottom: 10px;
   // font-weight: bold;

@@ -31,7 +31,7 @@ export default defineComponent({
         params: {
           space: this.getProfile.space,
           tableId: this.cellHeader?.meta?.tableId,
-          recordId: this.rowData?.relation[this.cellHeader?.id][0]._id.toString() || ''
+          recordRef: this.rowData?.relation[this.cellHeader?.id][0].reference || ''
         }
       });
     }

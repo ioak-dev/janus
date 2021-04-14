@@ -3,7 +3,7 @@
     <div
       v-for="option in options"
       :key="option.id"
-      :class="`list-view-datatype-chip__item app-swatch-bg-${option.color} app-swatch-fg-${option.color}`"
+      :class="`app-swatch-bg-${option.color} app-swatch-fg-${option.color} ${indicatorStyle}`"
     >
       <div class="list-view-datatype-chip__item__value">{{ option.value }}</div>
     </div>
@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { mapGetters } from 'vuex';
 
 export default defineComponent({
@@ -20,20 +20,32 @@ export default defineComponent({
     rowData: Object,
     cellHeader: Object
   },
-  computed: {
-    options(): any {
-      if (!this.cellHeader?.meta?.options) {
+  computed: {},
+  setup(props) {
+    const options = computed(() => {
+      if (!props.cellHeader?.options) {
         return null;
       }
-      if (this.cellHeader.meta.multiple) {
-        return this.cellHeader.meta.options.filter((item: any) =>
-          this.rowData?.row[this.cellHeader?.id].includes(item.id)
+      if (props.cellHeader.meta.multiple) {
+        return props.cellHeader.options.filter((item: any) =>
+          props.rowData?.row[props.cellHeader?.id].includes(item.id)
         );
       }
-      return this.cellHeader.meta.options.filter((item: any) =>
-        this.rowData?.row[this.cellHeader?.id]?.includes(item.id)
+      return props.cellHeader.options.filter((item: any) =>
+        props.rowData?.row[props.cellHeader?.id]?.includes(item.id)
       );
-    }
+    });
+    const indicatorStyle = computed(() => {
+      let style = 'list-view-datatype-chip__item';
+      const shapeStyle = ` chip-indicator-shape--${props.cellHeader?.meta?.shape}`;
+      const sizeStyle = ` chip-indicator-size--${props.cellHeader?.meta?.size}`;
+      style += shapeStyle;
+      style += sizeStyle;
+
+      return style;
+    });
+
+    return { options, indicatorStyle };
   }
 });
 </script>
@@ -50,7 +62,18 @@ export default defineComponent({
   display: flex;
   gap: 4px;
   padding: 6px 8px;
-  border-radius: 4px;
   font-size: 12px;
+}
+.chip-indicator-shape--Rounded {
+  border-radius: 4px;
+}
+.chip-indicator-shape--Ellipse {
+  border-radius: 20px;
+}
+.chip-indicator-size--Small {
+  padding: 2px 4px;
+}
+.chip-indicator-size--Large {
+  padding: 10px 12px;
 }
 </style>

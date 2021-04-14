@@ -1,7 +1,7 @@
 <template>
   <div v-if="cellHeader?.meta?.indicator && rowData">
-    <list-view-datatype-badge
-      v-if="cellHeader.meta.indicator === 'badge'"
+    <list-view-datatype-icon
+      v-if="cellHeader.meta.indicator === 'icon'"
       :rowData="rowData"
       :cellHeader="cellHeader"
     />
@@ -22,11 +22,11 @@
 import { defineComponent, ref } from 'vue';
 import { mapGetters } from 'vuex';
 import ListViewDatatypeChip from './ListViewDatatypeChip.vue';
-import ListViewDatatypeBadge from './ListViewDatatypeBadge.vue';
+import ListViewDatatypeIcon from './ListViewDatatypeIcon.vue';
 import ListViewDatatypeChipOutline from './ListViewDatatypeChipOutline.vue';
 
 export default defineComponent({
-  components: { ListViewDatatypeChip, ListViewDatatypeBadge, ListViewDatatypeChipOutline },
+  components: { ListViewDatatypeChip, ListViewDatatypeIcon, ListViewDatatypeChipOutline },
   name: 'ListViewDatatype',
   props: {
     rowData: Object,

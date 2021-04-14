@@ -8,6 +8,14 @@ export const updateSchemaTableColumnMutation = gql`
       tableId
       datatype
       meta
+      options {
+        id
+        tableId
+        columnId
+        value
+        color
+        icon
+      }
     }
   }
 `;

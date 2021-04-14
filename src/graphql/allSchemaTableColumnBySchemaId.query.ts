@@ -8,6 +8,14 @@ export const allSchemaTableColumnBySchemaIdQuery = gql`
       name
       datatype
       meta
+      options {
+        id
+        tableId
+        columnId
+        value
+        color
+        icon
+      }
     }
   }
 `;

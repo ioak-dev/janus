@@ -1,9 +1,9 @@
 <template>
   <div class="list-table">
     <action-bar
-      @create="openCreate('create')"
-      @clone="updateSidepaneContent('clone')"
-      @edit="updateSidepaneContent('edit')"
+      @create="openCreate"
+      @clone="openClone"
+      @edit="openEdit"
       @delete="handleDelete"
       @clear-selection="handleClear"
       :selectedTables="selectedTables"
@@ -14,10 +14,21 @@
         <table-listing :selectedTables="selectedTables" @change-selection="handleSelect" />
       </div>
       <div class="list-table__container__side" :class="sidepaneStyle">
-        <create-record
+        <create-table
           v-if="['create', 'clone'].includes(sidepaneContent)"
           :schemaId="$route.params.schemaId"
-          :table="tableToClone"
+          :table="tableToCloneOrEdit"
+          :isSidepaneExpanded="isSidepaneExpanded"
+          @saved="updateSidepaneContent(sidepaneContent)"
+          @close="updateSidepaneContent(sidepaneContent)"
+          @expand="expandSidepane"
+          @collapse="collapseSidepane"
+        />
+        <create-table
+          v-if="sidepaneContent === 'edit'"
+          edit
+          :schemaId="$route.params.schemaId"
+          :table="tableToCloneOrEdit"
           :isSidepaneExpanded="isSidepaneExpanded"
           @saved="updateSidepaneContent(sidepaneContent)"
           @close="updateSidepaneContent(sidepaneContent)"
@@ -30,28 +41,36 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
 import { useStore } from 'vuex';
 import { compose as dividerCompose } from '@oakui/core-stage/style-composer/OakDividerComposer';
-import { useRoute } from 'vue-router';
+import { useMutation } from '@vue/apollo-composable';
+import store from '@/store';
+import { deleteSchemaTableMutation } from '@/graphql/deleteSchemaTable.mutation';
 import ActionBar from './ActionBar.vue';
 import TableListing from './TableListing.vue';
+import CreateTable from './CreateTable.vue';
 
 export default defineComponent({
   name: 'ListTable',
-  components: { ActionBar, TableListing },
+  components: { ActionBar, TableListing, CreateTable },
   methods: {
     updateSidepaneContent(contentType: string) {
       this.sidepaneContent = this.sidepaneContent === contentType ? '' : contentType;
     },
     openCreate() {
-      // this.recordToClone = null;
+      this.tableToCloneOrEdit = null;
       this.updateSidepaneContent('create');
     },
     openClone() {
-      // this.recordToClone =
-      //   this.selectedRecordsObject.length === 1 ? this.selectedRecordsObject[0] : null;
+      this.tableToCloneOrEdit =
+        this.selectedTablesObject.length === 1 ? this.selectedTablesObject[0] : null;
       this.updateSidepaneContent('clone');
+    },
+    openEdit() {
+      this.tableToCloneOrEdit =
+        this.selectedTablesObject.length === 1 ? this.selectedTablesObject[0] : null;
+      this.updateSidepaneContent('edit');
     },
     expandSidepane() {
       this.isSidepaneExpanded = true;
@@ -65,19 +84,27 @@ export default defineComponent({
       );
     },
     handleSelect(event: any) {
-      console.log(event.detail);
       if (event.detail.value) {
-        this.selectedTables.push(event.detail.name);
+        this.selectedTables.push(event.detail.name.id);
+        this.selectedTablesObject.push(event.detail.name);
       } else {
-        this.selectedTables.splice(this.selectedTables.indexOf(event.detail.name), 1);
+        this.selectedTablesObject.splice(this.selectedTables.indexOf(event.detail.name.id), 1);
+        this.selectedTables.splice(this.selectedTables.indexOf(event.detail.name.id), 1);
       }
     },
     handleClear() {
       this.selectedTables.splice(0, this.selectedTables.length);
+      this.selectedTablesObject.splice(0, this.selectedTablesObject.length);
+    },
+    handleDelete() {
+      this.deleteTable({ idList: this.selectedTables }).then((response) => {
+        store.dispatch('deleteTable', response.data.deleteSchemaTable.idList);
+      });
     }
   },
   setup() {
-    const selectedTables = reactive([] as any);
+    const selectedTables = reactive([] as string[]);
+    const selectedTablesObject = reactive([] as any[]);
     const isSidepaneExpanded = ref(false);
     const sidepaneContent = ref('');
     const sidepaneStyle = computed(() => {
@@ -85,10 +112,21 @@ export default defineComponent({
         sidepaneContent.value
       }`;
     });
-    const store = useStore();
-    const profile = computed(() => store.getters.getProfile);
+    const storeVuex = useStore();
+    const profile = computed(() => storeVuex.getters.getProfile);
+    const tableToCloneOrEdit = reactive(null as any);
+    const { mutate } = useMutation(deleteSchemaTableMutation);
 
-    return { isSidepaneExpanded, sidepaneContent, sidepaneStyle, profile, selectedTables };
+    return {
+      isSidepaneExpanded,
+      sidepaneContent,
+      sidepaneStyle,
+      profile,
+      selectedTables,
+      selectedTablesObject,
+      tableToCloneOrEdit,
+      deleteTable: mutate
+    };
   }
 });
 </script>

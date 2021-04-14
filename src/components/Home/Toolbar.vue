@@ -1,5 +1,5 @@
 <template>
-  <teleport to="#topbar-left">Janus</teleport>
+  <!-- <teleport to="#topbar-left">Janus</teleport> -->
   <teleport to="#toolbar-left">Choose space realm</teleport>
 </template>
 

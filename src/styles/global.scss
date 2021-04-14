@@ -61,3 +61,20 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+.window-close-action {
+  display: flex;
+  justify-content: flex-end;
+  .window-close-action--icon {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 250ms ease-in-out;
+    &:hover {
+      color: var(--color-danger);
+    }
+  }
+}

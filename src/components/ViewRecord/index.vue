@@ -1,5 +1,4 @@
 <template>
-  <toolbar :tableId="tableId" :record="schemaTableDataByReferenceQueryResult" />
   <view-record-main
     v-if="schemaTableDataByReferenceQueryResult?.id"
     :tableId="tableId"
@@ -14,7 +13,6 @@ import { defineComponent, ref } from 'vue';
 import { mapGetters } from 'vuex';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import { compose as sectionCompose } from '@oakui/core-stage/style-composer/OakSectionComposer';
-import Toolbar from './Toolbar.vue';
 import ViewRecordMain from './ViewRecordMain.vue';
 
 export default defineComponent({
@@ -44,8 +42,7 @@ export default defineComponent({
     };
   },
   components: {
-    ViewRecordMain,
-    Toolbar
+    ViewRecordMain
   },
   props: { tableId: String, recordRef: String },
   methods: {

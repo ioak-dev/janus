@@ -15,6 +15,7 @@
         <oak-click-area @click-area-click="goToTable(table.id)">
           <div class="table-listing__list__item__left">
             <div class="table-listing__list__item__left__heading">
+              <font-awesome-icon :icon="['fas', 'table']" />
               <div>{{ table.name }}</div>
             </div>
             <div class="table-listing__list__item__left__description">
@@ -26,7 +27,7 @@
           <oak-checkbox
             :value="selectedTables.includes(table.id)"
             :name="table.id"
-            @input-change="$emit('change-selection', $event)"
+            @input-change="handleToggle($event, table)"
             color="primary"
           ></oak-checkbox>
         </div>
@@ -51,6 +52,9 @@ export default defineComponent({
     },
     handleSearchChange(event: any) {
       this.searchText = event.detail.value;
+    },
+    handleToggle(event: any, _table: any) {
+      this.$emit('change-selection', { detail: { name: _table, value: event.detail.value } });
     }
   },
   setup() {
@@ -121,6 +125,11 @@ export default defineComponent({
 .table-listing__list__item__left__heading {
   transition: color 200ms ease-in-out;
   font-size: 20px;
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 6px;
 }
 .table-listing__list__item__right {
   background-color: var(--color-container);

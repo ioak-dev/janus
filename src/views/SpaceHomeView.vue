@@ -1,15 +1,10 @@
-<template>
-  <manage-table />
-</template>
-
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ManageTable from '@/components/ManageTable/index.vue';
 
 export default defineComponent({
-  name: 'ManageTableView',
-  components: {
-    ManageTable
+  name: 'SpaceHomeView',
+  mounted() {
+    this.$router.push({ name: 'ListSchemaView' });
   }
 });
 </script>

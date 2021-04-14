@@ -1,11 +1,10 @@
 <template>
   <div class="topbar">
     <div class="topbar__left">
-      <schema-info class="desktop-only" />
-      <div id="topbar-left" />
+      <bookmark class="desktop-only" />
     </div>
     <div class="topbar__right">
-      <global-search />
+      <global-search class="desktop-only" />
       <dark-mode-switch />
       <div id="topbar-right" />
     </div>
@@ -14,15 +13,14 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import DarkModeSwitch from './DarkModeSwitch.vue';
-import UserAccount from './UserAccount.vue';
-import SchemaInfo from './Topbar/SchemaInfo.vue';
+import Bookmark from './Topbar/Bookmark.vue';
 import GlobalSearch from './GlobalSearch.vue';
 
 export default {
   name: 'Topbar',
   components: {
     DarkModeSwitch,
-    SchemaInfo,
+    Bookmark,
     GlobalSearch
   },
   computed: {

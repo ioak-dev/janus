@@ -40,7 +40,7 @@ import FieldView from './FieldView.vue';
 import ActionBar from './ActionBar.vue';
 
 export default defineComponent({
-  name: 'ManageTable',
+  name: 'ColumnSettings',
   components: { ActionBar, FieldView, AppSection, SidepaneHeading },
   props: { tableId: String, isSidepaneExpanded: Boolean },
   setup(props) {
@@ -48,6 +48,7 @@ export default defineComponent({
     const isEdit = ref(false);
 
     const columns = computed(() => store.getters.getColumnByTable(props.tableId));
+    const allColumns = computed(() => store.getters.getColumn);
     const profile = computed(() => store.getters.getProfile);
     const state = reactive({ current: [...columns.value], original: [...columns.value] });
     const editing = computed(() => !isEqual(state.current, state.original));
@@ -67,14 +68,16 @@ export default defineComponent({
           },
           data: {
             allSchemaTableColumnBySchemaId: [
-              data.allSchemaTableColumnBySchemaId.filter((item) => item.tableId !== props.tableId),
+              ...data.allSchemaTableColumnBySchemaId.filter(
+                (item) => item.tableId !== props.tableId
+              ),
               ...mutationResult.data.updateSchemaTableColumn
             ]
           }
         });
       }
     }));
-    return { isEdit, columns, state, mutate, editing, profile };
+    return { isEdit, columns, state, mutate, editing, profile, allColumns };
   },
   methods: {
     handleChange(detail, index) {
@@ -102,11 +105,15 @@ export default defineComponent({
           datatype: field.datatype,
           tableId: field.tableId,
           indicator: field.indicator,
-          meta: field.meta
+          meta: field.meta,
+          options: field.options
         });
       });
       this.mutate({ payload }).then((response) => {
-        columnDefinitionChangedSubject.next({ tableId: this.tableId });
+        columnDefinitionChangedSubject.next({
+          tableId: this.tableId,
+          columnList: response.data.updateSchemaTableColumn
+        });
       });
       this.editing = false;
     }

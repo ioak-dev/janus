@@ -10,7 +10,7 @@
           <div class="desktop-only">Create</div>
         </div>
       </oak-click-area>
-      <oak-click-area v-if="selectedTables.length === 1" @click-area-click="$emit('clone')">
+      <oak-click-area v-if="selectedSchemas.length === 1" @click-area-click="$emit('clone')">
         <div
           class="app-toolbar-action"
           :class="`${sidepaneContent === 'clone' ? 'app-toolbar-action--active' : ''}`"
@@ -19,7 +19,7 @@
           <div class="desktop-only">Clone</div>
         </div>
       </oak-click-area>
-      <oak-click-area v-if="selectedTables.length === 1" @click-area-click="$emit('edit')">
+      <oak-click-area v-if="selectedSchemas.length === 1" @click-area-click="$emit('edit')">
         <div
           class="app-toolbar-action"
           :class="`${sidepaneContent === 'edit' ? 'app-toolbar-action--active' : ''}`"
@@ -29,7 +29,7 @@
         </div>
       </oak-click-area>
 
-      <oak-click-area v-if="selectedTables?.length > 0" @click-area-click="$emit('delete')">
+      <oak-click-area v-if="selectedSchemas?.length > 0" @click-area-click="$emit('delete')">
         <div
           class="app-toolbar-action"
           :class="`${sidepaneContent === 'delete' ? 'app-toolbar-action--active' : ''}`"
@@ -39,12 +39,12 @@
         </div>
       </oak-click-area>
       <oak-click-area
-        v-if="selectedTables?.length > 0"
+        v-if="selectedSchemas?.length > 0"
         @click-area-click="$emit('clear-selection')"
       >
         <div class="app-toolbar-action">
           <font-awesome-icon :icon="['fas', 'times']" />
-          <div class="desktop-only">Clear ({{ selectedTables?.length }})</div>
+          <div class="desktop-only">Clear ({{ selectedSchemas?.length }})</div>
         </div>
       </oak-click-area>
     </div>
@@ -58,7 +58,7 @@ import { useStore } from 'vuex';
 export default defineComponent({
   name: 'ActionBar',
   props: {
-    selectedTables: Array,
+    selectedSchemas: Array,
     sidepaneContent: String
   },
   setup() {

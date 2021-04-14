@@ -3,15 +3,6 @@
     <div class="app-toolbar-action-container">
       <oak-button
         theme="info"
-        :variant="multiselect ? 'regular' : 'block'"
-        size="xsmall"
-        shape="sharp"
-        @button-click="$emit('toggle-multiselect')"
-      >
-        <font-awesome-icon :icon="['fas', 'tasks']" />
-      </oak-button>
-      <oak-button
-        theme="info"
         :variant="dense ? 'regular' : 'block'"
         size="xsmall"
         shape="sharp"
@@ -29,9 +20,6 @@
         <font-awesome-icon :icon="['fas', 'text-height']" />
       </oak-button>
     </div>
-  </teleport>
-  <teleport to="#topbar-left">
-    <div class="desktop-only">{{ table?.name }}</div>
   </teleport>
 </template>
 

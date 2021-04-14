@@ -1,6 +1,6 @@
 <template>
-  <div class="meta-options">
-    <div class="meta-options__title">
+  <div class="options">
+    <div class="options__title">
       <div>Choices</div>
       <oak-button
         theme="primary"
@@ -11,8 +11,15 @@
         >New choice</oak-button
       >
     </div>
-    <div class="meta-options__choices" v-if="meta">
-      <div class="meta-options__choices__item" v-for="(option, index) in meta.options" :key="index">
+    <div class="options__choices" v-if="options">
+      <div class="options__choices__item" v-for="(option, index) in options" :key="index">
+        <div class="window-close-action">
+          <oak-click-area @click-area-click="deleteOption(index)">
+            <div class="window-close-action--icon">
+              <font-awesome-icon :icon="['fas', 'times']" />
+            </div>
+          </oak-click-area>
+        </div>
         <oak-input
           fill="global"
           size="xsmall"
@@ -29,9 +36,10 @@
           @change="handleChange($event, option, index)"
         />
         <icon-swatch
-          label="Badge"
-          name="badge"
-          :value="option.badge"
+          v-if="meta.indicator === 'icon'"
+          label="Icon"
+          name="icon"
+          :value="option.icon"
           @change="handleChange($event, option, index)"
         />
         <oak-form-actions-container align="left">
@@ -52,11 +60,12 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { uuid } from 'uuidv4';
+import { cloneDeep } from 'lodash';
 import ColorSwatch from '@/components/ColorSwatch/index.vue';
 import IconSwatch from '@/components/IconSwatch/index.vue';
 
 export default defineComponent({
-  name: 'MetaOptions',
+  name: 'Options',
   components: { ColorSwatch, IconSwatch },
   data() {
     return {
@@ -64,34 +73,32 @@ export default defineComponent({
     };
   },
   props: {
-    meta: Object
+    meta: Object,
+    options: Array
   },
   methods: {
     handleChange(event: any, option: any, index: number) {
-      const options = this.meta?.options ? [...this.meta?.options] : [];
-      options[index] = { ...option, [event.detail.name]: event.detail.value };
-      this.emitChangeEvent(options);
+      const _options = this.options ? [...this.options] : [];
+      _options[index] = { ...option, [event.detail.name]: event.detail.value };
+      this.emitChangeEvent(_options);
     },
     deleteOption(index: number) {
       this.emitChangeEvent(
-        this.meta?.options?.filter((_: any, indexLocal: number) => index !== indexLocal)
+        this.options?.filter((_: any, indexLocal: number) => index !== indexLocal)
       );
     },
     newOption() {
-      if (this.meta?.options) {
-        this.emitChangeEvent([...this.meta?.options, { id: uuid() }]);
+      if (this.options) {
+        this.emitChangeEvent([...this.options, {}]);
       } else {
         this.emitChangeEvent([{}]);
       }
     },
     emitChangeEvent(options: any) {
-      return this.$emit('meta-change', {
+      return this.$emit('options-change', {
         detail: {
-          name: 'meta',
-          value: {
-            ...this.meta,
-            options
-          }
+          name: 'options',
+          value: options
         }
       });
     }
@@ -101,21 +108,21 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.meta-options__title {
+.options__title {
   margin-bottom: 10px;
   // font-weight: bold;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.meta-options__choices {
+.options__choices {
   // margin-left: 40px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   row-gap: 10px;
   column-gap: 10px;
 }
-.meta-options__choices__item {
+.options__choices__item {
   border: 1px solid var(--global-border-color);
   padding: 10px 10px;
   background-color: var(--color-float);

@@ -5,7 +5,29 @@
     label="Value display style"
     tooltip="How should the value shown?"
     :value="meta?.indicator"
-    :options="['badge', 'chip', 'chip-outline']"
+    :options="['icon', 'chip', 'chip-outline']"
+    @select-input="handleChange"
+    autocompleteVariant="none"
+    gutterBottom
+  />
+  <oak-select
+    v-if="meta?.indicator !== 'icon'"
+    fill="global"
+    name="size"
+    label="Chip size"
+    :value="meta?.size"
+    :options="['Small', 'Medium', 'Large']"
+    @select-input="handleChange"
+    autocompleteVariant="none"
+    gutterBottom
+  />
+  <oak-select
+    v-if="meta?.indicator !== 'icon'"
+    fill="global"
+    name="shape"
+    label="Chip shape"
+    :value="meta?.shape"
+    :options="['Sharp', 'Rounded', 'Ellipse']"
     @select-input="handleChange"
     autocompleteVariant="none"
     gutterBottom

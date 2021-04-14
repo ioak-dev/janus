@@ -39,7 +39,16 @@
             name="datatype"
             label="Datatype"
             :value="field.datatype"
-            :options="['text', 'number', 'list', 'relation', 'user', 'percentage', 'computed']"
+            :options="[
+              'text',
+              'number',
+              'date',
+              'list',
+              'relation',
+              'user',
+              'percentage',
+              'computed'
+            ]"
             @select-input="handleChange"
             autocompleteVariant="none"
             gutterBottom
@@ -74,10 +83,11 @@
             :meta="field.meta"
             @meta-change="handleChange"
           />
-          <meta-options
+          <options
             v-if="field.datatype === 'list'"
+            :options="field.options"
             :meta="field.meta"
-            @meta-change="handleChange"
+            @options-change="handleChange"
           />
         </div>
       </div>
@@ -89,7 +99,7 @@
 import { computed, defineComponent, ref } from 'vue';
 import { useStore } from 'vuex';
 import MetaIndicator from './MetaIndicator.vue';
-import MetaOptions from './MetaOptions.vue';
+import Options from './Options.vue';
 import MetaRelation from './MetaRelation.vue';
 import MetaMultiple from './MetaMultiple.vue';
 import MetaUserImpersonate from './MetaUserImpersonate.vue';
@@ -107,7 +117,7 @@ export default defineComponent({
     field: Object
   },
   components: {
-    MetaOptions,
+    Options,
     MetaIndicator,
     MetaRelation,
     MetaUserImpersonate,

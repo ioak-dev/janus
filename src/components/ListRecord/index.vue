@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="list-table-data__container__side" :class="sidepaneStyle">
-        <manage-table
+        <column-settings
           v-if="sidepaneContent === 'settings'"
           @saved="updateSidepaneContent(sidepaneContent)"
           :tableId="table.id"
@@ -102,14 +102,13 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue';
-import { schemaTableByIdQuery } from '@/graphql/schemaTableById.query';
 import { useRoute } from 'vue-router';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import store from '@/store';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import { deleteSchemaTableDataMutation } from '@/graphql/deleteSchemaTableData.mutation';
 import Activity from '@/components/Activity/index.vue';
-import ManageTable from '@/components/ManageTable/index.vue';
+import ColumnSettings from '@/components/ColumnSettings/index.vue';
 import Toolbar from './Toolbar.vue';
 import Datagrid from './Datagrid.vue';
 import ActionBar from './ActionBar.vue';
@@ -127,7 +126,7 @@ export default defineComponent({
     EditRecord,
     Activity,
     FilterPane,
-    ManageTable
+    ColumnSettings
   },
   data() {
     return {
@@ -199,11 +198,16 @@ export default defineComponent({
       this.selectedRecordsObject[index] = _updatedObject;
       this.updateSidepaneContent(this.sidepaneContent);
     },
-    handleRecordToggled(record: any, add: boolean) {
+    handleRecordToggled(record: any, add: boolean, originatedFromFormControl = false) {
       this.isSelectAll = false;
       if (add) {
-        this.selectedRecords = [...this.selectedRecords, record.id];
-        this.selectedRecordsObject = [...this.selectedRecordsObject, record];
+        if (!originatedFromFormControl && this.selectedRecords.length <= 1) {
+          this.selectedRecords = [record.id];
+          this.selectedRecordsObject = [record];
+        } else {
+          this.selectedRecords = [...this.selectedRecords, record.id];
+          this.selectedRecordsObject = [...this.selectedRecordsObject, record];
+        }
       } else {
         this.selectedRecords = this.selectedRecords.filter((item: any) => item !== record.id);
         this.selectedRecordsObject = this.selectedRecordsObject.filter(
@@ -257,13 +261,8 @@ export default defineComponent({
     const dense = ref(false);
     const route = useRoute();
     const profile = computed(() => store.getters.getProfile);
+    const table = computed(() => store.getters.getTableById(route.params.tableId));
     const { mutate: remove } = useMutation(deleteSchemaTableDataMutation);
-    const schemaTableByIdQueryOutput = useQuery(
-      schemaTableByIdQuery,
-      ref({
-        id: route.params.tableId
-      })
-    );
 
     const datagridSpacingStyle = computed(() => {
       if (dense.value) {
@@ -276,12 +275,11 @@ export default defineComponent({
       sidepaneContent,
       sidepaneStyle,
       isSidepaneExpanded,
-      table: useResult(schemaTableByIdQueryOutput.result),
+      table,
       profile,
       dense,
       remove,
-      datagridSpacingStyle,
-      loading: schemaTableByIdQueryOutput.loading
+      datagridSpacingStyle
     };
   },
   watch: {

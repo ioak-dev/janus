@@ -3,10 +3,9 @@ import HomeView from '../views/HomeView.vue';
 import Login from '../components/Auth/Login.vue';
 import ListSchemaView from '../views/ListSchemaView.vue';
 import ListTableView from '../views/ListTableView.vue';
-import CreateTableView from '../views/CreateTableView.vue';
 import ListRecordView from '../views/ListRecordView.vue';
 import ViewRecordView from '../views/ViewRecordView.vue';
-import ManageTableView from '../views/ManageTableView.vue';
+import SpaceHomeView from '../views/SpaceHomeView.vue';
 import SwatchGenerator from '../components/ColorSwatch/SwatchGenerator.vue';
 
 import {
@@ -42,11 +41,20 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/:space',
+    name: 'SpaceHomeView',
+    component: SpaceHomeView,
+    meta: {
+      context: 'space',
+      middleware: [readSpace, authenticate]
+    }
+  },
+  {
     path: '/:space/schema',
     name: 'ListSchemaView',
     component: ListSchemaView,
     meta: {
-      context: 'schema',
+      context: 'space',
       middleware: [readSpace, authenticate]
     }
   },
@@ -60,27 +68,9 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/:space/schema/:schemaId/create-table',
-    name: 'CreateTableView',
-    component: CreateTableView,
-    meta: {
-      context: 'table',
-      middleware: [readSpace, readSchema, authenticate]
-    }
-  },
-  {
     path: '/:space/schema/:schemaId/table/:tableId',
     name: 'ListRecordView',
     component: ListRecordView,
-    meta: {
-      context: 'table',
-      middleware: [readSpace, readSchema, readTable, authenticate]
-    }
-  },
-  {
-    path: '/:space/schema/:schemaId/table/:tableId/manage',
-    name: 'ManageTableView',
-    component: ManageTableView,
     meta: {
       context: 'table',
       middleware: [readSpace, readSchema, readTable, authenticate]

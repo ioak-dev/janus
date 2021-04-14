@@ -2,6 +2,7 @@ import axios from 'axios';
 import store from '@/store/index';
 import gql from 'graphql-tag';
 import { useQuery } from '@vue/apollo-composable';
+import { schemaChangedSubject } from '@/events/SchemaChangedEvent';
 import { getCookie, redirectToLogin } from './library';
 import { defaultClient } from '../apollo';
 import { sessionQuery } from '../graphql/session.query';
@@ -62,6 +63,7 @@ export function readSpace({ to, from, next, nextVue }: any) {
 }
 
 export function readSchema({ to, from, next, nextVue }: any) {
+  schemaChangedSubject.next({ id: to.params.schemaId });
   store.dispatch('setSchema', to.params.schemaId);
   next();
 }

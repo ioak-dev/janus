@@ -3,13 +3,13 @@
     <Header />
     <div class="sidebar__container">
       <!-- <div class="sidebar-section__divider" /> -->
-      <primary-nav />
+      <!-- <primary-nav /> -->
       <schema-nav />
       <!-- <div class="sidebar-section__divider" /> -->
       <static-nav />
     </div>
-    <user-account />
-    <user-profile />
+    <!-- <user-account />
+    <user-profile /> -->
   </div>
 </template>
 <script>
@@ -25,11 +25,10 @@ export default {
   name: 'Sidebar',
   components: {
     Header,
-    UserProfile,
+    // UserProfile,
     SchemaNav,
-    StaticNav,
-    PrimaryNav,
-    UserAccount
+    StaticNav
+    // UserAccount
   },
   computed: {
     ...mapGetters(['getProfile'])

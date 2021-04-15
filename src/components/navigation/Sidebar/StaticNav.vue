@@ -4,10 +4,12 @@
       <!-- <div class="nav-section__title__divider" /> -->
       <div>Help and Support</div>
     </div>
-    <oak-nav-element @button-click="goToTable(item)">User guide</oak-nav-element>
-    <oak-nav-element @button-click="goToTable(item)">Customer service</oak-nav-element>
-    <oak-nav-element @button-click="goToTable(item)">Terms and conditions</oak-nav-element>
-    <oak-nav-element @button-click="goToTable(item)">Privacy policy</oak-nav-element>
+    <oak-nav-element level="1" @button-click="goToTable(item)">User guide</oak-nav-element>
+    <oak-nav-element level="1" @button-click="goToTable(item)">Customer service</oak-nav-element>
+    <oak-nav-element level="1" @button-click="goToTable(item)"
+      >Terms and conditions</oak-nav-element
+    >
+    <oak-nav-element level="1" @button-click="goToTable(item)">Privacy policy</oak-nav-element>
   </div>
 </template>
 <script>

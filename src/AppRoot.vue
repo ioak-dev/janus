@@ -8,6 +8,7 @@
       topbarColor="custom"
       topbarElevation="0"
       sidebarElevation="0"
+      sidebarVariant="side"
       sidebarColor="global"
       sidebarOutlined="true"
     >

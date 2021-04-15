@@ -5,6 +5,7 @@ export const updateSchemaTableMutation = gql`
     updateSchemaTable(payload: $payload) {
       id
       schemaId
+      reference
       name
       description
       createdAt

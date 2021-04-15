@@ -5,7 +5,9 @@
     </div>
     <div slot="main">
       <oak-nav-element
+        level="2"
         v-for="item in tablesInCurrentSchema"
+        :active="item.id === currentTable ? true : false"
         @button-click="goToTable(item)"
         :key="item.id"
       >
@@ -34,6 +36,9 @@ export default {
     },
     tablesInCurrentSchema() {
       return this.getTable?.filter((item) => item.schemaId === this.schemaId);
+    },
+    currentTable() {
+      return this.$route.params.tableId;
     }
   },
   methods: {

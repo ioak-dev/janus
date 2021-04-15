@@ -82,6 +82,7 @@ export default defineComponent({
         payload: {
           id: this.edit ? this.table?.id : null,
           name: this.state.name,
+          reference: this.state.reference,
           description: this.state.description,
           schemaId: this.schemaId
         }

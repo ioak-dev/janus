@@ -5,6 +5,7 @@ export const allSchemaTableBySchemaIdQuery = gql`
     allSchemaTableBySchemaId(schemaId: $schemaId) {
       id
       schemaId
+      reference
       name
       description
     }

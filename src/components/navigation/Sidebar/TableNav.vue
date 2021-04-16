@@ -7,7 +7,7 @@
       <oak-nav-element
         level="2"
         v-for="item in tablesInCurrentSchema"
-        :active="item.id === currentTable ? true : false"
+        :active="item.reference === currentTable ? true : false"
         @button-click="goToTable(item)"
         :key="item.id"
       >
@@ -27,18 +27,18 @@ export default {
     };
   },
   props: {
-    schemaId: String
+    schemaRef: String
   },
   computed: {
-    ...mapGetters(['getSchema', 'getTable', 'getProfile']),
+    ...mapGetters(['getSchemaByReference', 'getTable', 'getProfile', 'schemaRefToId']),
     currentSchema() {
-      return this.getSchema?.find((item) => item.id === this.schemaId);
+      return this.getSchemaByReference(this.schemaRef);
     },
     tablesInCurrentSchema() {
-      return this.getTable?.filter((item) => item.schemaId === this.schemaId);
+      return this.getTable?.filter((item) => item.schemaId === this.schemaRefToId(this.schemaRef));
     },
     currentTable() {
-      return this.$route.params.tableId;
+      return this.$route.params.tableRef;
     }
   },
   methods: {
@@ -49,8 +49,9 @@ export default {
       this.isExpanded = false;
     },
     goToTable(table) {
-      console.log(table);
-      this.$router.push(`/${this.getProfile.space}/schema/${this.schemaId}/table/${table.id}`);
+      this.$router.push(
+        `/${this.getProfile.space}/schema/${this.schemaRef}/table/${table.reference}`
+      );
     }
   }
 };

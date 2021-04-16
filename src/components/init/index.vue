@@ -17,7 +17,7 @@ import { defaultClient } from '../../apollo';
 export default {
   name: 'Init',
   computed: {
-    ...mapGetters(['getProfile']),
+    ...mapGetters(['getProfile', 'getSchemaLookup']),
     getTheme() {
       return this.getProfile.theme;
     }
@@ -49,9 +49,9 @@ export default {
       }
     });
     schemaChangedSubject.asObservable().subscribe((message) => {
-      if (message.id) {
-        this.fetchColumn(message.id);
-        this.fetchFilter(message.id);
+      if (message.reference && this.getSchemaLookup[message.reference]) {
+        this.fetchColumn(this.getSchemaLookup[message.reference]);
+        this.fetchFilter(this.getSchemaLookup[message.reference]);
       }
     });
     columnDefinitionChangedSubject.asObservable().subscribe((message) => {
@@ -85,7 +85,7 @@ export default {
             console.log(response.data.allSchema);
             store.dispatch('refreshSchema', response.data.allSchema);
             if (this.getProfile.schema && this.getProfile.schema !== '') {
-              schemaChangedSubject.next({ id: this.getProfile.schema });
+              schemaChangedSubject.next({ reference: this.getProfile.schema });
             }
           }
         })

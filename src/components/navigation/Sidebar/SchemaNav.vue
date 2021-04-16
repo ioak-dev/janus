@@ -4,7 +4,7 @@
       <!-- <div class="nav-section__title__divider" /> -->
       <div>Schema explorer</div>
     </div>
-    <table-nav v-for="item in getSchema" :key="item.id" :schemaId="item.id"></table-nav>
+    <table-nav v-for="item in getSchema" :key="item.id" :schemaRef="item.reference"></table-nav>
   </div>
 </template>
 <script>

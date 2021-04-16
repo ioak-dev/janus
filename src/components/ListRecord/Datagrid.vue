@@ -155,7 +155,7 @@ export default defineComponent({
   emits: ['record-toggled', 'record-selected', 'select-all', 'select-none'],
   components: { DatatypeTableView, DatatypeForm },
   computed: {
-    ...mapGetters(['getProfile', 'getColumnByTable']),
+    ...mapGetters(['getProfile', 'getColumnByTable', 'getTableReverseLookup']),
     columns() {
       return this.getColumnByTable(this.tableId);
     },
@@ -181,7 +181,9 @@ export default defineComponent({
     },
     goToView(record) {
       this.$router.push(
-        `/${this.getProfile.space}/schema/${this.getProfile.schema}/table/${record.tableId}/record/${record.reference}`
+        `/${this.getProfile.space}/schema/${this.getProfile.schema}/table/${
+          this.getTableReverseLookup[record.tableId]
+        }/record/${record.reference}`
       );
     },
     headerKeyup(event) {
@@ -268,6 +270,16 @@ export default defineComponent({
       recordParameterChangedSubject.next({
         tableId: this.tableId,
         filter: newVal,
+        quickFilter: this.quickFilter.current,
+        secondary: this.secondaryGrid
+      });
+      this.$emit('select-none');
+    },
+    tableId(newVal, _) {
+      // this.fetchRecords();
+      recordParameterChangedSubject.next({
+        tableId: newVal,
+        filter: this.filter,
         quickFilter: this.quickFilter.current,
         secondary: this.secondaryGrid
       });

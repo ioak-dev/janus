@@ -53,30 +53,31 @@ export default defineComponent({
     const state = reactive({ current: [...columns.value], original: [...columns.value] });
     const editing = computed(() => !isEqual(state.current, state.original));
 
-    const { mutate } = useMutation(updateSchemaTableColumnMutation, () => ({
-      update: (cache, mutationResult) => {
-        const data = cache.readQuery({
-          query: allSchemaTableColumnBySchemaIdQuery,
-          variables: {
-            schemaId: profile.value.schema
-          }
-        });
-        cache.writeQuery({
-          query: allSchemaTableColumnBySchemaIdQuery,
-          variables: {
-            schemaId: profile.value.schema
-          },
-          data: {
-            allSchemaTableColumnBySchemaId: [
-              ...data.allSchemaTableColumnBySchemaId.filter(
-                (item) => item.tableId !== props.tableId
-              ),
-              ...mutationResult.data.updateSchemaTableColumn
-            ]
-          }
-        });
-      }
-    }));
+    const { mutate } = useMutation(updateSchemaTableColumnMutation);
+    // , () => ({
+    //   update: (cache, mutationResult) => {
+    //     const data = cache.readQuery({
+    //       query: allSchemaTableColumnBySchemaIdQuery,
+    //       variables: {
+    //         schemaId: profile.value.schema
+    //       }
+    //     });
+    //     cache.writeQuery({
+    //       query: allSchemaTableColumnBySchemaIdQuery,
+    //       variables: {
+    //         schemaId: profile.value.schema
+    //       },
+    //       data: {
+    //         allSchemaTableColumnBySchemaId: [
+    //           ...data.allSchemaTableColumnBySchemaId.filter(
+    //             (item) => item.tableId !== props.tableId
+    //           ),
+    //           ...mutationResult.data.updateSchemaTableColumn
+    //         ]
+    //       }
+    //     });
+    //   }
+    // }));
     return { isEdit, columns, state, mutate, editing, profile, allColumns };
   },
   methods: {

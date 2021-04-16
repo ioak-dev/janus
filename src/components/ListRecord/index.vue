@@ -27,7 +27,7 @@
         />
         <div class="list-table-data__container__main__datagrid">
           <datagrid
-            :tableId="$route.params.tableId"
+            :tableId="tableId"
             :selectedRecords="selectedRecords"
             :dense="dense"
             :multiselect="multiselect"
@@ -74,7 +74,7 @@
         />
         <create-record
           v-if="['create', 'clone'].includes(sidepaneContent)"
-          :tableId="table?.id"
+          :tableId="tableId"
           :record="recordToClone"
           :filter="filter"
           :isSidepaneExpanded="isSidepaneExpanded"
@@ -105,6 +105,7 @@ import { computed, defineComponent, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import store from '@/store';
+import { useStore } from 'vuex';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import { deleteSchemaTableDataMutation } from '@/graphql/deleteSchemaTableData.mutation';
 import Activity from '@/components/Activity/index.vue';
@@ -128,6 +129,7 @@ export default defineComponent({
     FilterPane,
     ColumnSettings
   },
+  props: { tableId: String },
   data() {
     return {
       selectedRecords: [] as string[],
@@ -161,17 +163,17 @@ export default defineComponent({
     goToEdit() {
       if (this.selectedRecords.length === 1) {
         this.$router.push(
-          `/${this.profile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords[0]}`
+          `/${this.profile.space}/table/${this.tableId}/record/${this.selectedRecords[0]}`
         );
       } else if (this.selectedRecords.length > 1) {
         this.$router.push(
-          `/${this.profile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords}`
+          `/${this.profile.space}/table/${this.tableId}/record/${this.selectedRecords}`
         );
       }
     },
     goToView() {
       this.$router.push(
-        `/${this.profile.space}/table/${this.$route.params.tableId}/record/${this.selectedRecords[0]}`
+        `/${this.profile.space}/table/${this.tableId}/record/${this.selectedRecords[0]}`
       );
     },
     toggleDenseView() {
@@ -250,7 +252,8 @@ export default defineComponent({
       this.filter = null;
     }
   },
-  setup() {
+  setup(props) {
+    const route = useRoute();
     const isSidepaneExpanded = ref(false);
     const sidepaneContent = ref('');
     const sidepaneStyle = computed(() => {
@@ -259,9 +262,8 @@ export default defineComponent({
       }`;
     });
     const dense = ref(false);
-    const route = useRoute();
     const profile = computed(() => store.getters.getProfile);
-    const table = computed(() => store.getters.getTableById(route.params.tableId));
+    const table = computed(() => store.getters.getTableById(props.tableId));
     const { mutate: remove } = useMutation(deleteSchemaTableDataMutation);
 
     const datagridSpacingStyle = computed(() => {

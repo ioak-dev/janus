@@ -18,7 +18,7 @@ import { mapGetters } from 'vuex';
 export default defineComponent({
   name: 'RelationViewDatatype',
   computed: {
-    ...mapGetters(['getProfile'])
+    ...mapGetters(['getProfile', 'tableIdToRef'])
   },
   props: {
     rowData: Object,
@@ -30,7 +30,7 @@ export default defineComponent({
         name: 'ViewRecordView',
         params: {
           space: this.getProfile.space,
-          tableId: this.cellHeader?.meta?.tableId,
+          tableRef: this.tableIdToRef(this.cellHeader?.meta?.tableId),
           recordRef: this.rowData?.relation[this.cellHeader?.id][0].reference || ''
         }
       });

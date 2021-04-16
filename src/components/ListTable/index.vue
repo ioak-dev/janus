@@ -11,12 +11,16 @@
     />
     <div class="list-table__container">
       <div class="list-table__container__main">
-        <table-listing :selectedTables="selectedTables" @change-selection="handleSelect" />
+        <table-listing
+          :schemaId="schemaId"
+          :selectedTables="selectedTables"
+          @change-selection="handleSelect"
+        />
       </div>
       <div class="list-table__container__side" :class="sidepaneStyle">
         <create-table
           v-if="['create', 'clone'].includes(sidepaneContent)"
-          :schemaId="$route.params.schemaId"
+          :schemaId="schemaId"
           :table="tableToCloneOrEdit"
           :isSidepaneExpanded="isSidepaneExpanded"
           @saved="updateSidepaneContent(sidepaneContent)"
@@ -27,7 +31,7 @@
         <create-table
           v-if="sidepaneContent === 'edit'"
           edit
-          :schemaId="$route.params.schemaId"
+          :schemaId="schemaId"
           :table="tableToCloneOrEdit"
           :isSidepaneExpanded="isSidepaneExpanded"
           @saved="updateSidepaneContent(sidepaneContent)"
@@ -54,6 +58,7 @@ import CreateTable from './CreateTable.vue';
 export default defineComponent({
   name: 'ListTable',
   components: { ActionBar, TableListing, CreateTable },
+  props: { schemaId: String },
   methods: {
     updateSidepaneContent(contentType: string) {
       this.sidepaneContent = this.sidepaneContent === contentType ? '' : contentType;
@@ -79,9 +84,7 @@ export default defineComponent({
       this.isSidepaneExpanded = false;
     },
     goToTable(tableId: string) {
-      this.$router.push(
-        `/${this.profile.space}/schema/${this.$route.params.schemaId}/table/${tableId}`
-      );
+      this.$router.push(`/${this.profile.space}/schema/${this.schemaId}/table/${tableId}`);
     },
     handleSelect(event: any) {
       if (event.detail.value) {

@@ -59,7 +59,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/:space/schema/:schemaId',
+    path: '/:space/schema/:schemaRef',
     name: 'ListTableView',
     component: ListTableView,
     meta: {
@@ -68,7 +68,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/:space/schema/:schemaId/table/:tableId',
+    path: '/:space/schema/:schemaRef/table/:tableRef',
     name: 'ListRecordView',
     component: ListRecordView,
     meta: {
@@ -77,7 +77,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/:space/schema/:schemaId/table/:tableId/record/:recordRef',
+    path: '/:space/schema/:schemaRef/table/:tableRef/record/:recordRef',
     name: 'ViewRecordView',
     component: ViewRecordView,
     meta: {

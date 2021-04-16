@@ -12,7 +12,7 @@
     </div>
     <div class="schema-listing__list">
       <div v-for="schema in schemas" :key="schema.id" class="schema-listing__list__item">
-        <oak-click-area @click-area-click="goToSchema(schema.id)">
+        <oak-click-area @click-area-click="goToSchema(schema)">
           <div class="schema-listing__list__item__left">
             <div class="schema-listing__list__item__left__heading">
               <font-awesome-icon :icon="['fas', 'server']" />
@@ -46,9 +46,9 @@ export default defineComponent({
   name: 'SchemaListing',
   props: { selectedSchemas: Array },
   methods: {
-    goToSchema(schemaId: string) {
-      schemaChangedSubject.next({ id: schemaId });
-      this.$router.push(`/${this.profile.space}/schema/${schemaId}`);
+    goToSchema(schema: any) {
+      schemaChangedSubject.next({ reference: schema.reference });
+      this.$router.push(`/${this.profile.space}/schema/${schema.reference}`);
     },
     handleSearchChange(event: any) {
       this.searchText = event.detail.value;

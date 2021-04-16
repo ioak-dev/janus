@@ -12,7 +12,7 @@
     </div>
     <div class="table-listing__list">
       <div v-for="table in tables" :key="table.id" class="table-listing__list__item">
-        <oak-click-area @click-area-click="goToTable(table.id)">
+        <oak-click-area @click-area-click="goToTable(table)">
           <div class="table-listing__list__item__left">
             <div class="table-listing__list__item__left__heading">
               <font-awesome-icon :icon="['fas', 'table']" />
@@ -43,12 +43,10 @@ import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'ListTable',
-  props: { selectedTables: Array },
+  props: { selectedTables: Array, schemaId: String },
   methods: {
-    goToTable(tableId: string) {
-      this.$router.push(
-        `/${this.profile.space}/schema/${this.$route.params.schemaId}/table/${tableId}`
-      );
+    goToTable(table: any) {
+      this.$router.push(`/${this.profile.space}/schema/${this.schemaRef}/table/${table.reference}`);
     },
     handleSearchChange(event: any) {
       this.searchText = event.detail.value;
@@ -57,13 +55,13 @@ export default defineComponent({
       this.$emit('change-selection', { detail: { name: _table, value: event.detail.value } });
     }
   },
-  setup() {
+  setup(props) {
     const searchText = ref('');
     const route = useRoute();
     const store = useStore();
     const tables = computed(() =>
       store.getters
-        .getTableBySchema(route.params.schemaId)
+        .getTableBySchema(props.schemaId)
         ?.filter(
           (item: any) =>
             item.name.toLowerCase().includes(searchText?.value?.toLowerCase()) ||
@@ -71,8 +69,9 @@ export default defineComponent({
         )
     );
     const profile = computed(() => store.getters.getProfile);
+    const schemaRef = computed(() => store.getters.schemaIdToRef(props.schemaId));
 
-    return { tables, profile, searchText };
+    return { tables, profile, searchText, schemaRef };
   }
 });
 </script>

@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 
-export const schemaChangedSubject = new BehaviorSubject<SchemaChangedType>({ id: null });
+export const schemaChangedSubject = new BehaviorSubject<SchemaChangedType>({ reference: null });
 
 interface SchemaChangedType {
-  id: string | null;
+  reference: string | null;
 }

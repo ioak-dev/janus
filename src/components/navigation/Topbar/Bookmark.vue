@@ -15,7 +15,7 @@
       <oak-click-area @click-area-click="goToSchema">
         <div class="bookmark__link__name" :class="currentTable ? '' : 'leaf-node'">
           <font-awesome-icon :icon="['fas', 'server']" />
-          <div class="bookmark__link__name__text">{{ currentSchema?.name }}</div>
+          <div class="bookmark__link__name__text">{{ currentSchema?.reference }}</div>
         </div>
       </oak-click-area>
     </div>
@@ -26,7 +26,7 @@
       <oak-click-area @click-area-click="goToTable">
         <div class="bookmark__link__name" :class="currentRecord ? '' : 'leaf-node'">
           <font-awesome-icon :icon="['fas', 'table']" />
-          <div class="bookmark__link__name__text">{{ currentTable?.name }}</div>
+          <div class="bookmark__link__name__text">{{ currentTable?.reference }}</div>
         </div>
       </oak-click-area>
     </div>
@@ -49,12 +49,12 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'Bookmark',
   computed: {
-    ...mapGetters(['getProfile', 'getSchema', 'getTable']),
+    ...mapGetters(['getProfile', 'getSchema', 'getTableByReference']),
     currentSchema() {
-      return this.getSchema?.find((item) => item.id === this.$route.params.schemaId);
+      return this.getSchema?.find((item) => item.reference === this.$route.params.schemaRef);
     },
     currentTable() {
-      return this.getTable?.find((item) => item.id === this.$route.params.tableId);
+      return this.getTableByReference(this.$route.params.tableRef);
     },
     currentRecord() {
       // return this.getTable?.find((item) => item.id === this.$route.params.recordRef);
@@ -70,12 +70,12 @@ export default {
     },
     goToTable() {
       this.$router.push(
-        `/${this.getProfile.space}/schema/${this.getProfile.schema}/table/${this.$route.params.tableId}`
+        `/${this.getProfile.space}/schema/${this.getProfile.schema}/table/${this.$route.params.tableRef}`
       );
     },
     goToRecord() {
       this.$router.push(
-        `/${this.getProfile.space}/schema/${this.getProfile.schema}/table/${this.$route.params.tableId}/record/${this.$route.params.recordRef}`
+        `/${this.getProfile.space}/schema/${this.getProfile.schema}/table/${this.$route.params.tableRef}/record/${this.$route.params.recordRef}`
       );
     }
   }

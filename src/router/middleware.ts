@@ -63,13 +63,13 @@ export function readSpace({ to, from, next, nextVue }: any) {
 }
 
 export function readSchema({ to, from, next, nextVue }: any) {
-  schemaChangedSubject.next({ id: to.params.schemaId });
-  store.dispatch('setSchema', to.params.schemaId);
+  schemaChangedSubject.next({ reference: to.params.schemaRef });
+  store.dispatch('setSchema', to.params.schemaRef);
   next();
 }
 
 export function readTable({ to, from, next, nextVue }: any) {
-  store.dispatch('setTable', to.params.tableId);
+  store.dispatch('setTable', to.params.tableRef);
   next();
 }
 

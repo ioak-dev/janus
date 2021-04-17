@@ -79,7 +79,6 @@ export default defineComponent({
       this.state = { ...this.state, [event.detail.name]: event.detail.value };
     },
     handleSubmit(event: any) {
-      console.log(123);
       this.mutate({
         payload: {
           tableId: this.tableId,

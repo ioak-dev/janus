@@ -160,7 +160,9 @@ export default defineComponent({
       return this.getColumnByTable(this.tableId);
     },
     tableStyle() {
-      return compose({ variant: 'outlined', fill: 'global', dense: this.dense });
+      return `${compose({ variant: 'outlined', fill: 'global', dense: this.dense })} ${
+        this.secondaryGrid ? ' do-not-limit-height' : ''
+      }`;
     }
   },
   created() {
@@ -330,6 +332,9 @@ table {
 .datagrid__table {
   overflow: auto;
   height: calc(100vh - var(--oak-app-layout-topbar-height) - var(--oak-toolbar-min-height));
+  &.do-not-limit-height {
+    height: 100%;
+  }
 }
 table {
   border-collapse: collapse;

@@ -38,6 +38,7 @@
             fill="global"
             name="datatype"
             label="Datatype"
+            positioningStrategy="fixed"
             :value="field.datatype"
             :options="[
               'text',

@@ -20,7 +20,7 @@
     paddingHorizontal="0"
     @sheet-close="closeChoosePrompt"
   >
-    <div class="sheet-container" id="iscroll-2">
+    <div class="sheet-container" :id="sheetId">
       <div class="sheet-container__content">
         <app-section>
           <div slot>
@@ -38,9 +38,10 @@
           </div>
         </app-section>
         <datagrid
+          v-if="showChoosePrompt"
           :tableId="cellHeader?.meta?.tableId"
           :selectedRecords="selectedRecords"
-          scrollId="iscroll-2"
+          :scrollId="sheetId"
           secondaryGrid
           @record-toggled="handleRecordToggled"
           @record-selected="handleRecordSelected"
@@ -53,6 +54,7 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue';
 import Datagrid from '@/components/ListRecord/Datagrid.vue';
+import { uuid } from 'uuidv4';
 
 export default defineComponent({
   name: 'RelationEditDatatype',
@@ -64,6 +66,7 @@ export default defineComponent({
   },
   data() {
     return {
+      sheetId: `id-${uuid()}`,
       showChoosePrompt: false,
       selectedRecords: [] as any[],
       selectedRecordsObject: [] as any[]

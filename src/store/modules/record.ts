@@ -77,7 +77,7 @@ const mutations = {
     state.data = uniqBy([...state.data, ...payload], 'id');
   },
   APPEND_SECONDARY_RECORD: (state: any, payload: any) => {
-    state.secondaryData = uniqBy([...state.data, ...payload], 'id');
+    state.secondaryData = uniqBy([...state.secondaryData, ...payload], 'id');
   },
   EDIT_RECORD: (state: any, payload: any) => {
     const _data = [...state.data];

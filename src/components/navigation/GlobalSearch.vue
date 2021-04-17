@@ -1,5 +1,5 @@
 <template>
-  <div class="global-search">
+  <div class="global-search desktop-only">
     <oak-select
       size="xsmall"
       fill="container"
@@ -7,33 +7,60 @@
       autocompleteVariant="autocomplete"
       :optionsAsKeyValue="globalList"
       @select-change="handleChange"
-      value=""
+      :value="currentLink"
     />
+  </div>
+  <div class="global-jump mobile-only">
+    <oak-menu buttonSize="xsmall" buttonTheme="info">
+      <div slot="menu-label">
+        <font-awesome-icon :icon="['fas', 'search']" />
+      </div>
+      <div slot="menu-popup">
+        <oak-menu-item
+          v-for="item in globalList"
+          :key="item.id"
+          @menu-click="handleChange({ detail: { value: item.id } })"
+          >{{ item.value }}</oak-menu-item
+        >
+      </div>
+    </oak-menu>
   </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
+import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
 export default defineComponent({
   name: 'GlobalSearch',
   setup() {
     const store = useStore();
+    const route = useRoute();
     const profile = computed(() => store.getters.getProfile);
     const tableList = computed(() =>
       store.getters.getTable.map((item: any) => ({
-        id: `${item.schemaId}:${item.id}`,
+        id: `${store.getters.schemaIdToRef(item.schemaId)}:${item.reference}`,
         value: `${item.name} (table)`
       }))
     );
     const schemaList = computed(() =>
       store.getters.getSchema.map((item: any) => ({
-        id: `${item.id}`,
+        id: `${item.reference}`,
         value: `${item.name} (schema)`
       }))
     );
+    const currentLink = computed(() => {
+      let link = '';
+      if (route.params.schemaRef) {
+        link += route.params.schemaRef;
+      }
+      if (route.params.tableRef) {
+        link += `:${route.params.tableRef}`;
+      }
+      return link;
+    });
     const globalList = computed(() => [...schemaList?.value, ...tableList?.value]);
-    return { profile, globalList };
+    return { profile, globalList, currentLink };
   },
   methods: {
     handleChange(event: any) {
@@ -43,7 +70,7 @@ export default defineComponent({
           name: 'ListTableView',
           params: {
             space: this.profile?.space,
-            schemaId: path[0]
+            schemaRef: path[0]
           }
         });
       } else {
@@ -51,8 +78,8 @@ export default defineComponent({
           name: 'ListRecordView',
           params: {
             space: this.profile?.space,
-            schemaId: path[0],
-            tableId: path[1]
+            schemaRef: path[0],
+            tableRef: path[1]
           }
         });
       }

@@ -68,7 +68,8 @@ export default {
             quickFilter,
             pageSize: this.recordParameter.pageSize,
             pageNo: 0
-          }
+          },
+          fetchPolicy: 'network-only'
         })
         .then((response) => {
           if (response) {
@@ -77,7 +78,6 @@ export default {
               secondary,
               payload: { pageNo, hasMore, filter, quickFilter, tableId }
             });
-            console.log('((((((((((((((((((((', quickFilter);
             store.dispatch('refreshRecord', { secondary, payload: results });
           }
         })
@@ -102,11 +102,11 @@ export default {
             quickFilter: param.quickFilter,
             pageSize: param.pageSize,
             pageNo: param.pageNo
-          }
+          },
+          fetchPolicy: 'network-only'
         })
         .then((response) => {
           if (response) {
-            console.log(Response);
             const { pageNo, hasMore, results } = response.data.searchSchemaTableData;
             store.dispatch('refreshRecordParameter', {
               secondary,

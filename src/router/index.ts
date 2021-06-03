@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import Login from '../components/Auth/Login.vue';
 import ListSchemaView from '../views/ListSchemaView.vue';
@@ -23,11 +23,6 @@ import {
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
-    component: HomeView
-  },
-  {
-    path: '/testpage',
     name: 'Home',
     component: HomeView
   },
@@ -93,7 +88,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes
 });
 

@@ -4,7 +4,7 @@
       size="xsmall"
       fill="container"
       placeholder="Quick Navigation"
-      autocompleteVariant="autocomplete"
+      autocomplete
       :optionsAsKeyValue="globalList"
       @select-change="handleChange"
       :value="currentLink"

@@ -14,6 +14,7 @@
     autocompleteVariant="none"
     multiple
     :gutterBottom="!hideLabel"
+    positioningStrategy="fixed"
   />
 </template>
 

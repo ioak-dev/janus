@@ -21,7 +21,7 @@
           </oak-click-area>
         </div>
         <oak-input
-          fill="global"
+          color="global"
           size="xsmall"
           name="value"
           label="Value"

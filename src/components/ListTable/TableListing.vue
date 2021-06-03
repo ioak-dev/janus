@@ -7,7 +7,7 @@
         @input-input="handleSearchChange"
         placeholder="Type to search"
         class="table-listing__search__input"
-        fill="container"
+        color="container"
       />
     </div>
     <div class="table-listing__list">

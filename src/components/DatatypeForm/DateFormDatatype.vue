@@ -2,7 +2,7 @@
   <div class="date-form-datatype">
     <oak-input
       type="date"
-      fill="container"
+      color="container"
       :name="cellHeader.id"
       :label="hideLabel ? null : cellHeader.name"
       :value="value"

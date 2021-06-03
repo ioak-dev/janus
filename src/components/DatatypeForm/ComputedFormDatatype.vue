@@ -2,7 +2,7 @@
   <div class="computed-form-datatype">
     <oak-input
       type="text"
-      fill="container"
+      color="container"
       :name="cellHeader.id"
       :label="hideLabel ? null : cellHeader.name"
       :value="value"

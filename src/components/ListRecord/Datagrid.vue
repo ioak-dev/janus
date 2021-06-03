@@ -1,14 +1,14 @@
 <template>
   <div class="datagrid" v-if="!loading" id="datagrid-reference">
     <oak-form :formGroupName="formId" @form-submit="applyQuickFilter" />
-    <oak-table navPlacement="none" fill="global" elevation="0" :dense="dense">
+    <div>
       <oak-infinite-scroll
         variant="custom-selector"
         :customSelector="`#${scrollId}`"
         @infinite-scroll-change="loadMore"
       >
-        <div :class="tableStyle" class="datagrid__table" :id="scrollId">
-          <table>
+        <div class="datagrid__table" :id="scrollId">
+          <table :class="tableStyle">
             <thead>
               <tr tabindex="0" @keyup="headerKeyup" id="datagrid-table-header-reference">
                 <th className="checkbox">
@@ -123,7 +123,7 @@
           </table>
         </div>
       </oak-infinite-scroll>
-    </oak-table>
+    </div>
   </div>
 </template>
 
@@ -160,7 +160,7 @@ export default defineComponent({
       return this.getColumnByTable(this.tableId);
     },
     tableStyle() {
-      return `${compose({ variant: 'outlined', fill: 'global', dense: this.dense })} ${
+      return `${compose({ variant: 'outlined', color: 'global', dense: this.dense })} ${
         this.secondaryGrid ? ' do-not-limit-height' : ''
       }`;
     }
@@ -303,11 +303,12 @@ table {
   }
   tbody tr td {
     cursor: default;
+    font-size: 14px;
   }
   tbody tr {
     border-top: 1px solid var(--color-info-lighter);
   }
-  tbody tr.active,
+  tbody tr.active td,
   tbody tr.active:hover td {
     background-color: var(--color-primary-transparent);
   }
@@ -342,6 +343,7 @@ table {
 thead tr th {
   position: sticky;
   top: 0;
+  font-size: 14px;
 }
 // table thead tr th {
 //   background-color: var(--color-primary);
@@ -380,7 +382,7 @@ table thead tr:focus {
   justify-content: flex-end;
   column-gap: 4px;
 }
-.oak-table-extern--dense {
+.oak-table--dense {
   tr {
     border-top: none;
   }

@@ -27,7 +27,7 @@
           </oak-form-actions-container>
 
           <oak-input
-            fill="global"
+            color="global"
             name="name"
             label="Field name"
             :value="field.name"

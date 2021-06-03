@@ -10,7 +10,7 @@ npm run build
 cd dist
 
 # if you are deploying to a custom domain
-echo 'janus.ioak.org' > CNAME
+echo 'janus-app.ioak.io' > CNAME
 
 git init
 git add -A

@@ -7,7 +7,7 @@
         @input-input="handleSearchChange"
         placeholder="Type to search"
         class="schema-listing__search__input"
-        fill="container"
+        color="container"
       />
     </div>
     <div class="schema-listing__list">

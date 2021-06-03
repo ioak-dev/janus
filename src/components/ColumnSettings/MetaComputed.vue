@@ -18,7 +18,7 @@
         :key="index"
       >
         <oak-input
-          fill="global"
+          color="global"
           name="name"
           label="Variable name"
           :value="variable.name"
@@ -27,7 +27,7 @@
           gutterBottom
         />
         <oak-select
-          fill="global"
+          color="global"
           name="tableId"
           label="Table"
           :value="variable.tableId"
@@ -37,7 +37,7 @@
           gutterBottom
         />
         <oak-select
-          fill="global"
+          color="global"
           name="columnId"
           label="Column"
           :value="variable.columnId"
@@ -51,7 +51,7 @@
   </div>
   <div class="meta-computed-template">
     <oak-input
-      fill="global"
+      color="global"
       @input-input="handleTemplateChange"
       label="Template"
       name="template"

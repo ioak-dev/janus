@@ -11,7 +11,7 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       authorization:
-        `${store.getters.getProfile?.space} ${store.getters.getProfile?.auth?.token}` || ''
+        `${store.getters.getProfile?.space} ${store.getters.getProfile?.auth?.accessToken}` || ''
     }
   };
 });

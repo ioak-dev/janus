@@ -1,6 +1,6 @@
 <template>
   <div class="user-account">
-    {{ getProfile.auth.firstName }}
+    {{ `${getProfile.auth.given_name} ${getProfile.auth.family_name}` }}
   </div>
 </template>
 <script>

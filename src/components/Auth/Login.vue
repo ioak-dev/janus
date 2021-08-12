@@ -14,17 +14,18 @@ export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
-    if (route.query.space && route.query.authKey) {
+    if (route.query.realm && route.query.access_token && route.query.refresh_token) {
       // const { result, loading, error } = useQuery(session, {
       //   id: route.query.authKey,
       //   space: route.query.space
       // });
       // console.log(result, loading, error);
 
-      setCookie(`janus_${route.query.space}`, route.query.authKey);
+      setCookie(`janus_${route.query.realm}-access_token`, route.query.access_token);
+      setCookie(`janus_${route.query.realm}-refresh_token`, route.query.refresh_token);
       router.push({
         name: 'ListSchemaView',
-        params: { space: route.query.space }
+        params: { space: route.query.realm }
       });
     }
   }

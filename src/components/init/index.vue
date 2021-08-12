@@ -65,9 +65,9 @@ export default {
   },
   methods: {
     fetchSpace() {
-      httpGet('/space/introspect', null).then((response) => {
+      httpGet('/realm/introspect', null).then((response) => {
         if (response.status === 200) {
-          store.dispatch('refreshSpace', response.data.data);
+          store.dispatch('refreshSpace', response.data);
         }
       });
     },

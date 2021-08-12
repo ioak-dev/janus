@@ -1,11 +1,7 @@
-import axios from 'axios';
 import store from '@/store/index';
-import gql from 'graphql-tag';
-import { useQuery } from '@vue/apollo-composable';
 import { schemaChangedSubject } from '@/events/SchemaChangedEvent';
-import { getCookie, redirectToLogin } from './library';
-import { defaultClient } from '../apollo';
-import { sessionQuery } from '../graphql/session.query';
+import { getCookie, redirectToLogin, setCookie } from './library';
+import { interpretAccessToken } from './service';
 
 export function middlewarePipeline(context: any, middleware: any, index: any) {
   const nextMiddleware = middleware[index];
@@ -28,29 +24,10 @@ export function authenticate({ to, from, next, nextVue }: any) {
   if (store.getters.getProfile.auth.isAuth) {
     next();
   } else {
-    const fromCookies = getCookie(`janus_${to.params.space}`);
-    if (fromCookies) {
-      defaultClient
-        .query({
-          query: sessionQuery,
-          variables: {
-            id: fromCookies,
-            space: to.params.space
-          }
-        })
-        .then((sessionResponse) => {
-          if (sessionResponse?.data?.session) {
-            store.dispatch('addAuth', {
-              auth: { ...sessionResponse.data.session, isAuth: true }
-            });
-            next();
-          } else {
-            redirectToLogin(to.params.space);
-          }
-        })
-        .catch((error) => {
-          redirectToLogin(to.params.space);
-        });
+    const accessToken = getCookie(`janus_${to.params.space}-access_token`);
+    const refreshToken = getCookie(`janus_${to.params.space}-refresh_token`);
+    if (accessToken && refreshToken) {
+      interpretAccessToken(next, to.params.space, accessToken, refreshToken);
     } else {
       redirectToLogin(to.params.space);
     }

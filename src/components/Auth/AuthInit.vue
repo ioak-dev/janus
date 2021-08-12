@@ -7,9 +7,10 @@ export default {
     ...mapGetters(['getProfile'])
   },
   created() {
-    const fromCookies = this.$cookies.get(`janus_${this.getProfile.space}`);
-    if (fromCookies) {
-      this.addAuth({ auth: fromCookies });
+    const accessToken = this.$cookies.get(`janus_${this.getProfile.space}-access_token`);
+    const refreshToken = this.$cookies.get(`janus_${this.getProfile.space}-refresh_token`);
+    if (accessToken && refreshToken) {
+      this.addAuth({ access_token: accessToken, refresh_token: refreshToken });
     }
   },
   methods: {

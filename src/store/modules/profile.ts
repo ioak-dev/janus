@@ -36,7 +36,8 @@ const actions = {
   },
   removeAuth({ commit }: any, cookies: any) {
     userAuthorizedSubject.next({ isAuth: false });
-    cookies.remove(`janus_${state.space}`);
+    cookies.remove(`janus_${state.space}-access_token`);
+    cookies.remove(`janus_${state.space}-refresh_token`);
     commit('UPDATE_PROFILE', { ...state, auth: {} });
   },
   toggleSidebar({ commit }: any) {

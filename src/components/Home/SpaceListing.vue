@@ -3,7 +3,7 @@
     <div class="space-listing">
       <div>
         <div v-for="space in spaces" :key="space.id">
-          <oak-click-area @click-area-click="goToSpace(space.spaceId)">
+          <oak-click-area @click-area-click="goToSpace(space.realm)">
             <div class="space-listing__item">
               <div class="space-listing__item__container">
                 {{ space.name }}

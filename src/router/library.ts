@@ -3,10 +3,10 @@ export function getCookie(key: string) {
   return b ? b.pop() : '';
 }
 
-export function setCookie(key: string, value: string) {
+export function setCookie(key: string, value: string | null) {
   document.cookie = `${key}=${value}`;
 }
 
-export const redirectToLogin = (space: string) => {
-  window.location.href = `${process.env.VUE_APP_ONEAUTH_URL}/#/space/${space}/login?appId=${process.env.VUE_APP_ONEAUTH_APP_ID}`;
+export const redirectToLogin = (space: number) => {
+  window.location.href = `${process.env.VUE_APP_ONEAUTH_URL}/#/realm/${space}/login/${process.env.VUE_APP_ONEAUTH_APP_ID}`;
 };

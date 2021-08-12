@@ -1,6 +1,6 @@
 <template>
   <div class="activity-log">
-    <app-section> {{ `${user.firstName} ${user.lastName}` }} {{ text }} </app-section>
+    <app-section> {{ `${user?.given_name} ${user?.family_name}` }} {{ text }} </app-section>
   </div>
 </template>
 

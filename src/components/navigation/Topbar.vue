@@ -7,6 +7,7 @@
       <global-search class="desktop-only" />
       <dark-mode-switch />
       <div id="topbar-right" />
+      <user-account />
     </div>
   </div>
 </template>
@@ -15,13 +16,15 @@ import { mapGetters, mapActions } from 'vuex';
 import DarkModeSwitch from './DarkModeSwitch.vue';
 import Bookmark from './Topbar/Bookmark.vue';
 import GlobalSearch from './GlobalSearch.vue';
+import UserAccount from './UserAccount.vue';
 
 export default {
   name: 'Topbar',
   components: {
     DarkModeSwitch,
     Bookmark,
-    GlobalSearch
+    GlobalSearch,
+    UserAccount
   },
   computed: {
     ...mapGetters(['getProfile'])

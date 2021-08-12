@@ -4,8 +4,10 @@ export const userQuery = gql`
   query user {
     user {
       id
-      firstName
-      lastName
+      given_name
+      family_name
+      name
+      nickname
       email
       resolver
     }

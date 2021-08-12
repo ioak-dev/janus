@@ -21,7 +21,8 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'prefer-template': 'off',
     'no-shadow': ['error', { allow: ['state'] }],
-    'import/prefer-default-export': 'off'
+    'import/prefer-default-export': 'off',
+    '@typescript-eslint/camelcase': 'off'
   },
   overrides: [
     {

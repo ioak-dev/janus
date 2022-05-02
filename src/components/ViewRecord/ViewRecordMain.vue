@@ -19,7 +19,7 @@
       </div>
     </div>
     <app-section>
-      <div slot>
+      <div>
         <div>Comments</div>
       </div>
     </app-section>

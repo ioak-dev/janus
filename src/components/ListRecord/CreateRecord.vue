@@ -10,7 +10,7 @@
     <div class="sidepane-main">
       <action-bar-create @close="$emit('close')" :formGroupName="formId" />
       <app-section>
-        <div slot>
+        <div>
           <div class="edit-detail">
             <oak-form :formGroupName="formId" @form-submit="handleSubmit">
               <div class="create-record__form">

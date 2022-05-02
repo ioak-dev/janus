@@ -1,6 +1,6 @@
 <template>
   <app-section subtle>
-    <div slot>
+    <div>
       <div class="app-action-bar">
         <div>
           <oak-button

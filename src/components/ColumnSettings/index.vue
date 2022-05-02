@@ -10,7 +10,7 @@
     <div class="sidepane-main">
       <action-bar @save="save" @add="add" @reset="reset" :editing="editing" />
       <app-section subtle>
-        <div slot>
+        <div>
           <div class="field-listing">
             <div v-for="(field, index) in state?.current" :key="field.id">
               <field-view

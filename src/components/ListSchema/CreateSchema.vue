@@ -12,7 +12,7 @@
     <div class="sidepane-main">
       <action-bar-create @close="$emit('close')" :formGroupName="formId" />
       <app-section>
-        <div slot>
+        <div>
           <div>
             <oak-form :formGroupName="formId" @form-submit="handleSubmit">
               <oak-input

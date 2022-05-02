@@ -1,7 +1,7 @@
 <template>
   <action-bar-view :openEdit="openEdit" />
   <app-section>
-    <div slot>
+    <div>
       <div class="view-record-detail">
         <div
           class="view-record-detail__item"

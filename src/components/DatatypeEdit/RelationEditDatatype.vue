@@ -23,7 +23,7 @@
     <div class="sheet-container" :id="sheetId">
       <div class="sheet-container__content">
         <app-section>
-          <div slot>
+          <div>
             <div class="app-action-bar">
               <div>
                 <oak-button

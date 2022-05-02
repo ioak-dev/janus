@@ -1,7 +1,7 @@
 <template>
   <div class="filter-listing">
     <app-section subtle>
-      <div slot>
+      <div>
         <div>
           <oak-select
             name="operator"

@@ -10,7 +10,7 @@
     <div class="sidepane-main">
       <action-bar-create @close="$emit('close')" :formGroupName="formId" />
       <app-section>
-        <div slot>
+        <div>
           <div class="activity">
             <div v-for="item in result?.activity" :key="item.id" class="activity-item">
               <activity-log :log="item" />

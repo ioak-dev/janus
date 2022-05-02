@@ -1,7 +1,7 @@
 <template>
   <div class="edit-detail">
     <app-section>
-      <div slot>
+      <div>
         <div class="edit-detail">
           <oak-form :formGroupName="formGroupName" @form-submit="handleSubmit">
             <div class="edit-detail__form">

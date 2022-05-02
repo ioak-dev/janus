@@ -22,18 +22,26 @@ const getters = {
   getTableReverseLookup: (state: any): any[] => {
     return state.reverseLookup;
   },
-  getTableById: (state: any) => (id: string): any[] => {
-    return state.data.find((item: any) => item.id === id);
-  },
-  getTableByReference: (state: any) => (reference: string): any[] => {
-    return state.data.find((item: any) => item.reference === reference);
-  },
-  tableRefToId: (state: any) => (reference: string): any[] => {
-    return state.lookup[reference];
-  },
-  tableIdToRef: (state: any) => (id: string): any[] => {
-    return state.reverseLookup[id];
-  },
+  getTableById:
+    (state: any) =>
+    (id: string): any[] => {
+      return state.data.find((item: any) => item.id === id);
+    },
+  getTableByReference:
+    (state: any) =>
+    (reference: string): any[] => {
+      return state.data.find((item: any) => item.reference === reference);
+    },
+  tableRefToId:
+    (state: any) =>
+    (reference: string): any[] => {
+      return state.lookup[reference];
+    },
+  tableIdToRef:
+    (state: any) =>
+    (id: string): any[] => {
+      return state.reverseLookup[id];
+    },
   getTableBySchema: (state: any) => (schemaId: string) => {
     return state.data.filter((item: any) => item.schemaId === schemaId);
   },

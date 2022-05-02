@@ -22,12 +22,16 @@ const state = {
 };
 
 const getters = {
-  getRecord: (state: any) => (secondary = false) => {
-    return secondary ? state.secondaryData : state.data;
-  },
-  getRecordParameter: (state: any) => (secondary = false) => {
-    return secondary ? state.secondaryParameter : state.parameter;
-  }
+  getRecord:
+    (state: any) =>
+    (secondary = false) => {
+      return secondary ? state.secondaryData : state.data;
+    },
+  getRecordParameter:
+    (state: any) =>
+    (secondary = false) => {
+      return secondary ? state.secondaryParameter : state.parameter;
+    }
 };
 
 const actions = {

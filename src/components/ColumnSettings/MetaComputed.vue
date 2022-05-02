@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import { computed, defineComponent, ref } from 'vue';
 import { useStore } from 'vuex';
 
@@ -72,7 +72,7 @@ export default defineComponent({
   },
   methods: {
     handleChange(event: any, variable: any, index: number) {
-      const variables = this.meta?.variables ? [...this.meta?.variables] : [];
+      const variables = this.meta?.variables ? [...(this.meta?.variables || [])] : [];
       variables[index] = { ...variable, [event.detail.name]: event.detail.value };
       this.emitChangeEvent('variables', variables);
     },
@@ -84,7 +84,7 @@ export default defineComponent({
     },
     newVariable() {
       if (this.meta?.variables) {
-        this.emitChangeEvent('variables', [...this.meta?.variables, {}]);
+        this.emitChangeEvent('variables', [...this.meta.variables, {}]);
       } else {
         this.emitChangeEvent('variables', [{}]);
       }

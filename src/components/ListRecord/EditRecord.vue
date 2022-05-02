@@ -21,7 +21,7 @@
 import { defineComponent, ref } from 'vue';
 import EditDetail from '@/components/ViewRecord/EditDetail.vue';
 import { useStore } from 'vuex';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import SidepaneHeading from '@/components/ui/SidepaneHeading.vue';
 import ActionBarEdit from './ActionBarEdit.vue';
 
@@ -29,7 +29,7 @@ export default defineComponent({
   name: 'EditRecord',
   components: { EditDetail, ActionBarEdit, SidepaneHeading },
   setup() {
-    const formId = uuid();
+    const formId = uuidv4();
     return { formId };
   },
   props: {

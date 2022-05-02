@@ -60,7 +60,7 @@ export default defineComponent({
             tableId: this.tableId,
             row: this.state
           }
-        }).then((response) => {
+        }).then((response: any) => {
           store.dispatch('editRecord', response.data.addSchemaTableData);
           this.$emit('saved', response.data.addSchemaTableData);
         });

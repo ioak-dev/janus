@@ -45,7 +45,7 @@ import { useMutation } from '@vue/apollo-composable';
 import { computed, defineComponent } from 'vue';
 import { mapGetters, useStore } from 'vuex';
 import store from '@/store';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import DatatypeEdit from '@/components/DatatypeEdit/index.vue';
 import AppSection from '@/components/ui/AppSection.vue';
 import SidepaneHeading from '@/components/ui/SidepaneHeading.vue';
@@ -62,7 +62,7 @@ export default defineComponent({
   data() {
     return {
       state: {} as any,
-      formId: uuid()
+      formId: uuidv4()
     };
   },
   components: { ActionBarCreate, SidepaneHeading, AppSection },

@@ -31,7 +31,7 @@ import { schemaTableDataByIdQuery } from '@/graphql/schemaTableDataById.query';
 import { useMutation, useQuery, useResult } from '@vue/apollo-composable';
 import { defineComponent, ref, toRefs } from 'vue';
 import { mapGetters } from 'vuex';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import { compose as spacingCompose } from '@oakui/core-stage/style-composer/OakSpacingComposer';
 import { compose as sectionCompose } from '@oakui/core-stage/style-composer/OakSectionComposer';
 import AppSection from '@/components/ui/AppSection.vue';
@@ -66,7 +66,7 @@ export default defineComponent({
   data() {
     return {
       isEdit: false,
-      formId: uuid()
+      formId: uuidv4()
     };
   },
   components: {

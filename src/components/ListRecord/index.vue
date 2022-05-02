@@ -238,12 +238,14 @@ export default defineComponent({
       this.selectedRecordsObject = records;
     },
     deleteSelectedRecords() {
-      this.remove({ tableId: this.table.id, idList: this.selectedRecords }).then((response) => {
-        store.dispatch('deleteRecord', response.data.deleteSchemaTableData.idList);
-        this.selectedRecords = [];
-        this.selectedRecordsObject = [];
-        this.isSelectAll = false;
-      });
+      this.remove({ tableId: this.table.id, idList: this.selectedRecords }).then(
+        (response: any) => {
+          store.dispatch('deleteRecord', response?.data?.deleteSchemaTableData?.idList);
+          this.selectedRecords = [];
+          this.selectedRecordsObject = [];
+          this.isSelectAll = false;
+        }
+      );
     },
     handleApplyFilter(filter: any) {
       this.filter = filter;

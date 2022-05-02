@@ -25,15 +25,21 @@ const getters = {
   getSchemaById: (state: any) => (id: string) => {
     return state.data.find((item: any) => item.id === id);
   },
-  getSchemaByReference: (state: any) => (reference: string): any[] => {
-    return state.data.find((item: any) => item.reference === reference);
-  },
-  schemaRefToId: (state: any) => (reference: string): any[] => {
-    return state.lookup[reference];
-  },
-  schemaIdToRef: (state: any) => (id: string): any[] => {
-    return state.reverseLookup[id];
-  }
+  getSchemaByReference:
+    (state: any) =>
+    (reference: string): any[] => {
+      return state.data.find((item: any) => item.reference === reference);
+    },
+  schemaRefToId:
+    (state: any) =>
+    (reference: string): any[] => {
+      return state.lookup[reference];
+    },
+  schemaIdToRef:
+    (state: any) =>
+    (id: string): any[] => {
+      return state.reverseLookup[id];
+    }
 };
 
 const actions = {

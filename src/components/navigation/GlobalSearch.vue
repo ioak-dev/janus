@@ -59,7 +59,7 @@ export default defineComponent({
       }
       return link;
     });
-    const globalList = computed(() => [...schemaList?.value, ...tableList?.value]);
+    const globalList = computed(() => [...(schemaList?.value || []), ...(tableList?.value || [])]);
     return { profile, globalList, currentLink };
   },
   methods: {

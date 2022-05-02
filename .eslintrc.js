@@ -22,7 +22,9 @@ module.exports = {
     'prefer-template': 'off',
     'no-shadow': ['error', { allow: ['state'] }],
     'import/prefer-default-export': 'off',
-    '@typescript-eslint/camelcase': 'off'
+    '@typescript-eslint/camelcase': 'off',
+    'vue/multi-word-component-names': 'off',
+    'vuejs-accessibility/click-events-have-key-events': 'off'
   },
   overrides: [
     {

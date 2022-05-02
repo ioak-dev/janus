@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep } from 'lodash';
 import ColorSwatch from '@/components/ColorSwatch/index.vue';
 import IconSwatch from '@/components/IconSwatch/index.vue';

@@ -132,7 +132,7 @@ import store from '@/store';
 import { compose } from '@oakui/core-stage/style-composer/OakTableComposer';
 import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
 import { mapGetters, useStore } from 'vuex';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import { isEqual } from 'lodash';
 import { recordParameterChangedSubject } from '@/events/RecordParameterChangedEvent';
 import { loadMoreRecordCommandSubject } from '@/events/LoadMoreRecordCommand';
@@ -253,7 +253,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const formId = uuid();
+    const formId = uuidv4();
     const records = computed(() => store.getters.getRecord(props.secondaryGrid));
     const isShowQuickFilter = ref(false);
     const quickFilter = reactive({ current: {}, applied: {} });

@@ -14,6 +14,7 @@
         <schema-listing :selectedSchemas="selectedSchemas" @change-selection="handleSelect" />
       </div>
       <div class="list-schema__container__side" :class="sidepaneStyle">
+        aasasbdv
         <create-schema
           v-if="['create', 'clone'].includes(sidepaneContent)"
           :schema="schemaToCloneOrEdit"
@@ -57,6 +58,7 @@ export default defineComponent({
       this.sidepaneContent = this.sidepaneContent === contentType ? '' : contentType;
     },
     openCreate() {
+      console.log('********');
       this.schemaToCloneOrEdit = null;
       this.updateSidepaneContent('create');
     },

@@ -100,8 +100,8 @@ export default defineComponent({
       this.selectedTablesObject.splice(0, this.selectedTablesObject.length);
     },
     handleDelete() {
-      this.deleteTable({ idList: this.selectedTables }).then((response) => {
-        store.dispatch('deleteTable', response.data.deleteSchemaTable.idList);
+      this.deleteTable({ idList: this.selectedTables }).then((response: any) => {
+        store.dispatch('deleteTable', response?.data?.deleteSchemaTable?.idList);
       });
     }
   },

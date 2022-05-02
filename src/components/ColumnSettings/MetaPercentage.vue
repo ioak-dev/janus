@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import ColorSwatch from '@/components/ColorSwatch/index.vue';
 
 export default defineComponent({
@@ -79,7 +79,7 @@ export default defineComponent({
       this.emitChangeEvent({ [event.detail.name]: event.detail.value });
     },
     handleGradeChange(event: any, grade: any, index: number) {
-      const grades = this.meta?.grades ? [...this.meta?.grades] : [];
+      const grades = this.meta?.grades ? [...(this.meta?.grades || [])] : [];
       grades[index] = event.detail.value;
       this.emitChangeEvent({ grades });
     },
@@ -90,7 +90,7 @@ export default defineComponent({
     },
     newGrade() {
       if (this.meta?.grades) {
-        this.emitChangeEvent({ grades: [...this.meta?.grades, 1] });
+        this.emitChangeEvent({ grades: [...(this.meta?.grades || []), 1] });
       } else {
         this.emitChangeEvent({ grades: [1] });
       }

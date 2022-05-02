@@ -54,7 +54,7 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue';
 import Datagrid from '@/components/ListRecord/Datagrid.vue';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 
 export default defineComponent({
   name: 'RelationEditDatatype',
@@ -66,15 +66,15 @@ export default defineComponent({
   },
   data() {
     return {
-      sheetId: `id-${uuid()}`,
+      sheetId: `id-${uuidv4()}`,
       showChoosePrompt: false,
       selectedRecords: [] as any[],
       selectedRecordsObject: [] as any[]
     };
   },
   mounted() {
-    if (this.rowData?.relation[this.cellHeader?.id]?.length > 0) {
-      this.selectedRecordsObject = [...this.rowData?.relation[this.cellHeader?.id]];
+    if (this.rowData && this.cellHeader && this.rowData.relation[this.cellHeader.id]?.length > 0) {
+      this.selectedRecordsObject = [...this.rowData.relation[this.cellHeader.id]];
       if (this.selectedRecordsObject) {
         this.selectedRecordsObject.forEach((item) => {
           this.selectedRecords.push(item._id);

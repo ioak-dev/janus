@@ -6,7 +6,7 @@ const httpLink = createHttpLink({
   uri: process.env.VUE_APP_GRAPHQL_URL
 });
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext((_, { headers }: any) => {
   return {
     headers: {
       ...headers,

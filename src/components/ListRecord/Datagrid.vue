@@ -160,7 +160,7 @@ export default defineComponent({
       return this.getColumnByTable(this.tableId);
     },
     tableStyle() {
-      return `${compose({ variant: 'outlined', color: 'global', dense: this.dense })} ${
+      return `${compose({ variant: 'outlined', color: 'container', dense: this.dense })} ${
         this.secondaryGrid ? ' do-not-limit-height' : ''
       }`;
     }
